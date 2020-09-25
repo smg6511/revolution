@@ -61,6 +61,7 @@ class modResourceUpdateProcessor extends modObjectUpdateProcessor {
     public $languageTopics = array('resource');
     public $permission = 'save_document';
     public $objectType = 'resource';
+    public $nameField = 'pagetitle';
     public $beforeSaveEvent = 'OnBeforeDocFormSave';
     public $afterSaveEvent = 'OnDocFormSave';
 
@@ -134,7 +135,8 @@ class modResourceUpdateProcessor extends modObjectUpdateProcessor {
 
         $this->workingContext = $this->modx->getContext($this->getProperty('context_key', $this->object->get('context_key') ? $this->object->get('context_key') : 'web'));
 
-        $this->trimPageTitle();
+        // $this->trimPageTitle();
+        parent::prepareEntityName();
         $this->handleParent();
         $root = (int) $this->modx->getOption('tree_root_id');
         if ($this->object->parent != $root && $this->getProperty('parent') === $root && !$this->modx->hasPermission('new_document_in_root')) {
@@ -214,17 +216,31 @@ class modResourceUpdateProcessor extends modObjectUpdateProcessor {
      * Trim the page title
      * @return string
      */
+
+    /*
     public function trimPageTitle() {
         $pageTitle = $this->getProperty('pagetitle',null);
-        if ($pageTitle != null && !$this->getProperty('reloadOnly',false)) {
+        $pageTitle = $pageTitle != null ? trim($pageTitle) : $pageTitle ;
+
+        $ro = $this->getProperty('reloadOnly',false) === false ? 'false' : 'true' ;
+        $isnull = $pageTitle != null ? 'no' : 'yes' ; // empty string is null-ish
+        $isabsnull = $pageTitle !== null ? 'no' : 'yes' ; // empty string is not absolutely null
+        $falseisnull = false == null ? 'yes' : 'no' ; // yes
+        $zeroisnull = 0 == null ? 'yes' : 'no' ; // yes
+        $this->modx->log(modX::LOG_LEVEL_ERROR, 'Is false null-ish? '.$falseisnull.'; Is 0 null-ish? '.$zeroisnull, '', __CLASS__, __FILE__, __LINE__);
+        $this->modx->log(modX::LOG_LEVEL_ERROR, 'Value for pageTitle: '.$pageTitle.'; Length: '.strlen($pageTitle).'; Is null? '.$isnull.'; Is abs null? '.$isabsnull, '', __CLASS__, __FILE__, __LINE__);
+        $this->modx->log(modX::LOG_LEVEL_ERROR, 'Value for reloadOnly: '.$ro, '', __CLASS__, __FILE__, __LINE__);
+
+        if ($pageTitle !== null && !$this->getProperty('reloadOnly',false)) {
             if ($pageTitle === '') {
                 $pageTitle = $this->modx->lexicon('resource_untitled');
             }
-            $pageTitle = trim($pageTitle);
+            // $this->modx->log(modX::LOG_LEVEL_ERROR, 'Value for pageTitle after trim: '.$pageTitle.'; Length: '.strlen($pageTitle), '', __CLASS__, __FILE__, __LINE__);
             $this->setProperty('pagetitle',$pageTitle);
         }
         return $pageTitle;
     }
+    */
 
     /**
      * Handle the parent field, checking for veracity

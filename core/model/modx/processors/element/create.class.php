@@ -35,7 +35,7 @@ abstract class modElementCreateProcessor extends modObjectCreateProcessor {
      */
     public function beforeSave() {
         $name = $this->getProperty('name');
-
+        parent::prepareEntityName();
         /* verify element with that name does not already exist */
         if ($this->alreadyExists($name)) {
             $this->addFieldError('name',$this->modx->lexicon($this->objectType.'_err_ae',array(

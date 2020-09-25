@@ -35,6 +35,8 @@ class modBrowserFileCreateProcessor extends modProcessor {
         $name = $this->getProperty('name');
         $name = ltrim(strip_tags(preg_replace('/[\.]{2,}/', '', htmlspecialchars($name))),'/');
 
+        parent::prepareEntityName();
+
         $loaded = $this->getSource();
         if (!($this->source instanceof modMediaSource)) {
             return $loaded;

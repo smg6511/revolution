@@ -338,6 +338,97 @@ abstract class modProcessor {
         }
         return $result;
     }
+
+    /**
+     * Pre-process primary object name depending upon class key ('pagetitle' for modDocument, 'name' for most elements, etc.)
+     *
+     *
+     */
+    public function prepareEntityName(string $objectType = 'auto') {
+
+        $objectType = $objectType == 'auto' ? $this->objectType : $objectType ;
+        $nameProperty = 'name';
+        // $useDefaultProperty = ['modTemplateVar'];
+        $enforceUniqueNameFor = ['template','tv','snippet','chunk','plugin'];
+        $nameFields = [
+            'name' => ['file'],
+            'pagetitle' => ['resource'],
+            'templatename' => ['template']
+        ];
+
+        switch($this->classKey){
+            case 'modDocument':
+            case 'modResource':
+                $nameProperty = 'pagetitle';
+                break;
+            case 'modTemplate':
+                $nameProperty = 'templatename';
+                break;
+            case 'modCategory':
+                $nameProperty = 'category';
+                break;
+            // Tne following elements all use the default property 'name'
+            case 'modTemplateVar':
+                break;
+            case 'modChunk':
+                break;
+            case 'modPlugin':
+                break;
+            case 'modSnippet':
+                break;
+            default:
+                break;
+        }
+        $entityName = $this->getProperty($nameProperty, null);
+        $entityName = $entityName !== null ? trim($entityName) : $entityName ;
+        if($entityName !== null){
+            if($entityName === '') {
+                if($objectType == 'resource' && !$this->getProperty('reloadOnly',false)) {
+                    $entityName = $this->modx->lexicon('resource_untitled');
+                } else {
+                    $this->addFieldError('test','field cannot be empty!');
+                }
+            } else {
+                if(in_array($objectType, $enforceUniqueNameFor)) {
+                    if($this->entityNameExists($entityName)) {
+                        $this->addFieldError($nameProperty,$this->modx->lexicon($objectType.'_err_ae',array(
+                            $nameProperty => $entityName,
+                        )));
+                    }
+                }
+            }
+            $this->setProperty($nameProperty, $entityName);
+        }
+
+        // Making the assumption that entity names must never begin or end with white space
+        // $this->modx->log(modX::LOG_LEVEL_ERROR, 'instantiating class: '.get_class($this), '', __CLASS__, __FILE__, __LINE__);
+        // $this->modx->log(modX::LOG_LEVEL_ERROR, 'modx->mode: '.$this->modx->mode, '', __CLASS__, __FILE__, __LINE__);
+        $this->modx->log(modX::LOG_LEVEL_ERROR, 'Value for nameField: '.$this->nameField, '', __CLASS__, __FILE__, __LINE__);
+        $this->modx->log(modX::LOG_LEVEL_ERROR, 'Value for objectType: '.$this->objectType, '', __CLASS__, __FILE__, __LINE__);
+        $this->modx->log(modX::LOG_LEVEL_ERROR, 'Value for classKey: '.$this->classKey, '', __CLASS__, __FILE__, __LINE__);
+        $this->modx->log(modX::LOG_LEVEL_ERROR, 'Properties: '.print_r($this->getProperties(), true), '', __CLASS__, __FILE__, __LINE__);
+
+        // return
+    }
+
+    public function entityNameExists(string $name, array $addedCriteria = []) : boolean {
+        // $mode = strtolower(get_class($this));
+        $criteria = [ $this->nameField => $name ];
+        $this->modx->log(modX::LOG_LEVEL_ERROR, 'Name to test: '.$name, '', __CLASS__, __FILE__, __LINE__);
+        if (!$this->inCreateMode()) {
+            $criteria['id:!='] = $this->object->get('id');
+            $this->modx->log(modX::LOG_LEVEL_ERROR, 'Testing name in update mode...', '', __CLASS__, __FILE__, __LINE__);
+        }
+        $criteria = array_merge($criteria, $addedCriteria);
+        return $this->modx->getCount($this->classKey,$criteria) > 0;
+    }
+
+    public function inCreateMode() : boolean {
+        $instantiator = get_class($this);
+        $this->modx->log(modX::LOG_LEVEL_ERROR, 'Class to derive mode from: '.$instantiator, '', __CLASS__, __FILE__, __LINE__);
+        return stripos($instantiator, 'create') !== false ? true : false ;
+    }
+
 }
 
 /**

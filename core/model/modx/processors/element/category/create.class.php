@@ -28,6 +28,7 @@ class modElementCategoryCreateProcessor extends modObjectCreateProcessor {
      */
     public function beforeSave() {
         $name = $this->getProperty('category');
+        parent::prepareEntityName();
         $parent = $this->getProperty('parent', 0);
         if (empty($name)) {
             $this->addFieldError('category',$this->modx->lexicon('category_err_ns'));
