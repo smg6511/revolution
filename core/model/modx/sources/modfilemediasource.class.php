@@ -24,14 +24,14 @@ class modFileMediaSource extends modMediaSource implements modMediaSourceInterfa
      * @return boolean
      */
     public function initialize() {
-        parent::initialize();
+        $return = parent::initialize();
         $options = array();
         if (!$this->ctx) {
             $this->ctx =& $this->xpdo->context;
         }
         $options['context'] = $this->ctx->get('key');
         $this->fileHandler = $this->xpdo->getService('fileHandler','modFileHandler', '',$options);
-        return true;
+        return $return;
     }
 
     /**
@@ -605,7 +605,7 @@ class modFileMediaSource extends modMediaSource implements modMediaSourceInterfa
                 $this->addError('name', $this->xpdo->lexicon('file_folder_err_ae'));
                 return true;
             }
-            $this->addError('name', sprintf($this->xpdo->lexicon('file_err_ae'), $objectName));
+            $this->addError('name', sprintf($this->xpdo->lexicon('file_err_ae'), htmlentities($objectName, ENT_QUOTES, 'UTF-8')));
             return true;
         }
         return false;
@@ -890,7 +890,8 @@ class modFileMediaSource extends modMediaSource implements modMediaSourceInterfa
             $newPath = $this->fileHandler->sanitizePath($file['name']);
             $newPath = $directory->getPath().$newPath;
 
-            if ($this->checkObjectExist($newPath,$file['name'])) {
+            $checkAlreadyExists = (bool)$this->xpdo->getOption('upload_check_exists', null, true);
+            if ($checkAlreadyExists && $this->checkObjectExist($newPath,$file['name'])) {
                 return false;
             }
 

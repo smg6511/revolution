@@ -1901,6 +1901,15 @@ $settings['unauthorized_page']->fromArray(array (
   'area' => 'site',
   'editedon' => null,
 ), '', true, true);
+$settings['upload_check_exists']= $xpdo->newObject('modSystemSetting');
+$settings['upload_check_exists']->fromArray(array (
+  'key' => 'upload_check_exists',
+  'value' => '1',
+  'xtype' => 'combo-boolean',
+  'namespace' => 'core',
+  'area' => 'file',
+  'editedon' => null,
+), '', true, true);
 $settings['upload_files']= $xpdo->newObject('modSystemSetting');
 $settings['upload_files']->fromArray(array (
   'key' => 'upload_files',
@@ -2044,7 +2053,7 @@ $settings['welcome_screen']->fromArray(array (
 $settings['welcome_screen_url']= $xpdo->newObject('modSystemSetting');
 $settings['welcome_screen_url']->fromArray(array (
   'key' => 'welcome_screen_url',
-  'value' => '//misc.modx.com/revolution/welcome.27.html ',
+  'value' => '//misc.modx.com/revolution/welcome.28.html',
   'xtype' => 'textfield',
   'namespace' => 'core',
   'area' => 'manager',

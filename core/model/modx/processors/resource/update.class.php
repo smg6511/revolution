@@ -788,7 +788,7 @@ class modResourceUpdateProcessor extends modObjectUpdateProcessor {
             Because we are now performing a transformation to trim pagetitle, it needs to be
             removed from this diff (to allow the new value to be sent in the success object).
         */
-        $returnArray = $this->object->get(array_diff(array_keys($this->object->_fields), array('content','ta','introtext','description','link_attributes','longtitle','menutitle','properties')));
+        $returnArray = $this->object->get(array_diff(array_keys($this->object->_fields), array('content','ta','introtext','description','link_attributes','longtitle','menutitle','properties','resource_groups')));
         foreach ($returnArray as $k => $v) {
             if (strpos($k,'tv') === 0) {
                 unset($returnArray[$k]);
