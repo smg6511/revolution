@@ -629,6 +629,8 @@ class modFileMediaSource extends modMediaSource implements modMediaSourceInterfa
             return false;
         }
         if (!$oldFile->isReadable() || !$oldFile->isWritable()) {
+            $this->xpdo->log(modX::LOG_LEVEL_ERROR, '$oldPath, renameObject(): '.$oldPath, '', __CLASS__, __FILE__, __LINE__);
+            $this->xpdo->log(modX::LOG_LEVEL_ERROR, '$oldFile path, renameObject(), getPath(): '.$oldFile->getPath(), '', __CLASS__, __FILE__, __LINE__);
             $this->addError('name',$this->xpdo->lexicon('file_folder_err_perms'));
             return false;
         }

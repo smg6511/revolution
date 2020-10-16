@@ -22,5 +22,14 @@ class modElementCategoryUpdateProcessor extends modObjectUpdateProcessor {
     public $languageTopics = array('category');
     public $permission = 'save_category';
     public $objectType = 'category';
+
+    /**
+     * Validate before saving
+     * @return boolean
+     */
+    public function beforeSave() {
+        parent::prepareEntityName();
+        return parent::beforeSave();
+    }
 }
 return 'modElementCategoryUpdateProcessor';

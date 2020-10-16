@@ -25,6 +25,17 @@ class modTemplateVarDuplicateProcessor extends modElementDuplicateProcessor {
     public $objectType = 'tv';
     public $captionField = 'caption';
 
+    /**
+     * Run any logic before the object has been duplicated. May return false to prevent duplication.
+     * @return boolean
+     */
+    public function beforeSave() {
+        $caption = $this->getNewCaption();
+        $this->setNewCaption($caption);
+
+        return parent::beforeSave();
+    }
+
     public function afterSave() {
         $this->duplicateTemplates();
         $this->duplicateResources();
@@ -119,8 +130,7 @@ class modTemplateVarDuplicateProcessor extends modElementDuplicateProcessor {
      * Get the new caption for the duplicate
      * @return string
      */
-    public function getNewCaption()
-    {
+    public function getNewCaption() {
         return $this->getProperty($this->captionField);
     }
 
@@ -130,22 +140,10 @@ class modTemplateVarDuplicateProcessor extends modElementDuplicateProcessor {
      * @return string
      * @internal param string $name
      */
-    public function setNewCaption($caption)
-    {
+    public function setNewCaption($caption) {
         return $this->newObject->set($this->captionField, $caption);
     }
 
-    /**
-     * Run any logic before the object has been duplicated. May return false to prevent duplication.
-     * @return boolean
-     */
-    public function beforeSave()
-    {
-        $caption = $this->getNewCaption();
-        $this->setNewCaption($caption);
-
-        return parent::beforeSave();
-    }
 }
 
 return 'modTemplateVarDuplicateProcessor';

@@ -35,15 +35,7 @@ abstract class modElementUpdateProcessor extends modObjectUpdateProcessor {
             $this->object->set('locked',(boolean)$locked);
         }
 
-        /* make sure a name was specified */
-        $nameField = $this->classKey === 'modTemplate' ? 'templatename' : 'name';
-        $name = $this->getProperty($nameField,'');
-        if (empty($name)) {
-            $this->addFieldError($nameField,$this->modx->lexicon($this->objectType.'_err_ns_name'));
-        } else if ($this->alreadyExists($name)) {
-            /* if changing name, but new one already exists */
-            $this->modx->error->addField($nameField,$this->modx->lexicon($this->objectType.'_err_ae',array('name' => $name)));
-        }
+        $this->prepareEntityName();
 
         /* category */
         $category = $this->object->get('category');
@@ -67,14 +59,6 @@ abstract class modElementUpdateProcessor extends modObjectUpdateProcessor {
         return !$this->hasErrors();
     }
 
-    public function alreadyExists($name) {
-        $nameField = $this->classKey === 'modTemplate' ? 'templatename' : 'name';
-        return $this->modx->getCount($this->classKey,array(
-            'id:!=' => $this->object->get('id'),
-            $nameField => $name,
-        )) > 0;
-    }
-
     public function afterSave() {
         if ($this->getProperty('clearCache',true)) {
             $this->modx->cacheManager->refresh();
@@ -82,8 +66,7 @@ abstract class modElementUpdateProcessor extends modObjectUpdateProcessor {
     }
 
     public function cleanup() {
-        $fields = array('id', 'description', 'locked', 'category', 'content');
-        array_push($fields,($this->classKey == 'modTemplate' ? 'templatename' : 'name'));
+        $fields = array_unique(['id', $this->getEntityNameField(), 'description', 'locked', 'category', 'content']);
         return $this->success('',array_merge($this->object->get($fields), array('previous_category' => $this->previousCategory)));
     }
 }

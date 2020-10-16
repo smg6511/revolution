@@ -219,6 +219,7 @@ Ext.extend(MODx.Window,Ext.Window,{
             if (fld) { fld.focus(false,200); }
         }
     }
+
     ,findFirstTextField: function(i) {
         i = i || 0;
         var fld = this.fp.getForm().items.itemAt(i);
@@ -234,20 +235,25 @@ Ext.extend(MODx.Window,Ext.Window,{
         close = close === false ? false : true;
         var f = this.fp.getForm();
         if (f.isValid() && this.fireEvent('beforeSubmit',f.getValues())) {
+            // console.log(`window submit is valid, close: ${close}`);
+            // console.log(`window submit form: `,f);
             f.submit({
                 waitMsg: this.config.waitMsg ||  _('saving')
                 ,submitEmptyText: this.config.submitEmptyText !== false
                 ,scope: this
                 ,failure: function(frm,a) {
                     if (this.fireEvent('failure',{f:frm,a:a})) {
+                        console.log('Failure on submit: ',a);
                         MODx.form.Handler.errorExt(a.result,frm);
                     }
                     this.doLayout();
                 }
                 ,success: function(frm,a) {
+                    console.log(`window submit success 1, close: ${close}`);
                     if (this.config.success) {
                         Ext.callback(this.config.success,this.config.scope || this,[frm,a]);
                     }
+                    console.log(`window submit success 2, close: ${close}`);
                     this.fireEvent('success',{f:frm,a:a});
                     if (close) { this.config.closeAction !== 'close' ? this.hide() : this.close(); }
                     this.doLayout();
@@ -305,6 +311,7 @@ Ext.extend(MODx.Window,Ext.Window,{
         if (r === null) { return false; }
         this.fp.getForm().setValues(r);
     }
+
     ,reset: function() {
         this.fp.getForm().reset();
     }
@@ -350,6 +357,66 @@ Ext.extend(MODx.Window,Ext.Window,{
             el.setStyle('overflow-y', 'auto');
             el.setHeight('auto');
         }
+    }
+
+    /**
+     * Remove beginning and ending white space from element names and, optionally, invalid characters
+     *
+     * Note that this fn is present in the MODx.FormPanel class and replicated here, as for some reason
+     * the forms generated in windows do not seem to utilize the MODx.FormPanel class.
+     *
+     * @param {Object} fld - the Ext component containing the element field
+     * @param {Bool} removeInvalidChars - whether to strip illegal characters from the string
+     * @param {String|Object} pattern - a string (regular expression literal) specifying characters to remove
+     *        or an object with the format { 'pattern' : 'replacement', ... }
+     */
+    ,trimEntityName: function(fld, removeInvalidChars = false, pattern = null) {
+        if (typeof fld === 'object' && fld !== null) {
+            let val = fld.getValue().trim();
+            if(removeInvalidChars) {
+                if(pattern === null) {
+                    pattern = /[!@#$%^&*()+=\[\]\{\}'":;\\\/<>?,`~]/gi;
+                    val = val.replace(pattern, '');
+                } else {
+                    switch (true) {
+                        case typeof pattern === 'string':
+                            val = val.replace(new RegExp(pattern, 'gi'));
+                            break;
+                        case typeof pattern === 'object':
+                            const rules = Object.keys(pattern);
+                            if (rules.length > 0) {
+                                rules.forEach(function(rule) {
+                                    if (re = new RegExp(rule, 'g')) {
+                                        val = val.replace(re, pattern[rule]);
+                                    }
+                                });
+                            }
+                            break;
+                    }
+                }
+            }
+            /*
+                Re-trim when setting in case white space gets revealed when
+                running passed-in regex patterns/replacements
+            */
+            fld.setValue(val.trim());
+        }
+    }
+    ,getEntityNameRegexRules: function() {
+        var regexRules = {};
+        if (this instanceof MODx.window.QuickCreateFile || this instanceof MODx.window.RenameFile) {
+            console.log('Getting file regex rules...');
+            regexRules = {
+                '[\.]{2,}': '.',
+                '[<>]' : '',
+                '[\.]+$': '',
+                '^[\/]+': ''
+            };
+        }
+        // console.log(this);
+        // console.log(this.constructor.name);
+        // console.log(`Is this instance of MODx.window.QuickCreateFile? ${this instanceof MODx.window.QuickCreateFile}`);
+        return regexRules;
     }
 });
 Ext.reg('modx-window',MODx.Window);

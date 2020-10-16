@@ -135,7 +135,6 @@ class modResourceUpdateProcessor extends modObjectUpdateProcessor {
 
         $this->workingContext = $this->modx->getContext($this->getProperty('context_key', $this->object->get('context_key') ? $this->object->get('context_key') : 'web'));
 
-        // $this->trimPageTitle();
         parent::prepareEntityName();
         $this->handleParent();
         $root = (int) $this->modx->getOption('tree_root_id');
@@ -211,36 +210,6 @@ class modResourceUpdateProcessor extends modObjectUpdateProcessor {
         }
         return $locked;
     }
-
-    /**
-     * Trim the page title
-     * @return string
-     */
-
-    /*
-    public function trimPageTitle() {
-        $pageTitle = $this->getProperty('pagetitle',null);
-        $pageTitle = $pageTitle != null ? trim($pageTitle) : $pageTitle ;
-
-        $ro = $this->getProperty('reloadOnly',false) === false ? 'false' : 'true' ;
-        $isnull = $pageTitle != null ? 'no' : 'yes' ; // empty string is null-ish
-        $isabsnull = $pageTitle !== null ? 'no' : 'yes' ; // empty string is not absolutely null
-        $falseisnull = false == null ? 'yes' : 'no' ; // yes
-        $zeroisnull = 0 == null ? 'yes' : 'no' ; // yes
-        $this->modx->log(modX::LOG_LEVEL_ERROR, 'Is false null-ish? '.$falseisnull.'; Is 0 null-ish? '.$zeroisnull, '', __CLASS__, __FILE__, __LINE__);
-        $this->modx->log(modX::LOG_LEVEL_ERROR, 'Value for pageTitle: '.$pageTitle.'; Length: '.strlen($pageTitle).'; Is null? '.$isnull.'; Is abs null? '.$isabsnull, '', __CLASS__, __FILE__, __LINE__);
-        $this->modx->log(modX::LOG_LEVEL_ERROR, 'Value for reloadOnly: '.$ro, '', __CLASS__, __FILE__, __LINE__);
-
-        if ($pageTitle !== null && !$this->getProperty('reloadOnly',false)) {
-            if ($pageTitle === '') {
-                $pageTitle = $this->modx->lexicon('resource_untitled');
-            }
-            // $this->modx->log(modX::LOG_LEVEL_ERROR, 'Value for pageTitle after trim: '.$pageTitle.'; Length: '.strlen($pageTitle), '', __CLASS__, __FILE__, __LINE__);
-            $this->setProperty('pagetitle',$pageTitle);
-        }
-        return $pageTitle;
-    }
-    */
 
     /**
      * Handle the parent field, checking for veracity
@@ -356,7 +325,7 @@ class modResourceUpdateProcessor extends modObjectUpdateProcessor {
         }
 
         // If the alias is empty yet friendly urls is enabled, add an error to the alias field
-        if (empty($alias) && $friendlyUrlsEnabled) {
+        if (($alias === null || $alias === '') && $friendlyUrlsEnabled) {
             $this->addFieldError('alias', $this->modx->lexicon('field_required'));
         }
 
@@ -591,6 +560,7 @@ class modResourceUpdateProcessor extends modObjectUpdateProcessor {
         $this->checkContextOfChildren();
         $this->fireUnDeleteEvent();
         $this->fireDeleteEvent();
+        $this->object->prepareUntitledAlias();
         return parent::afterSave();
     }
 
@@ -814,8 +784,11 @@ class modResourceUpdateProcessor extends modObjectUpdateProcessor {
     public function cleanup() {
         $this->object->removeLock();
         $this->clearCache();
-
-        $returnArray = $this->object->get(array_diff(array_keys($this->object->_fields), array('content','ta','introtext','description','link_attributes','pagetitle','longtitle','menutitle','properties')));
+        /*
+            Because we are now performing a transformation to trim pagetitle, it needs to be
+            removed from this diff (to allow the new value to be sent in the success object).
+        */
+        $returnArray = $this->object->get(array_diff(array_keys($this->object->_fields), array('content','ta','introtext','description','link_attributes','longtitle','menutitle','properties')));
         foreach ($returnArray as $k => $v) {
             if (strpos($k,'tv') === 0) {
                 unset($returnArray[$k]);

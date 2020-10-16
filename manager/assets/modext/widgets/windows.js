@@ -12,7 +12,6 @@ MODx.window.DuplicateResource = function(config) {
     Ext.applyIf(config,{
         title: config.pagetitle ? _('duplicate') + ' ' + config.pagetitle : _('duplication_options')
         ,id: this.ident
-        // ,width: 500
     });
     MODx.window.DuplicateResource.superclass.constructor.call(this,config);
 };
@@ -112,8 +111,8 @@ Ext.reg('modx-window-resource-duplicate',MODx.window.DuplicateResource);
  */
 MODx.window.DuplicateElement = function(config) {
     config = config || {};
-
     this.ident = config.ident || 'dupeel-'+Ext.id();
+
     var flds = [{
         xtype: 'hidden'
         ,name: 'id'
@@ -122,7 +121,7 @@ MODx.window.DuplicateElement = function(config) {
         xtype: 'hidden'
         ,name: 'source'
         ,id: 'modx-'+this.ident+'-source'
-    }, {
+    },{
         xtype: 'textfield'
         ,fieldLabel: _('element_name_new')
         ,name: config.record.type == 'template' ? 'templatename' : 'name'
@@ -149,7 +148,8 @@ MODx.window.DuplicateElement = function(config) {
         });
         flds.push({
             xtype: 'xcheckbox'
-            ,fieldLabel: _('element_duplicate_values')
+            ,hideLabel: true
+            ,boxLabel: _('element_duplicate_values')
             ,labelSeparator: ''
             ,name: 'duplicateValues'
             ,id: 'modx-'+this.ident+'-duplicate-values'
@@ -161,17 +161,16 @@ MODx.window.DuplicateElement = function(config) {
 
     if (config.record.static === true) {
         flds.push({
-                xtype: 'textfield'
-                ,fieldLabel: _('static_file')
-                ,name: 'static_file'
-                ,id: 'modx-'+this.ident+'-static_file'
-                ,anchor: '100%'
-            }
-        );
+            xtype: 'textfield'
+            ,fieldLabel: _('static_file')
+            ,name: 'static_file'
+            ,id: 'modx-'+this.ident+'-static_file'
+            ,anchor: '100%'
+        });
     }
 
     Ext.applyIf(config,{
-        title: _('element_duplicate')
+        title: _('duplicate_'+config.record.type)
         ,url: MODx.config.connector_url
         ,action: 'element/'+config.record.type+'/duplicate'
         ,width: 600
@@ -180,9 +179,15 @@ MODx.window.DuplicateElement = function(config) {
     });
     MODx.window.DuplicateElement.superclass.constructor.call(this,config);
 };
-
 Ext.extend(MODx.window.DuplicateElement,MODx.Window, {
-    setStaticElementsPath: function(f) {
+    submit: function(close) {
+        const nameFieldName = this.action.indexOf('template') !== -1 ? 'templatename' : 'name' ,
+              nameFormField = this.fp.getForm().findField(nameFieldName);
+        console.log(`Field name to work with: ${nameFieldName}`);
+        this.trimEntityName(nameFormField);
+        MODx.window.DuplicateElement.superclass.submit.call(this,close);
+    }
+    ,setStaticElementsPath: function(f) {
         if (this.config.record.static === true) {
             var category = this.config.record.category;
 
@@ -220,7 +225,6 @@ Ext.extend(MODx.window.DuplicateElement,MODx.Window, {
         }
     }
 });
-
 Ext.reg('modx-window-element-duplicate',MODx.window.DuplicateElement);
 
 MODx.window.CreateCategory = function(config) {
@@ -229,8 +233,6 @@ MODx.window.CreateCategory = function(config) {
     Ext.applyIf(config,{
         title: _('new_category')
         ,id: this.ident
-        // ,height: 150
-        // ,width: 350
         ,url: MODx.config.connector_url
         ,action: 'element/category/create'
         ,fields: [{
@@ -256,7 +258,13 @@ MODx.window.CreateCategory = function(config) {
     });
     MODx.window.CreateCategory.superclass.constructor.call(this,config);
 };
-Ext.extend(MODx.window.CreateCategory,MODx.Window);
+Ext.extend(MODx.window.CreateCategory,MODx.Window, {
+    submit: function(close) {
+        const nameFormField = this.fp.getForm().findField('category');
+        this.trimEntityName(nameFormField, true);
+        MODx.window.CreateCategory.superclass.submit.call(this,close);
+    }
+});
 Ext.reg('modx-window-category-create',MODx.window.CreateCategory);
 
 /**
@@ -272,8 +280,6 @@ MODx.window.RenameCategory = function(config) {
     this.ident = config.ident || 'rencat-'+Ext.id();
     Ext.applyIf(config,{
         title: _('category_rename')
-        // ,height: 150
-        // ,width: 350
         ,url: MODx.config.connector_url
         ,action: 'element/category/update'
         ,fields: [{
@@ -299,9 +305,14 @@ MODx.window.RenameCategory = function(config) {
     });
     MODx.window.RenameCategory.superclass.constructor.call(this,config);
 };
-Ext.extend(MODx.window.RenameCategory,MODx.Window);
+Ext.extend(MODx.window.RenameCategory,MODx.Window, {
+    submit: function(close) {
+        const nameFormField = this.fp.getForm().findField('category');
+        this.trimEntityName(nameFormField, true);
+        MODx.window.RenameCategory.superclass.submit.call(this,close);
+    }
+});
 Ext.reg('modx-window-category-rename',MODx.window.RenameCategory);
-
 
 MODx.window.CreateNamespace = function(config) {
     config = config || {};
@@ -373,15 +384,12 @@ MODx.window.UpdateNamespace = function(config) {
 Ext.extend(MODx.window.UpdateNamespace, MODx.window.CreateNamespace, {});
 Ext.reg('modx-window-namespace-update',MODx.window.UpdateNamespace);
 
-
 MODx.window.QuickCreateChunk = function(config) {
     config = config || {};
 
     Ext.applyIf(config,{
         title: _('quick_create_chunk')
         ,width: 600
-        //,height: 640
-        // ,autoHeight: true
         ,layout: 'anchor'
         ,url: MODx.config.connector_url
         ,action: 'element/chunk/create'
@@ -403,7 +411,6 @@ MODx.window.QuickCreateChunk = function(config) {
             ,name: 'description'
             ,fieldLabel: _('description')
             ,anchor: '100%'
-            //,rows: 2
         },{
             xtype: 'textarea'
             ,name: 'snippet'
@@ -429,7 +436,13 @@ MODx.window.QuickCreateChunk = function(config) {
     });
     MODx.window.QuickCreateChunk.superclass.constructor.call(this,config);
 };
-Ext.extend(MODx.window.QuickCreateChunk,MODx.Window);
+Ext.extend(MODx.window.QuickCreateChunk,MODx.Window, {
+    submit: function(close) {
+        const nameFormField = this.fp.getForm().findField('name');
+        this.trimEntityName(nameFormField);
+        MODx.window.QuickCreateChunk.superclass.submit.call(this,close);
+    }
+});
 Ext.reg('modx-window-quick-create-chunk',MODx.window.QuickCreateChunk);
 
 MODx.window.QuickUpdateChunk = function(config) {
@@ -464,7 +477,6 @@ MODx.window.QuickCreateTemplate = function(config) {
     Ext.applyIf(config,{
         title: _('quick_create_template')
         ,width: 600
-        // ,autoHeight: true
         ,layout: 'anchor'
         ,url: MODx.config.connector_url
         ,action: 'element/template/create'
@@ -511,7 +523,13 @@ MODx.window.QuickCreateTemplate = function(config) {
     });
     MODx.window.QuickCreateTemplate.superclass.constructor.call(this,config);
 };
-Ext.extend(MODx.window.QuickCreateTemplate,MODx.Window);
+Ext.extend(MODx.window.QuickCreateTemplate,MODx.Window, {
+    submit: function(close) {
+        const nameFormField = this.fp.getForm().findField('templatename');
+        this.trimEntityName(nameFormField);
+        MODx.window.QuickCreateTemplate.superclass.submit.call(this,close);
+    }
+});
 Ext.reg('modx-window-quick-create-template',MODx.window.QuickCreateTemplate);
 
 MODx.window.QuickUpdateTemplate = function(config) {
@@ -540,14 +558,12 @@ MODx.window.QuickUpdateTemplate = function(config) {
 Ext.extend(MODx.window.QuickUpdateTemplate,MODx.window.QuickCreateTemplate);
 Ext.reg('modx-window-quick-update-template',MODx.window.QuickUpdateTemplate);
 
-
 MODx.window.QuickCreateSnippet = function(config) {
     config = config || {};
 
     Ext.applyIf(config,{
         title: _('quick_create_snippet')
         ,width: 600
-        // ,autoHeight: true
         ,layout: 'anchor'
         ,url: MODx.config.connector_url
         ,action: 'element/snippet/create'
@@ -594,7 +610,13 @@ MODx.window.QuickCreateSnippet = function(config) {
     });
     MODx.window.QuickCreateSnippet.superclass.constructor.call(this,config);
 };
-Ext.extend(MODx.window.QuickCreateSnippet,MODx.Window);
+Ext.extend(MODx.window.QuickCreateSnippet,MODx.Window, {
+    submit: function(close) {
+        const nameFormField = this.fp.getForm().findField('name');
+        this.trimEntityName(nameFormField);
+        MODx.window.QuickCreateSnippet.superclass.submit.call(this,close);
+    }
+});
 Ext.reg('modx-window-quick-create-snippet',MODx.window.QuickCreateSnippet);
 
 MODx.window.QuickUpdateSnippet = function(config) {
@@ -623,15 +645,12 @@ MODx.window.QuickUpdateSnippet = function(config) {
 Ext.extend(MODx.window.QuickUpdateSnippet,MODx.window.QuickCreateSnippet);
 Ext.reg('modx-window-quick-update-snippet',MODx.window.QuickUpdateSnippet);
 
-
-
 MODx.window.QuickCreatePlugin = function(config) {
     config = config || {};
 
     Ext.applyIf(config,{
         title: _('quick_create_plugin')
         ,width: 600
-        // ,autoHeight: true
         ,layout: 'anchor'
         ,url: MODx.config.connector_url
         ,action: 'element/plugin/create'
@@ -686,7 +705,13 @@ MODx.window.QuickCreatePlugin = function(config) {
     });
     MODx.window.QuickCreatePlugin.superclass.constructor.call(this,config);
 };
-Ext.extend(MODx.window.QuickCreatePlugin,MODx.Window);
+Ext.extend(MODx.window.QuickCreatePlugin,MODx.Window, {
+    submit: function(close) {
+        const nameFormField = this.fp.getForm().findField('name');
+        this.trimEntityName(nameFormField);
+        MODx.window.QuickCreatePlugin.superclass.submit.call(this,close);
+    }
+});
 Ext.reg('modx-window-quick-create-plugin',MODx.window.QuickCreatePlugin);
 
 MODx.window.QuickUpdatePlugin = function(config) {
@@ -714,7 +739,6 @@ MODx.window.QuickUpdatePlugin = function(config) {
 };
 Ext.extend(MODx.window.QuickUpdatePlugin,MODx.window.QuickCreatePlugin);
 Ext.reg('modx-window-quick-update-plugin',MODx.window.QuickUpdatePlugin);
-
 
 MODx.window.QuickCreateTV = function(config) {
     config = config || {};
@@ -814,7 +838,13 @@ MODx.window.QuickCreateTV = function(config) {
     });
     MODx.window.QuickCreateTV.superclass.constructor.call(this,config);
 };
-Ext.extend(MODx.window.QuickCreateTV,MODx.Window);
+Ext.extend(MODx.window.QuickCreateTV,MODx.Window, {
+    submit: function(close) {
+        const nameFormField = this.fp.getForm().findField('name');
+        this.trimEntityName(nameFormField);
+        MODx.window.QuickCreateTV.superclass.submit.call(this,close);
+    }
+});
 Ext.reg('modx-window-quick-create-tv',MODx.window.QuickCreateTV);
 
 MODx.window.QuickUpdateTV = function(config) {
@@ -843,7 +873,6 @@ MODx.window.QuickUpdateTV = function(config) {
 Ext.extend(MODx.window.QuickUpdateTV,MODx.window.QuickCreateTV);
 Ext.reg('modx-window-quick-update-tv',MODx.window.QuickUpdateTV);
 
-
 MODx.window.DuplicateContext = function(config) {
     config = config || {};
     this.ident = config.ident || 'dupctx'+Ext.id();
@@ -853,7 +882,6 @@ MODx.window.DuplicateContext = function(config) {
         ,id: this.ident
         ,url: MODx.config.connector_url
         ,action: 'context/duplicate'
-        // ,width: 400
         ,fields: [{
             xtype: 'statictextfield'
             ,id: 'modx-'+this.ident+'-key'
@@ -920,7 +948,6 @@ MODx.window.Login = function(config) {
         ,id: this.ident
         ,url: MODx.config.connectors_url
         ,action: 'security/login'
-        // ,width: 400
         ,fields: [{
             html: '<p>'+_('session_logging_out')+'</p>'
             ,xtype: 'modx-description'

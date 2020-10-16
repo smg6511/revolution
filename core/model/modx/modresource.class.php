@@ -720,6 +720,22 @@ class modResource extends modAccessibleSimpleObject implements modResourceInterf
     }
 
     /**
+     * Appends alias of a resource that is untitled with its id.
+     *
+     * This method is called by the create and update processors and allows
+     * for multiple resources to be saved with the default pagetitle while supplying
+     * a unique alias, which is required when friendly URLs are being used.
+     */
+    public function prepareUntitledAlias() {
+        $untitled = $this->xpdo->lexicon('resource_untitled');
+        if($this->get('pagetitle') == $untitled) {
+            $untitledAlias = $this->cleanAlias($untitled).'-'.$this->get('id');
+            $this->set('alias', $untitledAlias);
+            $this->save();
+        }
+    }
+
+    /**
      * Persist new or changed modResource instances to the database container.
      *
      * If the modResource is new, the createdon and createdby fields will be set
@@ -1020,7 +1036,7 @@ class modResource extends modAccessibleSimpleObject implements modResourceInterf
                     }
 
                     $parentAlias= $currResource['alias'];
-                    if (empty ($parentAlias)) {
+                    if ($parentAlias === null || $parentAlias === '') {
                         $parentAlias= "{$pathParentId}";
                     }
 
@@ -1034,7 +1050,7 @@ class modResource extends modAccessibleSimpleObject implements modResourceInterf
                     $query->stmt->execute(array($pathParentId));
                     $currResource= $query->stmt->fetch(PDO::FETCH_ASSOC);
                 }
-                $aliasPath= !empty ($parentResources) ? implode('/', array_reverse($parentResources)) : '';
+                $aliasPath = !empty ($parentResources) ? implode('/', array_reverse($parentResources)) : '';
                 if (strlen($aliasPath) > 0 && $aliasPath[strlen($aliasPath) - 1] !== '/') $aliasPath .= '/';
             }
             $fullAlias= $aliasPath . $fullAlias . $extension;

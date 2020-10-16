@@ -299,7 +299,6 @@ Ext.extend(MODx.tree.Directory,MODx.tree.Tree,{
         Ext.state.Manager.set(this.treestate_id, p);
     }
 
-
     ,_handleAfterDrop: function(o,r) {
         var targetNode = o.event.target;
         var dropNode = o.event.dropNode;
@@ -346,7 +345,7 @@ Ext.extend(MODx.tree.Directory,MODx.tree.Tree,{
         });
     }
 
-    ,getPath:function(node) {
+    ,getPath: function(node) {
         var path, p, a;
 
         // get path for non-root node
@@ -639,7 +638,15 @@ Ext.extend(MODx.tree.Directory,MODx.tree.Tree,{
                 ,path: node.attributes.directory
             }
             ,listeners: {
-                'success':{fn:this.refreshParentNode,scope:this}
+                'success': {fn:function(r) {
+                    this.refreshParentNode();
+                    MODx.msg.status({
+                        title: _('file_unpacked_title'),
+                        message: r.message,
+                        delay: 5
+                    });
+
+                },scope:this}
             }
         });
     }
@@ -655,11 +662,13 @@ Ext.extend(MODx.tree.Directory,MODx.tree.Tree,{
                 ,source: this.getSource()
             }
             ,listeners: {
-                'success':{fn:function(r) {
+                'success': {fn:function(r) {
                     if (!Ext.isEmpty(r.object.url)) {
                         location.href = MODx.config.connector_url+'?action=browser/file/download&download=1&file='+node.attributes.id+'&HTTP_MODAUTH='+MODx.siteId+'&source='+this.getSource()+'&wctx='+MODx.ctx;
                     }
                 },scope:this}
+                // This listener must be present, even as an empty fn, for error modal to show
+                ,'failure': {fn:function(r) {},scope:this}
             }
         });
     }
@@ -874,7 +883,13 @@ MODx.window.RenameDirectory = function(config) {
     });
     MODx.window.RenameDirectory.superclass.constructor.call(this,config);
 };
-Ext.extend(MODx.window.RenameDirectory,MODx.Window);
+Ext.extend(MODx.window.RenameDirectory,MODx.Window, {
+    submit: function(close) {
+        const nameFormField = this.fp.getForm().findField('name');
+        this.trimEntityName(nameFormField);
+        MODx.window.RenameFile.superclass.submit.call(this,close);
+    }
+});
 Ext.reg('modx-window-directory-rename',MODx.window.RenameDirectory);
 
 /**
@@ -889,10 +904,12 @@ MODx.window.RenameFile = function(config) {
     config = config || {};
     Ext.applyIf(config,{
         title: _('rename')
-        // ,width: 430
-        // ,height: 200
         ,url: MODx.config.connector_url
         ,action: 'browser/file/rename'
+        ,defaults: {
+            validationEvent: 'change'
+            ,validateOnBlur: false
+        }
         ,fields: [{
             xtype: 'hidden'
             ,name: 'wctx'
@@ -924,7 +941,13 @@ MODx.window.RenameFile = function(config) {
     });
     MODx.window.RenameFile.superclass.constructor.call(this,config);
 };
-Ext.extend(MODx.window.RenameFile,MODx.Window);
+Ext.extend(MODx.window.RenameFile,MODx.Window, {
+    submit: function(close) {
+        const nameFormField = this.fp.getForm().findField('name');
+        this.trimEntityName(nameFormField, true, this.getEntityNameRegexRules());
+        MODx.window.RenameFile.superclass.submit.call(this,close);
+    }
+});
 Ext.reg('modx-window-file-rename',MODx.window.RenameFile);
 
 /**
@@ -1061,7 +1084,11 @@ MODx.window.QuickCreateFile = function(config) {
     });
     MODx.window.QuickCreateFile.superclass.constructor.call(this,config);
 };
-Ext.extend(MODx.window.QuickCreateFile,MODx.Window);
+Ext.extend(MODx.window.QuickCreateFile,MODx.Window, {
+    submit: function(close) {
+        const nameFormField = this.fp.getForm().findField('name');
+        this.trimEntityName(nameFormField, true, this.getEntityNameRegexRules());
+        MODx.window.QuickCreateFile.superclass.submit.call(this,close);
+    }
+});
 Ext.reg('modx-window-file-quick-create',MODx.window.QuickCreateFile);
-
-

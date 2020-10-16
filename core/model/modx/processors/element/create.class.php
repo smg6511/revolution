@@ -18,30 +18,16 @@
 abstract class modElementCreateProcessor extends modObjectCreateProcessor {
     /** @var modElement $object */
     public $object;
-    /**
-     * Cleanup the process and send back the response
-     * @return array
-     */
-    public function cleanup() {
-        $this->clearCache();
-        $fields = array('id', 'description', 'locked', 'category');
-        array_push($fields,($this->classKey == 'modTemplate' ? 'templatename' : 'name'));
-        return $this->success('',$this->object->get($fields));
-    }
 
     /**
      * Validate the form
      * @return boolean
      */
     public function beforeSave() {
-        $name = $this->getProperty('name');
-        parent::prepareEntityName();
-        /* verify element with that name does not already exist */
-        if ($this->alreadyExists($name)) {
-            $this->addFieldError($nameField,$this->modx->lexicon($this->objectType.'_err_ae',array(
-                'name' => $name,
-            )));
-        }
+        $locked = (boolean)$this->getProperty('locked',false);
+        $this->object->set('locked',$locked);
+
+        $this->prepareEntityName();
 
         $category = $this->getProperty('category',0);
         if (!empty($category)) {
@@ -55,9 +41,6 @@ abstract class modElementCreateProcessor extends modObjectCreateProcessor {
             }
         }
 
-        $locked = (boolean)$this->getProperty('locked',false);
-        $this->object->set('locked',$locked);
-
         $this->setElementProperties();
         $this->validateElement();
 
@@ -70,20 +53,6 @@ abstract class modElementCreateProcessor extends modObjectCreateProcessor {
         }
 
         return !$this->hasErrors();
-    }
-
-    /**
-     * Check to see if a Chunk already exists with specified name
-     * @param string $name
-     * @return bool
-     */
-    public function alreadyExists($name) {
-        if ($this->classKey == 'modTemplate') {
-            $c = array('templatename' => $name);
-        } else {
-            $c = array('name' => $name);
-        }
-        return $this->modx->getCount($this->classKey,$c) > 0;
     }
 
     /**
@@ -126,5 +95,15 @@ abstract class modElementCreateProcessor extends modObjectCreateProcessor {
         if ($this->getProperty('clearCache')) {
             $this->modx->cacheManager->refresh();
         }
+    }
+
+    /**
+     * Cleanup the process and send back the response
+     * @return array
+     */
+    public function cleanup() {
+        $this->clearCache();
+        $fields = array_unique(['id', $this->getEntityNameField(), 'description', 'locked', 'category']);
+        return $this->success('',$this->object->get($fields));
     }
 }

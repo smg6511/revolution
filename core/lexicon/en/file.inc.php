@@ -7,6 +7,40 @@
  * @subpackage lexicon
  */
 $_lang['directory'] = 'Directory';
+
+/*
+    Replacing 'file_folder_' with 'directory_' in lex keys to coordinate with object/class naming convention.
+    Some changes made to original message content, and some new entries were added.
+*/
+$_lang['directory_enter_new'] = 'Enter New Folder Name';
+$_lang['directory_chmod'] = 'Chmod Directory';
+$_lang['directory_create'] = 'Create Directory';
+$_lang['directory_create_here'] = 'Create Directory Here';
+$_lang['directory_created'] = 'Folder created successfully!';
+$_lang['directory_deleted'] = 'Folder was successfully deleted!';
+$_lang['directory_copy_path'] = 'Copy Folder Path';
+$_lang['directory_err_ae'] = 'A directory already exists with that name in that location.';
+$_lang['directory_err_chmod'] = 'Unable to change permissions, you will need to change permissions outside of MODX.';
+$_lang['directory_err_create'] = 'An unknown error occurred while trying to create the directory.';
+$_lang['directory_err_invalid'] = 'The "<b>%s</b>" directory does not exist.';
+$_lang['directory_err_invalid_path'] = 'Invalid path to create the new folder in.';
+$_lang['directory_err_invalid_dots'] = 'The directory name "<b>%s</b>" contains invalid dot characters. A directory\'s name may only contain one dot at the beginning to make it hidden on unix-like systems.';
+$_lang['directory_err_nesting_unsupported'] = 'You must provide a directory name without forward slashes ("/"), as the automatic reation of nested directories is currently unsupported.';
+$_lang['directory_err_nf'] = 'Folder does not exist!';
+$_lang['directory_err_ns'] = 'Please specify a valid directory.';
+$_lang['directory_err_ns_name'] = 'Please specify a valid name for the directory.';
+$_lang['directory_err_name_is_path'] = 'Forward slashes ("/") are not allowed in a directory name.';
+$_lang['directory_err_parent_invalid'] = 'The specified parent directory "<b>%s</b>" does not exist.';
+$_lang['directory_err_perms'] = 'The webserver does not have the necessary permissions to update the directory.';
+$_lang['directory_err_perms_parent'] = 'The webserver does not have the necessary permissions to add a directory there.';
+$_lang['directory_err_perms_remove'] = 'The webserver does not have the necessary permissions to remove the directory.';
+$_lang['directory_err_perms_upload'] = 'The webserver does not have the necessary permissions to upload to the directory.';
+$_lang['directory_err_rename'] = 'An unknown error occurred while trying to rename the directory.';
+$_lang['directory_err_remove'] = 'An error occurred while trying to remove the directory.';
+$_lang['directory_parent'] = 'Parent Directory';
+$_lang['directory_remove'] = 'Delete Directory';
+$_lang['directory_remove_confirm'] = 'Are you sure you want to remove this directory? This could potentially break your website.';
+
 $_lang['file_confirm_remove'] = 'Are you sure you want to remove this file? Removing a file could potentially break your website. Make sure you know what this file does before removing it.';
 $_lang['file_create'] = 'Create File';
 $_lang['file_deleted'] = 'Success!';
@@ -17,29 +51,45 @@ $_lang['file_download_file'] = 'Download File';
 $_lang['file_download_unzip'] = 'Unzip File';
 $_lang['file_copy_path'] = 'Copy File Path';
 $_lang['file_edit'] = 'Edit File';
-$_lang['file_err_ae'] = 'File %s already exists';
+$_lang['file_unpacked_title'] = 'Success!';
+$_lang['file_unpacked_msg'] = 'The archive named "<b>%s</b>" was extracted into the <i>%s</i> directory.';
+$_lang['file_err_ae'] = 'A file named "<b>%s</b>" already exists.';
 $_lang['file_err_chmod'] = 'An unknown error occurred while trying to chmod the target.';
 $_lang['file_err_chmod_invalid'] = 'An invalid chmod value was passed while trying to chmod the target.';
 $_lang['file_err_chmod_ns'] = 'Please specify a mode to chmod to.';
+$_lang['file_err_download_file_unspecified'] = 'Due to an internal error, the request for this download failed due to a missing file name.';
+$_lang['file_err_download_file_notfound'] = 'The file requested for download from "<b>%s</b>" does not exist or may be corrupted.';
 $_lang['file_err_create'] = 'An unknown error occurred while trying to create the file.';
-$_lang['file_err_ext_not_allowed'] = 'File extension `[[+ext]]` is not permitted.';
+$_lang['file_err_create_container_not_exists'] = 'The file could not be created because the directory "<b>%container$s</b>" does not exist. Please create that directory first, then try again.';
+$_lang['file_err_create_container_not_writable'] = 'The file could not be created because you do not have permission to write to the directory "<b>%container$s</b>."';
+$_lang['file_err_ext_ns'] = 'The file name must include a valid extension (such as \'jpg\',\'pdf\', etc.).';
+$_lang['file_err_ext_not_allowed'] = 'File extension "<b>[[+ext]]</b>" is not permitted.';
 $_lang['file_err_filter'] = 'No files match the specified filter.';
 $_lang['file_err_invalid'] = 'The file is not a regular file and cannot be removed.';
+$_lang['file_err_is_folder'] = '"<b>%s</b>" is the name of an existing directory. Please provide a unique file name with a valid extension.';
+$_lang['directory_err_nesting_unsupported'] = 'You must provide a file name without forward slashes ("/"), as the automatic creation of nested directories from the given file path is currently unsupported.';
 $_lang['file_err_nf'] = 'File does not exist!';
 $_lang['file_err_ns'] = 'Please specify a valid file.';
 $_lang['file_err_open'] = 'Cannot open file: ';
 $_lang['file_err_perms_rename'] = 'The webserver does not have the necessary permissions to rename the file.';
 $_lang['file_err_perms_remove'] = 'The webserver does not have the necessary permissions to remove the file.';
 $_lang['file_err_rename'] = 'MODX failed to rename the file. Please make sure your permissions are set correctly.';
+$_lang['file_err_rename_container_not_exists'] = 'The file could not be renamed because the directory "<b>%container$s</b>" does not exist. Please create that directory first, then try again.';
+$_lang['file_err_rename_container_not_writable'] = 'The file could not be renamed because you do not have permission to write to the directory "<b>%container$s</b>."';
+$_lang['file_err_rename_original_unclean'] = 'The original file or one or more of its parent directories has an invalid name. Please change the existing file path/name from "<b>%s</b>" to "<b>%s</b>" directly on your server and try again.';
 $_lang['file_err_remove'] = 'MODX failed to delete the file. Please make sure your permissions are set correctly.';
 $_lang['file_err_save'] = 'Cannot save file, please ensure target directory is writable!';
 $_lang['file_err_too_large'] = 'Uploaded file is too large at [[+size]] bytes. Please ensure your files are less than [[+allowed]] bytes.';
 $_lang['file_err_unzip'] = 'Unzip Failed!';
+$_lang['file_err_unpack_directory_locked'] = 'You do not have sufficient permissions to extract this archive to the <i>%s</i> directory.';
+$_lang['file_err_unpack_not_found'] = 'The archive file to extract "<b>%s</b>" could not be found on the server.';
 $_lang['file_err_unzip_invalid_path'] = 'Invalid path for the unzipped file.';
 $_lang['file_err_unzip_missing_lib'] = 'Missing zip library (php_zip.dll / zip.so)';
 $_lang['file_err_upload'] = 'An error occurred while trying to upload the files.';
+$_lang['file_err_upload_directory_unspecified'] = 'Due to an internal error, the required directory path to upload the file(s) to is empty.';
 $_lang['file_exists_hk'] = 'File <b>{0}</b> already exists';
 $_lang['file_extensions'] = 'File Extensions';
+
 $_lang['file_folder_enter_new'] = 'Enter New Folder Name';
 $_lang['file_folder_chmod'] = 'Chmod Directory';
 $_lang['file_folder_create'] = 'Create Directory';
@@ -65,6 +115,7 @@ $_lang['file_folder_err_remove'] = 'An error occurred while trying to remove the
 $_lang['file_folder_parent'] = 'Parent Directory';
 $_lang['file_folder_remove'] = 'Delete Directory';
 $_lang['file_folder_remove_confirm'] = 'Are you sure you want to remove this directory? This could potentially break your website.';
+
 $_lang['file_last_accessed'] = 'Last Accessed';
 $_lang['file_last_modified'] = 'Last Modified';
 $_lang['file_name'] = 'File Name';

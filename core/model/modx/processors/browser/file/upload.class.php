@@ -8,6 +8,8 @@
  * files found in the top-level directory of this distribution.
  */
 
+require_once (dirname(__DIR__).'/browser.class.php');
+
 /**
  * Upload files to a directory
  *
@@ -16,61 +18,23 @@
  * @package modx
  * @subpackage processors.browser.file
  */
-class modBrowserFileUploadProcessor extends modProcessor {
-    /** @var modMediaSource $source */
-    public $source;
-    public function checkPermissions() {
-        return $this->modx->hasPermission('file_upload');
-    }
+class modBrowserFileUploadProcessor extends modBrowserProcessor {
 
-    public function getLanguageTopics() {
-        return array('file');
-    }
-
-    public function initialize() {
-        $this->setDefaultProperties(array(
-            'source' => 1,
-            'path' => false,
-        ));
-        if (!$this->getProperty('path')) return $this->modx->lexicon('file_folder_err_ns');
-        return true;
-    }
+    public $permission = 'file_upload';
+    public $policy = 'create';
+    public $languageTopics = ['file'];
+    public $objectType = 'file';
 
     public function process() {
-        if (!$this->getSource()) {
-            return $this->failure($this->modx->lexicon('permission_denied'));
-        }
-        $this->source->setRequestProperties($this->getProperties());
-        $this->source->initialize();
-        if (!$this->source->checkPolicy('create')) {
-            return $this->failure($this->modx->lexicon('permission_denied'));
-        }
 
-        $path = preg_replace('/[\.]{2,}/', '', htmlspecialchars($this->getProperty('path')));
-        $success = $this->source->uploadObjectsToContainer($path,$_FILES);
+        $response = null;
 
-        if (empty($success)) {
-            $msg = '';
-            $errors = $this->source->getErrors();
-            foreach ($errors as $k => $msg) {
-                $this->modx->error->addField($k,$msg);
-            }
-            return $this->failure($msg);
+        if ($this->prepareBrowserItem()) {
+            $path = $this->getProperty('path');
+            $response = $this->source->uploadObjectsToContainer($path, $_FILES);
         }
-        return $this->success();
+        return $this->handleResponse($response);
     }
 
-    /**
-     * Get the active Source
-     * @return modMediaSource|boolean
-     */
-    public function getSource() {
-        $this->modx->loadClass('sources.modMediaSource');
-        $this->source = modMediaSource::getDefaultSource($this->modx,$this->getProperty('source'));
-        if (empty($this->source) || !$this->source->getWorkingContext()) {
-            return false;
-        }
-        return $this->source;
-    }
 }
 return 'modBrowserFileUploadProcessor';

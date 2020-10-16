@@ -52,3 +52,4 @@ composer.lock
 
 # ignore composer vendor dir
 /vendor
+_tmp/element-naming-current.php

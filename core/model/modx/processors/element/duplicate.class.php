@@ -16,8 +16,11 @@
  * @subpackage processors.element
  */
 class modElementDuplicateProcessor extends modObjectDuplicateProcessor {
-    public function cleanup() {
-        return $this->success('',$this->newObject->get(array('id', 'name', 'description', 'category', 'locked')));
+
+    public function beforeSave() {
+        // $this->modx->log(modX::LOG_LEVEL_ERROR, 'Value for $this->getEntityNameField(), via beforeSave(): '.$this->getEntityNameField(), '', __CLASS__, __FILE__, __LINE__);
+        $this->prepareEntityName();
+        return !$this->hasErrors();
     }
 
     public function afterSave() {
@@ -26,4 +29,11 @@ class modElementDuplicateProcessor extends modObjectDuplicateProcessor {
         }
         return parent::afterSave();
     }
+
+    public function cleanup() {
+        // $this->modx->log(modX::LOG_LEVEL_ERROR, 'Value for $this->getEntityNameField(), via cleanup(): '.$this->getEntityNameField(), '', __CLASS__, __FILE__, __LINE__);
+        $fields = array_unique(['id', $this->getEntityNameField(), 'description', 'locked', 'category']);
+        return $this->success('',$this->newObject->get($fields));
+    }
+
 }

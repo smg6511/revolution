@@ -336,7 +336,10 @@ Ext.extend(MODx.panel.Plugin,MODx.FormPanel,{
             this.getForm().setValues(this.config.record);
         }
 
-        if (this.initialized) { this.clearDirty(); return true; }
+        if (this.initialized) {
+            this.clearDirty();
+            return true;
+        }
 
         if (!Ext.isEmpty(this.config.record.name)) {
             var title = _('plugin')+': '+this.config.record.name;
@@ -376,6 +379,7 @@ Ext.extend(MODx.panel.Plugin,MODx.FormPanel,{
             events: g.encodeModified()
             ,propdata: Ext.getCmp('modx-grid-element-properties').encode()
         });
+        this.trimEntityName(Ext.getCmp('modx-plugin-name'));
         this.cleanupEditor();
         return this.fireEvent('save',{
             values: this.getForm().getValues()

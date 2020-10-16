@@ -338,7 +338,10 @@ Ext.extend(MODx.panel.Template,MODx.FormPanel,{
             this.getForm().setValues(this.config.record);
         }
 
-        if (this.initialized) { this.clearDirty(); return true; }
+        if (this.initialized) {
+            this.clearDirty();
+            return true;
+        }
 
         if (!Ext.isEmpty(this.config.record.templatename)) {
             var title = _('template') + ': ' + Ext.util.Format.htmlEncode(this.config.record.templatename);
@@ -378,6 +381,7 @@ Ext.extend(MODx.panel.Template,MODx.FormPanel,{
             tvs: g.encodeModified()
             ,propdata: Ext.getCmp('modx-grid-element-properties').encode()
         });
+        this.trimEntityName(Ext.getCmp('modx-template-templatename'));
         this.cleanupEditor();
         return this.fireEvent('save',{
             values: this.getForm().getValues()
@@ -388,7 +392,6 @@ Ext.extend(MODx.panel.Template,MODx.FormPanel,{
         if (MODx.request.id) Ext.getCmp('modx-grid-element-properties').save();
         Ext.getCmp('modx-grid-template-tv').getStore().commitChanges();
         this.getForm().setValues(r.result.object);
-
         var t = Ext.getCmp('modx-tree-element');
         if (t) {
             var c = Ext.getCmp('modx-template-category').getValue();

@@ -8,6 +8,8 @@
  * files found in the top-level directory of this distribution.
  */
 
+require_once (dirname(__DIR__).'/browser.class.php');
+
 /**
  * Create a directory.
  *
@@ -19,65 +21,25 @@
  * @package modx
  * @subpackage processors.browser.directory
  */
-class modBrowserFolderCreateProcessor extends modProcessor {
-    /** @var modMediaSource|modFileMediaSource $source */
-    public $source;
-    public function checkPermissions() {
-        return $this->modx->hasPermission('directory_create');
-    }
+class modBrowserFolderCreateProcessor extends modBrowserProcessor {
 
-    public function getLanguageTopics() {
-        return array('file');
-    }
-
-    public function initialize() {
-        $this->setDefaultProperties(array(
-            'name' => false,
-            'parent' => '',
-        ));
-        if (!$this->getProperty('name')) return $this->modx->lexicon('file_err_chmod_ns');
-        return true;
-    }
+    public $permission = 'directory_create';
+    public $policy = 'create';
+    public $languageTopics = ['file'];
+    public $objectType = 'directory';
 
     public function process() {
-        if (!$this->getSource()) {
-            return $this->failure($this->modx->lexicon('permission_denied'));
-        }
-        $this->source->setRequestProperties($this->getProperties());
-        $this->source->initialize();
-        if (!$this->source->checkPolicy('create')) {
-            return $this->failure($this->modx->lexicon('permission_denied'));
-        }
 
-        $parent = rawurldecode($this->getProperty('parent',''));
-        $parent = ltrim(strip_tags(preg_replace('/[\.]{2,}/', '', htmlspecialchars($parent))),'/');
+        $response = null;
 
-        $name = $this->getProperty('name');
-        $name = ltrim(strip_tags(preg_replace('/[\.]{2,}/', '', htmlspecialchars($name))),'/');
-        $success = $this->source->createContainer($name, $parent);
-
-        if (empty($success)) {
-            $msg = '';
-            $errors = $this->source->getErrors();
-            foreach ($errors as $k => $msg) {
-                $this->modx->error->addField($k,$msg);
-            }
-            return $this->failure($msg);
+        if ($this->prepareBrowserItem()) {
+            $parent = $this->getProperty('parent');
+            $name = $this->getProperty('name');
+            // $this->modx->log(modX::LOG_LEVEL_ERROR, 'Properties: '.print_r($this->getProperties(), true), '', __CLASS__, __FILE__, __LINE__);
+            $response = $this->source->createContainer($name, $parent);
         }
-        return $this->success();
+        return $this->handleResponse($response);
     }
 
-    /**
-     * Get the active Source
-     * @return modMediaSource|boolean
-     */
-    public function getSource() {
-        $this->modx->loadClass('sources.modMediaSource');
-        $this->source = modMediaSource::getDefaultSource($this->modx,$this->getProperty('source'));
-        if (empty($this->source) || !$this->source->getWorkingContext()) {
-            return false;
-        }
-        return $this->source;
-    }
 }
 return 'modBrowserFolderCreateProcessor';

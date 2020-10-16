@@ -76,6 +76,13 @@ Ext.extend(MODx.FormPanel,Ext.FormPanel,{
     ,errorHandlingTabs: []
     ,errorHandlingIgnoreTabs: []
 
+    ,fileNameRegexMap: {
+        '[\.]{2,}': '.',
+        '[<>]' : '',
+        '[\.]+$': '',
+        '^[\/]+': ''
+    }
+
     ,submit: function(o) {
         var fm = this.getForm();
         if (fm.isValid() || o.bypassValidCheck) {
@@ -402,6 +409,9 @@ Ext.extend(MODx.FormPanel,Ext.FormPanel,{
                     ;
                 if (tvTabs && tvTabs.items && tvTabs.items.keys) {
                     var tvTabIndex = tvTabs.items.keys.indexOf(errFldPanelId);
+                    console.log('tvTabs: ',tvTabs);
+                    console.log(`Errored panel id: ${errFldPanelId}`);
+                    // if (tvTabs.items.items[tvTabIndex] && tvTabs.items.items[tvTabIndex].hidden) {
                     if (tvTabs.items.items[tvTabIndex].hidden)  {
                         tvTabs.activate(errFldPanelId);
                     }
@@ -419,6 +429,77 @@ Ext.extend(MODx.FormPanel,Ext.FormPanel,{
             return erroredFlds[0].id;
         } else {
             return false;
+        }
+    }
+
+    /**
+     * Remove beginning and ending white space from element names and, optionally, invalid characters
+     *
+     * Note that this fn is replicated in the MODx.Window class, as for some reason
+     * the forms generated in windows do not seem to utilize the MODx.FormPanel class.
+     *
+     * @param {Object} fld - the Ext component containing the element field
+     * @param {Bool} removeInvalidChars - whether to strip illegal characters from the string
+     * @param {String|Object} pattern - a string (regular expression literal) specifying characters to remove
+     *        or an object with the format { 'pattern' : 'replacement', ... }
+     */
+    ,trimEntityName: function(fld, removeInvalidChars = false, pattern = null, returnFld = false) {
+        if (typeof fld === 'object' && fld !== null) {
+            // console.log(`Trimming entity name '${fld.getValue()}'`);
+
+            let val = fld.getValue().trim();
+            // console.log(`Pre-trimmed val: '${val}'`);
+
+            if(removeInvalidChars) {
+                if(pattern === null) {
+                    pattern = /[!@#$%^&*()+=\[\]\{\}'":;\\\/<>?,`~]/gi;
+                    val = val.replace(pattern, '');
+                } else {
+                    switch (true) {
+                        case typeof pattern === 'string':
+                            val = val.replace(new RegExp(pattern, 'gi'));
+                            break;
+                        case typeof pattern === 'object':
+                            Object.keys(pattern).forEach(function(rule) {
+                                // console.log(`using re '${rule}' replace with '${pattern[rule]}'`);
+                                if (re = new RegExp(rule, 'g')) {
+                                    val = val.replace(re, pattern[rule]);
+                                    // console.log(`Rule run, val is now '${val}'`);
+                                }
+                            });
+                            break;
+                    }
+                }
+            }
+            /*
+                Re-trim when setting in case white space gets revealed when
+                running passed-in regex patterns/replacements
+            */
+            fld.setValue(val.trim());
+            if (returnFld) {
+                return fld;
+            }
+        }
+    }
+
+    /**
+     * Update the panel header dynamically and before form submission
+     *
+     * This fn synchonizes the header with the name field while additionally temporarily
+     * replacing opening angle bracket (<) with html entity to prevent actual tags from being
+     * placed while the name is being typed in.
+     *
+     * @param {String} targetHeaderId - Ext component id for the panel header element
+     * @param {String} headerPrefixKey - the lexicon key for the header prefix
+     * @param {Object} sourceField - the Ext component to sync the header with
+     */
+    ,updatePanelHeader: function(targetHeaderId, headerPrefixKey, sourceField) {
+        var header = Ext.getCmp(targetHeaderId),
+            prefix = _(headerPrefixKey)+': ',
+            val = sourceField.getValue().replace(/[<]/g, '&lt;')
+            ;
+        if (header) {
+            header.getEl().update(prefix+val);
         }
     }
 });

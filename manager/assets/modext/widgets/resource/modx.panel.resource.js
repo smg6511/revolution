@@ -76,6 +76,7 @@ Ext.extend(MODx.panel.Resource,MODx.FormPanel,{
             }
             // initial check to enable realtime alias
             if (Ext.isEmpty(this.config.record.alias)) {
+                console.log(`setup : alias was empty with a value of ${this.config.record.alias}`);
                 this.config.aliaswasempty = true;
             } else {
                 this.config.aliaswasempty = false;
@@ -121,7 +122,14 @@ Ext.extend(MODx.panel.Resource,MODx.FormPanel,{
                 this.rteLoaded = false;
             }
         }
-        
+
+        /*
+            Here, this.config.record only contains the initial values loaded
+            and will not reflect any interim changes to the document
+        */
+        // console.log('Initialized? '+this.initialized, this.config.record);
+        // console.log(`Reload? ${MODx.request.reload}`);
+
         this.fireEvent('ready');
         this.initialized = true;
 
@@ -188,6 +196,7 @@ Ext.extend(MODx.panel.Resource,MODx.FormPanel,{
     }
 
     ,success: function(o) {
+        console.log('Success obj passed in:',o);
         this.warnUnsavedChanges = false;
         var g = Ext.getCmp('modx-grid-resource-security');
         if (g) { g.getStore().commitChanges(); }
@@ -223,6 +232,9 @@ Ext.extend(MODx.panel.Resource,MODx.FormPanel,{
                 this.handlePreview(action);
             }
             this.record = object;
+
+            console.log(`Setting values is success fn to`, object);
+
             this.getForm().setValues(object);
             Ext.getCmp('modx-page-update-resource').config.preview_url = object.preview_url;
         }
@@ -242,6 +254,7 @@ Ext.extend(MODx.panel.Resource,MODx.FormPanel,{
     ,translitAlias: function(string) {
         if (!this.config.translitloading) {
             this.config.translitloading = true;
+            console.log(`translitAlias running on string '${string}'`);
             MODx.Ajax.request({
                 url: MODx.config.connector_url
                 ,params: {
@@ -251,6 +264,7 @@ Ext.extend(MODx.panel.Resource,MODx.FormPanel,{
                 ,listeners: {
                     'success': {fn:function(r) {
                         var alias = Ext.getCmp('modx-resource-alias');
+                        console.log(`translitAlias listener, alias = ${alias}`);
                         if (!Ext.isEmpty(r.object.transliteration)) {
                             alias.setValue(r.object.transliteration);
                             this.config.translitloading = false;
@@ -593,6 +607,7 @@ Ext.extend(MODx.panel.Resource,MODx.FormPanel,{
                 'change': {fn: function(f,e) {
                     // when the alias is manually cleared, enable real time alias
                     if (Ext.isEmpty(f.getValue())) {
+                        console.log("alias listener : alias is empty, value of "+f.getValue());
                         this.config.aliaswasempty = true;
                     }
                 }, scope: this}

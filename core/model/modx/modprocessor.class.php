@@ -340,93 +340,224 @@ abstract class modProcessor {
     }
 
     /**
-     * Pre-process primary object name depending upon class key ('pagetitle' for modDocument, 'name' for most elements, etc.)
+     * Remove the specified array of characters from a string
      *
      *
+     * Invalid characters copied this from the modCategory class and put into this method
+     * as a temporary solution for this issue:
+     *
+     * There are a few classes that silently strip these characters (from an element name) before
+     * attempting to save, which is fine except for in the case where the resulting name already exists.
+     * In this scenario, a database error occurs and an amibuous front end error message is presented. Evaluating
+     * the presence of and/or removing these characters needs to happen in a validation stage instead.
+     *
+     * @param string $string The subject string to alter, typically an modx element's name
+     * @param array $characters A set of illegal characters to remove
+     * @return string The cleaned string
      */
-    public function prepareEntityName(string $objectType = 'auto') {
+    public function removeInvalidCharacters(string $string, array $characters = []) : string {
 
-        $objectType = $objectType == 'auto' ? $this->objectType : $objectType ;
-        $nameProperty = 'name';
-        // $useDefaultProperty = ['modTemplateVar'];
-        $enforceUniqueNameFor = ['template','tv','snippet','chunk','plugin'];
-        $nameFields = [
-            'name' => ['file'],
-            'pagetitle' => ['resource'],
-            'templatename' => ['template']
-        ];
+        $characters = !empty($characters) ? $characters : ['!','@','#','$','%','^','&','*',
+        '(',')','+','=','[',']','{','}','\'','"',':',';','\\','/','<','>','?'
+        ,',','`','~'] ;
+        return str_replace($characters, '', $string);
+    }
 
-        switch($this->classKey){
-            case 'modDocument':
-            case 'modResource':
-                $nameProperty = 'pagetitle';
+    /**
+     * Remove illegal/problematic characters from a file and directory names
+     *
+     * Proposing to move a lot of the string manipulations for files and directories to this centralized
+     * location to allow validation (particularly testing for file exists) earlier in the process and in
+     * a place that's easier to report back and display errors in the form panel or modal window.
+     *
+     * At this point, only the replacements from the initial create/rename/update processors have been moved here.
+     *
+     * @param string $objectType The object specification (file, directory, source)
+     * @param array $entityValue he subject string to alter
+     * @return string The cleaned string
+     */
+    public function cleanFilesystemEntity(string $objectType, string $entityValue) : string {
+
+        // Object-specific transformations
+        switch ($objectType) {
+            case 'directory':
                 break;
-            case 'modTemplate':
-                $nameProperty = 'templatename';
-                break;
-            case 'modCategory':
-                $nameProperty = 'category';
-                break;
-            // Tne following elements all use the default property 'name'
-            case 'modTemplateVar':
-                break;
-            case 'modChunk':
-                break;
-            case 'modPlugin':
-                break;
-            case 'modSnippet':
-                break;
-            default:
+            case 'file':
+                $entityValue = ltrim(strip_tags(preg_replace('/[\.]{2,}/', '.', htmlspecialchars($entityValue))),'/');
                 break;
         }
-        $entityName = $this->getProperty($nameProperty, null);
-        $entityName = $entityName !== null ? trim($entityName) : $entityName ;
-        if($entityName !== null){
-            if($entityName === '') {
+        // Common transformations
+        $entityValue = rtrim($entityValue, '.');
+
+        return $entityValue;
+    }
+
+    /**
+     * Pre-process primary object name depending upon class key ('pagetitle' for modDocument/modResource, 'name' for most elements, etc.)
+     *
+     * @param string $objectType Allow calling method to pass a type if it is not specified in its properties
+     * @return string The prepared string
+     */
+    public function prepareEntityName(string $objectType = 'auto') : string {
+
+        $isEmpty = false;
+        $objectType = $objectType == 'auto' ? $this->objectType : $objectType ;
+        $enforceUniqueNameFor = ['category','chunk','plugin','propertyset','snippet','template','tv'];
+        $stripInvalidCharsFor = ['category'];
+        $nameField = $this->getEntityNameField();
+        $nameValue = $this->getProperty($nameField, null);
+        $nameValue = $nameValue !== null ? trim($nameValue) : $nameValue ;
+
+        if($nameValue !== null){
+            if(in_array($objectType, $stripInvalidCharsFor)) {
+                $nameValue = $this->removeInvalidCharacters($nameValue);
+            }
+            if($nameValue === '') {
                 if($objectType == 'resource' && !$this->getProperty('reloadOnly',false)) {
-                    $entityName = $this->modx->lexicon('resource_untitled');
+                    $nameValue = $this->modx->lexicon('resource_untitled');
+                    $this->setProperty('alias', '');
                 } else {
-                    $this->addFieldError('test','field cannot be empty!');
+                    $isEmpty = true;
                 }
             } else {
+                if(in_array($objectType, ['directory','file'])) {
+                    $nameValue = $this->cleanFilesystemEntity($objectType, $nameValue);
+                }
                 if(in_array($objectType, $enforceUniqueNameFor)) {
-                    if($this->entityNameExists($entityName)) {
-                        $this->addFieldError($nameProperty,$this->modx->lexicon($objectType.'_err_ae',array(
-                            $nameProperty => $entityName,
-                        )));
+                    $addCriteria = [];
+                    if($objectType == 'category'){
+                        $parent = $this->object->get('parent', 0);
+                        $addCriteria = [ 'parent' => $parent ];
+                    }
+                    if($this->entityNameExists($nameField, $nameValue, $addCriteria)) {
+                        $this->addFieldError($nameField,$this->modx->lexicon($objectType.'_err_ae',
+                            [ $nameField => $nameValue ]
+                        ));
                     }
                 }
             }
-            $this->setProperty($nameProperty, $entityName);
+        } else {
+            $isEmpty = true;
+        }
+
+        if($isEmpty) {
+            // $this->modx->log(modX::LOG_LEVEL_ERROR, 'Issuing field error...', '', __CLASS__, __FILE__, __LINE__);
+            $this->addFieldError($nameField,$this->modx->lexicon($objectType.'_err_ns_name'));
         }
 
         // Making the assumption that entity names must never begin or end with white space
         // $this->modx->log(modX::LOG_LEVEL_ERROR, 'instantiating class: '.get_class($this), '', __CLASS__, __FILE__, __LINE__);
         // $this->modx->log(modX::LOG_LEVEL_ERROR, 'modx->mode: '.$this->modx->mode, '', __CLASS__, __FILE__, __LINE__);
-        $this->modx->log(modX::LOG_LEVEL_ERROR, 'Value for nameField: '.$this->nameField, '', __CLASS__, __FILE__, __LINE__);
-        $this->modx->log(modX::LOG_LEVEL_ERROR, 'Value for objectType: '.$this->objectType, '', __CLASS__, __FILE__, __LINE__);
-        $this->modx->log(modX::LOG_LEVEL_ERROR, 'Value for classKey: '.$this->classKey, '', __CLASS__, __FILE__, __LINE__);
+        // $this->modx->log(modX::LOG_LEVEL_ERROR, 'Value for $this->isNew(): '.$this->isNew(), '', __CLASS__, __FILE__, __LINE__);
+        // $this->modx->log(modX::LOG_LEVEL_ERROR, 'Value for $this->nameField: '.$this->nameField, '', __CLASS__, __FILE__, __LINE__);
+        $this->modx->log(modX::LOG_LEVEL_ERROR, 'Value for $this->objectType: '.$this->objectType, '', __CLASS__, __FILE__, __LINE__);
+        $this->modx->log(modX::LOG_LEVEL_ERROR, 'Value for $this->classKey: '.$this->classKey, '', __CLASS__, __FILE__, __LINE__);
         $this->modx->log(modX::LOG_LEVEL_ERROR, 'Properties: '.print_r($this->getProperties(), true), '', __CLASS__, __FILE__, __LINE__);
 
-        // return
-    }
-
-    public function entityNameExists(string $name, array $addedCriteria = []) : boolean {
-        // $mode = strtolower(get_class($this));
-        $criteria = [ $this->nameField => $name ];
-        $this->modx->log(modX::LOG_LEVEL_ERROR, 'Name to test: '.$name, '', __CLASS__, __FILE__, __LINE__);
-        if (!$this->inCreateMode()) {
-            $criteria['id:!='] = $this->object->get('id');
-            $this->modx->log(modX::LOG_LEVEL_ERROR, 'Testing name in update mode...', '', __CLASS__, __FILE__, __LINE__);
+        // $this->modx->log(modX::LOG_LEVEL_ERROR, 'Setting name value to: \''.$nameValue.'\'', '', __CLASS__, __FILE__, __LINE__);
+        if(in_array($objectType, ['resource','file'])) {
+            $this->setProperty($nameField, $nameValue);
+        } else {
+            // $duplicate = is_object($this->newObject) && !empty($this->newObject) ? true : false ;
+            // $this->modx->log(modX::LOG_LEVEL_ERROR, 'Creating duplicate? '.$duplicate, '', __CLASS__, __FILE__, __LINE__);
+            if ($this->getCurrentAction() === 'duplicate') {
+                $this->newObject->set($nameField, $nameValue);
+            } else {
+                $this->object->set($nameField, $nameValue);
+            }
         }
-        $criteria = array_merge($criteria, $addedCriteria);
-        return $this->modx->getCount($this->classKey,$criteria) > 0;
+        return $nameValue;
     }
 
-    public function inCreateMode() : boolean {
+    public function getEntityNameField() : string {
+        if(empty($this->nameField)){
+            // Do other checks to assign name
+            if(!empty($this->objectType)){
+                switch ($this->objectType) {
+                    case 'template':
+                        $nameField = 'templatename';
+                        break;
+                    case 'category':
+                        $nameField = 'category';
+                        break;
+                    /*
+                        Considering that resource is the only object type that sets the $nameField property, suggest we
+                        remove that property if not otherwise needed. Until such time, the case below is uneeded but
+                        established here for future use.
+                    */
+                    case 'resource':
+                        $nameField = 'pagetitle';
+                        break;
+                    default:
+                        $nameField = 'name';
+                        break;
+                }
+            }
+        } else {
+            $nameField = $this->nameField;
+        }
+        $this->modx->log(modX::LOG_LEVEL_ERROR, 'getEntityNameField() result: '.$nameField, '', __CLASS__, __FILE__, __LINE__);
+        return $nameField;
+    }
+
+    public function entityNameExists(string $nameField, string $nameValue, array $addCriteria = [], bool $criteriaReplace = false) : bool {
+        $queryClass = $this->classKey;
+        if(empty($queryClass)) {
+            $this->modx->log(modX::LOG_LEVEL_ERROR, 'A classKey was not found to test the whether this element name already exists', '', __CLASS__, __FILE__, __LINE__);
+            return false;
+        }
+        if($criteriaReplace) {
+            $criteria = $addCriteria;
+        } else {
+            $criteria = [ $nameField => $nameValue ];
+            $this->modx->log(modX::LOG_LEVEL_ERROR, 'Name to test: '.$nameValue, '', __CLASS__, __FILE__, __LINE__);
+            // if (!$this->inCreateMode()) {
+            if ($this->getCurrentAction() === 'update') {
+                $criteria['id:!='] = $this->object->get('id');
+                // $this->modx->log(modX::LOG_LEVEL_ERROR, 'Testing name in update mode...', '', __CLASS__, __FILE__, __LINE__);
+            }
+            $criteria = array_merge($criteria, $addCriteria);
+        }
+        $this->modx->log(modX::LOG_LEVEL_ERROR, 'Value for $criteria in entityNameExists(): '.print_r($criteria, true), '', __CLASS__, __FILE__, __LINE__);
+        return $this->modx->getCount($queryClass,$criteria) > 0;
+    }
+
+    public function getCurrentAction() : string {
         $instantiator = get_class($this);
-        $this->modx->log(modX::LOG_LEVEL_ERROR, 'Class to derive mode from: '.$instantiator, '', __CLASS__, __FILE__, __LINE__);
-        return stripos($instantiator, 'create') !== false ? true : false ;
+        switch (true) {
+            case stripos($instantiator, 'create') !== false:
+                $mode = 'create';
+                break;
+            case stripos($instantiator, 'download') !== false:
+                $mode = 'download';
+                break;
+            case stripos($instantiator, 'duplicate') !== false:
+                $mode = 'duplicate';
+                break;
+            case stripos($instantiator, 'get') !== false:
+                $mode = 'get';
+                break;
+            case stripos($instantiator, 'rename') !== false:
+                $mode = 'rename';
+                break;
+            case stripos($instantiator, 'remove') !== false:
+                $mode = 'remove';
+                break;
+            case stripos($instantiator, 'unpack') !== false:
+                $mode = 'unpack';
+                break;
+            case stripos($instantiator, 'update') !== false:
+                $mode = 'update';
+                break;
+            case stripos($instantiator, 'upload') !== false:
+                $mode = 'upload';
+                break;
+            default:
+                $mode = 'unknown';
+                break;
+        }
+        // $this->modx->log(modX::LOG_LEVEL_ERROR, 'Mode of "'.$mode.'" derived from calling class: '.$instantiator, '', __CLASS__, __FILE__, __LINE__);
+        return $mode;
     }
 
 }
@@ -785,6 +916,7 @@ abstract class modObjectCreateProcessor extends modObjectProcessor {
      * @return array
      */
     public function cleanup() {
+        $this->modx->log(modX::LOG_LEVEL_ERROR, 'cleanup() called in parent processor.', '', __CLASS__, __FILE__, __LINE__);
         return $this->success('',$this->object);
     }
 
@@ -805,7 +937,6 @@ abstract class modObjectCreateProcessor extends modObjectProcessor {
      * @return boolean
      */
     public function afterSave() { return true; }
-
 
     /**
      * Fire before save event. Return true to prevent saving.
@@ -952,7 +1083,6 @@ abstract class modObjectUpdateProcessor extends modObjectProcessor {
      */
     public function beforeSet() { return !$this->hasErrors(); }
 
-
     /**
      * Override in your derivative class to do functionality before save() is run
      * @return boolean
@@ -972,7 +1102,6 @@ abstract class modObjectUpdateProcessor extends modObjectProcessor {
     public function cleanup() {
         return $this->success('',$this->object);
     }
-
 
     /**
      * Fire before save event. Return true to prevent saving.
@@ -1089,14 +1218,14 @@ class modObjectDuplicateProcessor extends modObjectProcessor {
         if (!empty($staticFilename)) {
             $this->newObject->set('static_file', $staticFilename);
         }
-
+        /*
         if ($this->alreadyExists($name)) {
             $this->addFieldError(
                 $this->newNameField ? $this->newNameField : $this->nameField,
                 $this->modx->lexicon($this->objectType.'_err_ae',array('name' => $name))
             );
         }
-
+        */
         /* Check if a static file already exists within specified static file path. */
         if ($staticFilename && $this->staticFileAlreadyExists($staticFilename)) {
             $this->modx->lexicon->load('core:element');
@@ -1179,13 +1308,14 @@ class modObjectDuplicateProcessor extends modObjectProcessor {
      * @param string $name
      * @return boolean
      */
+    /*
     public function alreadyExists($name) {
         return $this->modx->getCount($this->classKey,array(
             $this->nameField => $name,
         )) > 0;
 
     }
-
+    */
     /**
      * Check to see if a static element file already exists.
      * @param $filename

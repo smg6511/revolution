@@ -143,8 +143,7 @@ class modResourceCreateProcessor extends modObjectCreateProcessor {
         $set = $this->setFieldDefaults();
         if ($set !== true) return $set;
 
-        // $this->preparePageTitle();
-        parent::prepareEntityName(); // will replace preparePageTitle()
+        parent::prepareEntityName();
         $this->prepareAlias();
         $this->handleResourceProperties();
 
@@ -194,7 +193,7 @@ class modResourceCreateProcessor extends modObjectCreateProcessor {
         $this->setParentToContainer();
         $this->saveResourceGroups();
         $this->checkIfSiteStart();
-
+        $this->object->prepareUntitledAlias();
         return parent::afterSave();
     }
 
@@ -332,31 +331,6 @@ class modResourceCreateProcessor extends modObjectCreateProcessor {
     }
 
     /**
-     * Prepare the pagetitle for insertion
-     * @return string
-     */
-
-    /*
-    public function preparePageTitle() {
-        // $this->modx->log(modX::LOG_LEVEL_ERROR, 'Handling pagetitle...', '', __CLASS__, __FILE__, __LINE__);
-        $pageTitle = $this->getProperty('pagetitle','');
-        if (!empty($pageTitle)) {
-            $this->modx->log(modX::LOG_LEVEL_ERROR, '$pageTitle is not empty: '.$pageTitle, '', __CLASS__, __FILE__, __LINE__);
-            $pageTitle = trim($pageTitle);
-        }
-
-        // default pagetitle if not reloading template
-        if (!$this->getProperty('reloadOnly',false)) {
-            if ($pageTitle === '') {
-                $pageTitle = $this->modx->lexicon('resource_untitled');
-            }
-        }
-        $this->setProperty('pagetitle',$pageTitle);
-        return $pageTitle;
-    }
-    */
-
-    /**
      * Get the working Context for the Resource
      *
      * @return modContext
@@ -413,7 +387,7 @@ class modResourceCreateProcessor extends modObjectCreateProcessor {
         }
 
         // If the alias is empty yet friendly urls is enabled, add an error to the alias field
-        if (empty($alias) && $friendlyUrlsEnabled) {
+        if (($alias === null || $alias === '') && $friendlyUrlsEnabled) {
             $this->addFieldError('alias', $this->modx->lexicon('field_required'));
         }
 

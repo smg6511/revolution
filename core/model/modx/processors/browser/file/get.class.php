@@ -8,63 +8,41 @@
  * files found in the top-level directory of this distribution.
  */
 
+require_once (dirname(__DIR__).'/browser.class.php');
+
 /**
- * Gets the contents of a file
+ * Gets the contents of a file, used by Quick Update File
  *
  * @param string $file The absolute path of the file
  *
  * @package modx
  * @subpackage processors.browser.file
  */
-class modBrowserFileGetProcessor extends modProcessor {
-    /** @var modMediaSource|modFileMediaSource $source */
-    public $source;
-    public function checkPermissions() {
-        return $this->modx->hasPermission('file_view');
-    }
-    public function getLanguageTopics() {
-        return array('file');
-    }
+class modBrowserFileGetProcessor extends modBrowserProcessor {
+
+    public $permission = 'file_view';
+    public $languageTopics = ['file'];
+    public $objectType = 'file';
 
     public function process() {
-        /* format filename */
-        $file = rawurldecode($this->getProperty('file',''));
-        $file = preg_replace('/[\.]{2,}/', '', htmlspecialchars($file));
 
-        $loaded = $this->getSource();
-        if ($loaded !== true) {
-            return $loaded;
-        }
-        if (!$this->source->checkPolicy('delete')) {
-            return $this->failure($this->modx->lexicon('permission_denied'));
-        }
+        $response = null;
 
-        $fileArray = $this->source->getObjectContents($file);
+        if ($this->prepareBrowserItem()) {
 
-        if (empty($fileArray)) {
-            $msg = '';
-            $errors = $this->source->getErrors();
-            foreach ($errors as $k => $msg) {
-                $this->addFieldError($k,$msg);
+            $file = $this->getProperty('file','');
+            $this->modx->log(modX::LOG_LEVEL_ERROR, 'Get class called, $file: '.$file, '', __CLASS__, __FILE__, __LINE__);
+
+            // Shouldn't this be checking for 'save' policy?
+            if (!$this->source->checkPolicy('delete')) {
+                return $this->failure($this->modx->lexicon('permission_denied'));
             }
-            return $this->failure($msg);
+
+            $response = $this->source->getObjectContents($file);
         }
-        return $this->success('',$fileArray);
+
+        return $this->handleResponse($response);
     }
 
-    /**
-     * @return boolean|string
-     */
-    public function getSource() {
-        $source = $this->getProperty('source',1);
-        /** @var modMediaSource $source */
-        $this->modx->loadClass('sources.modMediaSource');
-        $this->source = modMediaSource::getDefaultSource($this->modx,$source);
-        if (!$this->source->getWorkingContext()) {
-            return $this->modx->lexicon('permission_denied');
-        }
-        $this->source->setRequestProperties($this->getProperties());
-        return $this->source->initialize();
-    }
 }
 return 'modBrowserFileGetProcessor';

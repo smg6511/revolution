@@ -76,6 +76,11 @@ MODx.panel.CreateFile = function(config) {
                 ,cls:'main-wrapper'
                 ,layout: 'form'
                 ,labelAlign: 'top'
+                ,defaults: {
+                    msgTarget: 'under'
+                    ,validationEvent: 'change'
+                    ,validateOnBlur: false
+                }
                 ,items: [{
                     xtype: 'hidden'
                     ,name: 'source'
@@ -91,15 +96,21 @@ MODx.panel.CreateFile = function(config) {
                 },{
                     xtype: 'textfield'
                     ,fieldLabel: _('file_name')
+                    ,description: MODx.expandHelp ? '' : _('file_desc_name')
                     ,name: 'name'
                     ,id: 'modx-file-name'
                     ,anchor: '100%'
                     ,allowBlank: false
                     ,listeners: {
                         'keyup': {scope:this,fn:function(f,e) {
-                            Ext.getCmp('modx-file-header').getEl().update(_('file_create')+': '+f.getValue());
+                            this.updatePanelHeader('modx-file-header','file_create',f);
                         }}
                     }
+                },{
+                    xtype: MODx.expandHelp ? 'label' : 'hidden'
+                    ,forId: 'modx-file-name'
+                    ,html: _('file_desc_name')
+                    ,cls: 'desc-under'
                 },{
                     xtype: 'textarea'
                     ,hideLabel: false
@@ -132,6 +143,8 @@ Ext.extend(MODx.panel.CreateFile,MODx.FormPanel,{
     }
     ,beforeSubmit: function(o) {
         this.cleanupEditor();
+        var nameFld = this.trimEntityName(Ext.getCmp('modx-file-name'), true, this.fileNameRegexMap, true);
+        this.updatePanelHeader('modx-file-header','file_create',nameFld);
         return this.fireEvent('save',{
             values: this.getForm().getValues()
         });

@@ -21,6 +21,8 @@
 class modBrowserFolderUpdateProcessor extends modProcessor {
     /** @var modMediaSource|modFileMediaSource $source */
     public $source;
+    $objectType = 'directory';
+    
     public function checkPermissions() {
         return $this->modx->hasPermission('directory_update');
     }

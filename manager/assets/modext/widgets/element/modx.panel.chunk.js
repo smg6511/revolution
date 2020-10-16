@@ -302,7 +302,10 @@ Ext.extend(MODx.panel.Chunk,MODx.FormPanel,{
             this.getForm().setValues(this.config.record);
         }
 
-        if (this.initialized) { this.clearDirty(); return true; }
+        if (this.initialized) {
+            this.clearDirty();
+            return true;
+        }
 
         if (!Ext.isEmpty(this.config.record.name)) {
             var title = _('chunk')+': '+this.config.record.name;
@@ -342,6 +345,7 @@ Ext.extend(MODx.panel.Chunk,MODx.FormPanel,{
         Ext.apply(o.form.baseParams,{
             propdata: Ext.getCmp('modx-grid-element-properties').encode()
         });
+        this.trimEntityName(Ext.getCmp('modx-chunk-name'));
         return this.fireEvent('save',{
             values: this.getForm().getValues()
             ,stay: MODx.config.stay

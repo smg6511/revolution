@@ -150,6 +150,7 @@ Ext.extend(MODx.panel.EditFile,MODx.FormPanel,{
     }
     ,beforeSubmit: function(o) {
         this.cleanupEditor();
+        this.trimEntityName(Ext.getCmp('modx-file-name'));
         return this.fireEvent('save',{
             values: this.getForm().getValues()
         });
