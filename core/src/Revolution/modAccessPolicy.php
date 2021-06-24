@@ -25,15 +25,62 @@ use xPDO\xPDO;
  */
 class modAccessPolicy extends xPDOSimpleObject
 {
+    public const POLICY_RESOURCE = 'Resource';
+    public const POLICY_ADMINISTRATOR = 'Administrator';
+    public const POLICY_LOAD_ONLY = 'Load Only';
+    public const POLICY_LOAD_LIST_VIEW = 'Load, List and View';
+    public const POLICY_OBJECT = 'Object';
+    public const POLICY_ELEMENT = 'Element';
+    public const POLICY_CONTENT_EDITOR = 'Content Editor';
+    public const POLICY_MEDIA_SOURCE_ADMIN = 'Media Source Admin';
+    public const POLICY_MEDIA_SOURCE_USER = 'Media Source User';
+    public const POLICY_DEVELOPER = 'Developer';
+    public const POLICY_CONTEXT = 'Context';
+    public const POLICY_HIDDEN_NAMESPACE = 'Hidden Namespace';
+
+    /**
+     * Returns list of core Policies
+     *
+     * @return array
+     */
+    public static function getCorePolicies(): array
+    {
+        return [
+            self::POLICY_RESOURCE,
+            self::POLICY_ADMINISTRATOR,
+            self::POLICY_LOAD_ONLY,
+            self::POLICY_LOAD_LIST_VIEW,
+            self::POLICY_OBJECT,
+            self::POLICY_ELEMENT ,
+            self::POLICY_CONTENT_EDITOR,
+            self::POLICY_MEDIA_SOURCE_ADMIN,
+            self::POLICY_MEDIA_SOURCE_USER,
+            self::POLICY_DEVELOPER,
+            self::POLICY_CONTEXT,
+            self::POLICY_HIDDEN_NAMESPACE,
+        ];
+    }
+
+    /**
+     * @param $name string The name of access policy
+     *
+     * @return bool
+     */
+    public function isCorePolicy(string $name): bool
+    {
+        return in_array($name, static::getCorePolicies(), true);
+    }
+
     /**
      * Get the permissions for this access policy, in array format.
      *
      * @return array An array of access permissions for this Policy.
      */
-    public function getPermissions()
+    public function getPermissions(): array
     {
         $template = $this->getOne('Template');
-        if (empty($template)) {
+
+        if ($template === null) {
             return [];
         }
 

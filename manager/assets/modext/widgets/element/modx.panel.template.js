@@ -66,7 +66,7 @@ MODx.panel.Template = function(config) {
                         ,name: 'templatename'
                         ,id: 'modx-template-templatename'
                         ,anchor: '100%'
-                        ,maxLength: 100
+                        ,maxLength: 50
                         ,enableKeyEvents: true
                         ,allowBlank: false
                         ,value: config.record.templatename
@@ -287,7 +287,7 @@ MODx.panel.Template = function(config) {
             ,collapsible: true
             ,elementPanel: 'modx-panel-template'
             ,elementId: config.template
-            ,elementType: 'modTemplate'
+            ,elementType: 'MODX\\Revolution\\modTemplate'
             ,record: config.record
         }],{
             id: 'modx-template-tabs'

@@ -17,7 +17,7 @@ MODx.panel.Plugin = function(config) {
         }
         ,id: 'modx-panel-plugin'
 		,cls: 'container form-with-labels'
-        ,class_key: 'modPlugin'
+        ,class_key: 'MODX\\Revolution\\modPlugin'
         ,plugin: ''
         ,bodyStyle: ''
         ,allowDrop: false
@@ -65,7 +65,7 @@ MODx.panel.Plugin = function(config) {
                         ,name: 'name'
                         ,id: 'modx-plugin-name'
                         ,anchor: '100%'
-                        ,maxLength: 255
+                        ,maxLength: 50
                         ,enableKeyEvents: true
                         ,allowBlank: false
                         ,value: config.record.name
@@ -292,7 +292,7 @@ MODx.panel.Plugin = function(config) {
             xtype: 'modx-panel-element-properties'
             ,elementPanel: 'modx-panel-plugin'
             ,elementId: config.plugin
-            ,elementType: 'modPlugin'
+            ,elementType: 'MODX\\Revolution\\modPlugin'
             ,record: config.record
         }],{
             id: 'modx-plugin-tabs'

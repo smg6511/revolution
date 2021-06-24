@@ -323,7 +323,7 @@ MODx.panel.TV = function(config) {
             ,itemId: 'panel-properties'
             ,elementPanel: 'modx-panel-tv'
             ,elementId: config.tv
-            ,elementType: 'modTemplateVar'
+            ,elementType: 'MODX\\Revolution\\modTemplateVar'
             ,record: config.record
         }],{
             id: 'modx-tv-tabs'
@@ -561,10 +561,24 @@ Ext.extend(MODx.panel.TVInputProperties,MODx.Panel,{
     }
 
     ,showInputProperties: function(cb,rc,i) {
-        var element = Ext.getCmp('modx-tv-elements');
-        if (element) {
-            element.show();
+        var tvTypesWithOptions = ['checkbox', 'listbox-multiple', 'listbox', 'option', 'tag'],
+            tvType = Ext.getCmp('modx-tv-type').value,
+            tvOptions = Ext.getCmp('modx-tv-elements'),
+            tvOptionsLabel = Ext.select('label[for="' + tvOptions.id + '"]'),
+            tvOptionsBlank = true;
+
+        if (tvTypesWithOptions.indexOf(tvType) === -1) {
+            tvOptions.hide();
+            tvOptionsLabel.hide();
+        } else {
+            tvOptionsBlank = false;
+            tvOptions.show();
+            tvOptionsLabel.show();
         }
+
+        Ext.apply(tvOptions, {
+            allowBlank: tvOptionsBlank,
+        });
 
         this.markPanelDirty();
         var pu = Ext.get('modx-input-props').getUpdater();

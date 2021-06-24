@@ -81,10 +81,13 @@ MODx.combo.ComboBox = function(config,getStore) {
             ,remoteSort: config.remoteSort || false
             ,autoDestroy: true
             ,listeners: {
-                'loadexception': {fn: function(o,trans,resp) {
-                    var status = _('code') + ': ' + resp.status + ' ' + resp.statusText + '<br/>';
-                    MODx.msg.alert(_('error'), status + resp.responseText);
-                }}
+                loadexception: {
+                    fn: function (o, trans, resp) {
+                        var status = _('code') + ': ' + resp.status + ' ' + resp.statusText;
+                        var response = Ext.decode(resp.responseText || '[]');
+                        MODx.msg.alert(_('error'), (response.message || status));
+                    }
+                }
             }
         })
     });
@@ -105,6 +108,11 @@ MODx.combo.ComboBox = function(config,getStore) {
         // Workaround to let the combobox know the store is loaded (to help hide/display the pagination if required)
         this.fireEvent('loaded', this);
         this.loaded = true;
+        // Show the pagination panel if it didn't show up earlier
+        if (this.isExpanded() && this.pageSize < this.store.getTotalCount() && this.pageTb.hidden === true) {
+            this.collapse();
+            this.expand();
+        }
     }, this, {
         single: true
     });
@@ -134,6 +142,7 @@ Ext.extend(MODx.combo.ComboBox,Ext.form.ComboBox, {
             }
             if(this.pageSize < this.store.getTotalCount()){
                 this.assetHeight += this.footer.getHeight();
+                this.pageTb.show();
             } else {
                 this.list.setHeight(this.list.getHeight() - this.footer.getHeight());
                 this.pageTb.hide();
@@ -556,26 +565,6 @@ MODx.combo.ContentDisposition = function(config) {
 Ext.extend(MODx.combo.ContentDisposition,MODx.combo.ComboBox);
 Ext.reg('modx-combo-content-disposition',MODx.combo.ContentDisposition);
 
-MODx.combo.ClassMap = function(config) {
-    config = config || {};
-    Ext.applyIf(config,{
-        name: 'class'
-        ,hiddenName: 'class'
-        ,url: MODx.config.connector_url
-        ,baseParams: {
-            action: 'System/ClassMap/GetList'
-        }
-        ,displayField: 'class'
-        ,valueField: 'class'
-        ,fields: ['class']
-        ,editable: false
-        ,pageSize: 20
-    });
-    MODx.combo.ClassMap.superclass.constructor.call(this,config);
-};
-Ext.extend(MODx.combo.ClassMap,MODx.combo.ComboBox);
-Ext.reg('modx-combo-class-map',MODx.combo.ClassMap);
-
 MODx.combo.ClassDerivatives = function(config) {
     config = config || {};
     Ext.applyIf(config,{
@@ -710,6 +699,7 @@ MODx.combo.Country = function(config) {
         ,url: MODx.config.connector_url
         ,baseParams: {
             action: 'System/Country/GetList'
+            ,combo: 1
         }
         ,displayField: 'country'
         ,valueField: 'iso'
@@ -719,7 +709,6 @@ MODx.combo.Country = function(config) {
             'value' // Deprecated (available for BC)
         ]
         ,editable: true
-        ,value: 0
         ,typeAhead: true
     });
     MODx.combo.Country.superclass.constructor.call(this,config);

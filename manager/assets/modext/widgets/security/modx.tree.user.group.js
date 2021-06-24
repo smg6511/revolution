@@ -14,6 +14,7 @@ MODx.tree.UserGroup = function(config) {
         ,url: MODx.config.connector_url
         ,action: 'Security/Group/GetNodes'
         ,sortAction: 'Security/Group/Sort'
+        ,rootIconCls: 'icon-group'
         ,root_id: 'n_ug_0'
         ,root_name: _('user_groups')
         ,enableDrag: true
@@ -143,10 +144,12 @@ Ext.extend(MODx.tree.UserGroup,MODx.tree.Tree,{
     ,removeUserGroup: function(item,e) {
         var n = this.cm.activeNode;
         var id = n.id.substr(2).split('_');id = id[1];
+        var user_group = n.text;
 
         MODx.msg.confirm({
-            title: _('warning')
-            ,text: _('user_group_remove_confirm')
+            text: _('user_group_remove_confirm',{
+                user_group: user_group
+            })
             ,url: this.config.url
             ,params: {
                 action: 'Security/Group/Remove'
@@ -164,8 +167,7 @@ Ext.extend(MODx.tree.UserGroup,MODx.tree.Tree,{
         var group_id = n.parentNode.id.substr(2).split('_');group_id = group_id[1];
 
         MODx.msg.confirm({
-            title: _('warning')
-            ,text: _('user_group_user_remove_confirm')
+            text: _('user_group_user_remove_confirm')
             ,url: this.config.url
             ,params: {
                 action: 'Security/Group/User/Remove'
@@ -195,6 +197,12 @@ Ext.extend(MODx.tree.UserGroup,MODx.tree.Tree,{
 });
 Ext.reg('modx-tree-usergroup',MODx.tree.UserGroup);
 
+/**
+ * @class MODx.window.CreateUserGroup
+ * @extends MODx.Window
+ * @param {Object} config An object of configuration user groups
+ * @xtype modx-window-usergroup-create
+ */
 MODx.window.CreateUserGroup = function(config) {
     config = config || {};
     this.ident = config.ident || 'cugrp'+Ext.id();
@@ -280,7 +288,6 @@ MODx.window.CreateUserGroup = function(config) {
                         ,forId: this.ident+'-aw-resource-groups'
                         ,html: _('user_group_aw_resource_groups_desc')
                         ,cls: 'desc-under'
-
                     },{
                         boxLabel: _('user_group_aw_parallel')
                         ,description: _('user_group_aw_parallel_desc')
@@ -311,12 +318,11 @@ MODx.window.CreateUserGroup = function(config) {
                         ,forId: this.ident+'-aw-contexts'
                         ,html: _('user_group_aw_contexts_desc')
                         ,cls: 'desc-under'
-
                     },{
                         xtype: 'modx-combo-policy'
                         ,baseParams: {
                             action: 'Security/Access/Policy/GetList'
-                            ,group: 'Admin'
+                            ,group: 'Administrator'
                             ,combo: '1'
                         }
                         ,name: 'aw_manager_policy'
@@ -330,7 +336,6 @@ MODx.window.CreateUserGroup = function(config) {
                         ,forId: this.ident+'-aw-manager-policy'
                         ,html: _('user_group_aw_manager_policy_desc')
                         ,cls: 'desc-under'
-
                     },{
                         fieldLabel: _('user_group_aw_categories')
                         ,description: _('user_group_aw_categories_desc')
@@ -344,7 +349,6 @@ MODx.window.CreateUserGroup = function(config) {
                         ,forId: this.ident+'-aw-categories'
                         ,html: _('user_group_aw_categories_desc')
                         ,cls: 'desc-under'
-
                     }]
                 }]
             }]
@@ -356,6 +360,12 @@ MODx.window.CreateUserGroup = function(config) {
 Ext.extend(MODx.window.CreateUserGroup,MODx.Window);
 Ext.reg('modx-window-usergroup-create',MODx.window.CreateUserGroup);
 
+/**
+ * @class MODx.window.AddUserToUserGroup
+ * @extends MODx.Window
+ * @param {Object} config An object of configuration user groups
+ * @xtype modx-window-usergroup-adduser
+ */
 MODx.window.AddUserToUserGroup = function(config) {
     config = config || {};
     this.ident = config.ident || 'adtug'+Ext.id();

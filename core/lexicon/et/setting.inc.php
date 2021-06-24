@@ -36,7 +36,6 @@ $_lang['namespace'] = 'Namespace';
 $_lang['namespace_desc'] = 'The Namespace that this Setting is associated with. The default Lexicon Topic will be loaded for this Namespace when grabbing Settings.';
 $_lang['namespace_filter'] = 'Filtreeri nimeruumi järgi...';
 $_lang['search_by_key'] = 'Otsi võtme järgi...';
-$_lang['setting_create'] = 'Create Setting';
 $_lang['setting_err'] = 'Palun kontrollige järgnevate väljade andmeid: ';
 $_lang['setting_err_ae'] = 'Sellise võtmeg seade juba eksisteerib. Palun kasutage teistsugust nime.';
 $_lang['setting_err_nf'] = 'Seadet ei leitud.';
@@ -46,9 +45,7 @@ $_lang['setting_err_remove'] = 'An error occurred while trying to delete the set
 $_lang['setting_err_save'] = 'Tekkis viga seade salvestamisel.';
 $_lang['setting_err_startint'] = 'Seaded ei või alata numbriga.';
 $_lang['setting_err_invalid_document'] = 'Dokumenti ID-ga %d ei ole olemas. Palun määrake olemasolev dokument.';
-$_lang['setting_remove'] = 'Eemalda Seade';
 $_lang['setting_remove_confirm'] = 'Olete kindel, et soovite eemaldada selle seade? See võib teie MODX installatsiooni katki teha.';
-$_lang['setting_update'] = 'Edit Setting';
 $_lang['settings_after_install'] = 'Kuna MODX on hetkel värske install, peate kontrollima neid seaded ja muutma neid seadeid mida soovite. P
 Pärast seadete kontrollimist, vajutage \'Salvesta\', uuendamaks seadete andmebaasi<br /><br />';
 $_lang['settings_desc'] = 'Here you can set general preferences and configuration settings for the MODX manager interface, as well as how your MODX site runs. <b>Each setting will be available via the [[++key]] placeholder.</b><br />Double-click on the value column for the setting you\'d like to edit to dynamically edit via the grid, or right-click on a setting for more options. You can also click the "+" sign for a description of the setting.';
@@ -385,6 +382,9 @@ $_lang['setting_mail_smtp_port_desc'] = 'Vaikimisi SMTP serveri port.';
 $_lang['setting_mail_smtp_prefix'] = 'SMTP Ühenduse Prefix';
 $_lang['setting_mail_smtp_prefix_desc'] = 'Määrab ühenduse prefix-i. Valikud on "", "ssl" või "tls"';
 
+$_lang['setting_mail_smtp_autotls'] = 'SMTP Auto TLS';
+$_lang['setting_mail_smtp_autotls_desc'] = 'Whether to enable TLS encryption automatically if a server supports it, even if "SMTP Encryption" is not set to "tls"';
+
 $_lang['setting_mail_smtp_single_to'] = 'SMTP Single To';
 $_lang['setting_mail_smtp_single_to_desc'] = 'Võimaldab To välja eraldi protsessimist individiuaalselemailil, selle asemel, et saata kogu TO aadressitele';
 
@@ -572,6 +572,12 @@ $_lang['setting_publish_default'] = 'Avalikustatud Vaikimisi';
 $_lang['setting_publish_default_desc'] = 'Valige \'Jah\', et muuta kõik ressurssid vaikimisi avalikustatuks.';
 $_lang['setting_publish_default_err'] = 'Palun määrake, kas soovite või mitte, et dokumendid oleksid avalikustatud vaikimisi.';
 
+$_lang['setting_quick_search_in_content'] = 'Allow search in content';
+$_lang['setting_quick_search_in_content_desc'] = 'If \'Yes\', then the content of the element (resource, template, chunk, etc.) will also be available for quick search.';
+
+$_lang['setting_quick_search_result_max'] = 'Number of items in search result';
+$_lang['setting_quick_search_result_max_desc'] = 'Maximum number of elements for each type (resource, template, chunk, etc.) in the quick search result.';
+
 $_lang['setting_request_controller'] = 'Päringu Kontrolleri Failinimi';
 $_lang['setting_request_controller_desc'] = 'Põhi päringu kontrolleri failinimi, millest MODX laetakse. Enamus kasutajaid jätavad selle index.php peale.';
 
@@ -605,6 +611,9 @@ $_lang['setting_server_offset_time_desc'] = 'Valige tundide erinevus, mis on tei
 
 $_lang['setting_session_cookie_domain'] = 'Session Küpsise Domeen';
 $_lang['setting_session_cookie_domain_desc'] = 'Kasutage seda seadet, et muuta sessiooni küpsise domeeni.';
+
+$_lang['setting_session_cookie_samesite'] = 'Session Cookie Samesite';
+$_lang['setting_session_cookie_samesite_desc'] = 'Choose Lax or Strict.';
 
 $_lang['setting_session_cookie_lifetime'] = 'Session Küpsise Eluiga';
 $_lang['setting_session_cookie_lifetime_desc'] = 'Kasutage seda seadet, et määrata sessiooni küpsise eluiga sekundites. Seda kasutatakse "jäta mind meelde" sisselogimise võimalusel, selle küpsise eluiga.';
@@ -668,8 +677,8 @@ $_lang['setting_site_unavailable_page_err'] = 'Palun määrake dokumendi ID \'le
 $_lang['setting_static_elements_automate_templates'] = 'Automate static elements for templates?';
 $_lang['setting_static_elements_automate_templates_desc'] = 'This will automate the handling of static files, such as creating and deleting static files for templates.';
 
-$_lang['setting_static_elements_automate_tvs'] = 'Automate static elements for template variables?';
-$_lang['setting_static_elements_automate_tvs_desc'] = 'This will automate the handling of static files, such as creating and deleting static files for template variables.';
+$_lang['setting_static_elements_automate_tvs'] = 'Automate static elements for TVs?';
+$_lang['setting_static_elements_automate_tvs_desc'] = 'This will automate the handling of static files, such as creating and deleting static files for TVs.';
 
 $_lang['setting_static_elements_automate_chunks'] = 'Automate static elements for chunks?';
 $_lang['setting_static_elements_automate_chunks_desc'] = 'This will automate the handling of static files, such as creating and deleting static files for chunks.';
@@ -706,7 +715,7 @@ $_lang['setting_tree_root_id'] = 'Tree Root ID';
 $_lang['setting_tree_root_id_desc'] = 'Määrake kehtiv Ressurssi ID, millest vasak Ressurssi puu alguse saab, üksus mis on root. Kasutaja on võimaline nägema ainult Ressursse, mis on selle määratud Ressurssi alamad (children).';
 
 $_lang['setting_tvs_below_content'] = 'Move TVs Below Content';
-$_lang['setting_tvs_below_content_desc'] = 'Set this to Yes to move Template Variables below the Content when editing Resources.';
+$_lang['setting_tvs_below_content_desc'] = 'Set this to Yes to move TVs below the Content when editing Resources.';
 
 $_lang['setting_ui_debug_mode'] = 'UI Debug Mode';
 $_lang['setting_ui_debug_mode_desc'] = 'Set this to Yes to output debug messages when using the UI for the default manager theme. You must use a browser that supports console.log.';
@@ -718,6 +727,9 @@ $_lang['setting_unauthorized_page_err'] = 'Palun määrake Ressurssi ID authoris
 $_lang['setting_upload_files'] = 'Uploadable File Types';
 $_lang['setting_upload_files_desc'] = 'Here you can enter a list of files that can be uploaded into \'assets/files/\' using the Resource Manager. Please enter the extensions for the filetypes, seperated by commas.';
 
+$_lang['setting_upload_file_exists'] = 'Check if uploaded file exists';
+$_lang['setting_upload_file_exists_desc'] = 'When enabled an error will be shown when uploading a file that already exists with the same name. When disabled, the existing file will be quietly replaced with the new file.';
+
 $_lang['setting_upload_images'] = 'Üleslaetavad Piltide Tüübid';
 $_lang['setting_upload_images_desc'] = 'Siit saate sisestada nimekirja failidest, mida saab üleslaadida \'assets/images/\' kasuta, kasutades Ressurssi Manageri. Palun sisestage faililaiendid piltide tüüpidele, eraldatud komadega.';
 
@@ -726,6 +738,9 @@ $_lang['setting_upload_maxsize_desc'] = 'Sisestage maksimaalne faili suurus, mid
 
 $_lang['setting_upload_media'] = 'Üleslaetavad Meedia Tüübid';
 $_lang['setting_upload_media_desc'] = 'Siit saate sisestada nimekirja failidest, mida saab üleslaadida \'assets/media/\' kasuta, kasutades Ressurssi Manageri. Palun sisestage faililaiendid meedia tüüpidele, eraldatud komadega.';
+
+$_lang['setting_upload_translit'] = 'Transliterate names of uploaded files?';
+$_lang['setting_upload_translit_desc'] = 'If this option is enabled, the name of an uploaded file will be transliterated according to the global transliteration rules.';
 
 $_lang['setting_use_alias_path'] = 'Kasuta Sõbralikke Aliase Pathe';
 $_lang['setting_use_alias_path_desc'] = 'Valides \'jah\' kuvatakse terve path Ressurssini, kuiRessurssil on alias. Näiteks. kui Ressurss aliasega  \'child\' asub konteiner-Ressurssi sees, millel on alias \'parent\', siis täis alias paht Ressurssile kuvatakse kui \'/parent/child.html\'.<br /><strong>MÄRKUS: Valides \'Jah\' (lubades alias path-id), viitavad üksused (nagu näiteks pildid, css, javascriptid, jne) peavad kasutama absoluutseid pathe: näiteks \'/assets/images\' vastupidiselt \'assets/images\'. Tehes nii, hoiate ära, et brauser (või veebiserver) ei lisaks relatiivseid pathe aliase path-ile.</strong>';

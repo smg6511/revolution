@@ -229,8 +229,8 @@ class modX extends xPDO {
     public $sanitizePatterns = [
         'scripts'       => '@<script[^>]*?>.*?</script>@si',
         'entities'      => '@&#(\d+);@',
-        'tags1'          => '@\[\[(.*?)\]\]@si',
-        'tags2'          => '@(\[\[|\]\])@si',
+        'tags1'         => '@\[\[(?:(?!(\[\[|\]\])).)*\]\]@si',
+        'tags2'         => '@(\[\[|\]\])@si',
     ];
     /**
      * @var integer An integer representing the session state of modX.
@@ -344,7 +344,7 @@ class modX extends xPDO {
                         $iteration++;
                     }
                 }
-                if (get_magic_quotes_gpc()) {
+                if (version_compare(PHP_VERSION, '7.4.0', '<') && get_magic_quotes_gpc()) {
                     $target[$key]= stripslashes($value);
                 } else {
                     $target[$key]= $value;
@@ -451,7 +451,7 @@ class modX extends xPDO {
                 null,
                 null,
                 $options,
-                null
+                array(PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT)
             );
             $this->setLogLevel($this->getOption('log_level', null, xPDO::LOG_LEVEL_ERROR));
             $this->setLogTarget($this->getOption('log_target', null, 'FILE'));
@@ -475,12 +475,12 @@ class modX extends xPDO {
      *
      * @param string $configPath    An absolute path location to search for the modX config file.
      * @param array  $data          Data provided to initialize the instance with, overriding config file entries.
-     * @param null   $driverOptions Driver options for the primary connection.
+     * @param array   $driverOptions Driver options for the primary connection.
      *
      * @return Container A DI container containing the config data ready for use by the modX::__construct() method.
      * @throws xPDOException
      */
-    protected function loadConfig($configPath = '', $data = [], $driverOptions = null) {
+    protected function loadConfig($configPath = '', $data = [], $driverOptions = array()) {
         if (!is_array($data)) $data = [];
         modX :: protect();
         if (!defined('MODX_CONFIG_KEY')) {
@@ -495,6 +495,8 @@ class modX extends xPDO {
             if (MODX_CONFIG_KEY !== 'config') $cachePath .= MODX_CONFIG_KEY . '/';
             if (!is_array($config_options)) $config_options = [];
             if (!is_array($driver_options)) $driver_options = [];
+            if (!is_array($driverOptions)) $driverOptions = [];
+            $driver_options = array(PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT) + $driverOptions + $driver_options;
             $data = array_merge(
                 [
                     xPDO::OPT_CACHE_KEY => 'default',
@@ -1571,7 +1573,7 @@ class modX extends xPDO {
             } elseif (strpos(strtolower($src), "<script") !== false) {
                 $this->sjscripts[count($this->sjscripts)]= $src;
             } else {
-                $this->sjscripts[count($this->sjscripts)]= '<script type="text/javascript" src="' . $src . '"></script>';
+                $this->sjscripts[count($this->sjscripts)]= '<script src="' . $src . '"></script>';
             }
         }
     }
@@ -1594,7 +1596,7 @@ class modX extends xPDO {
         } elseif (strpos(strtolower($src), "<script") !== false) {
             $this->jscripts[count($this->jscripts)]= $src;
         } else {
-            $this->jscripts[count($this->jscripts)]= '<script type="text/javascript" src="' . $src . '"></script>';
+            $this->jscripts[count($this->jscripts)]= '<script src="' . $src . '"></script>';
         }
     }
 
@@ -1728,10 +1730,16 @@ class modX extends xPDO {
 
         // Make sure the required services are loaded before initialising a processor
         if (!$this->lexicon) {
-            $this->services->get('lexicon');
+            if (!$this->services->has('lexicon')) {
+                $this->services->add('lexicon', new modLexicon($this));
+            }
+            $this->lexicon = $this->services->get('lexicon');
         }
         if (!$this->error) {
-            $this->services->get('error');
+            if (!$this->services->has('error')) {
+                $this->services->add('error', new modError($this));
+            }
+            $this->error = $this->services->get('error');
         }
 
         // First check if the processor can be found directly as a class name provided to $action
@@ -2704,19 +2712,40 @@ class modX extends xPDO {
                         session_save_path($sessionSavePath);
                     }
                 }
-                $cookieDomain= $this->getOption('session_cookie_domain', $options, '');
-                $cookiePath= $this->getOption('session_cookie_path', $options, MODX_BASE_URL);
+                $cookieDomain = $this->getOption('session_cookie_domain', $options, '');
+                $cookiePath = $this->getOption('session_cookie_path', $options, MODX_BASE_URL);
                 if (empty($cookiePath)) $cookiePath = $this->getOption('base_url', $options, MODX_BASE_URL);
-                $cookieSecure= (boolean) $this->getOption('session_cookie_secure', $options, false);
-                $cookieHttpOnly= (boolean) $this->getOption('session_cookie_httponly', $options, true);
-                $cookieLifetime= (integer) $this->getOption('session_cookie_lifetime', $options, 0);
-                $gcMaxlifetime = (integer) $this->getOption('session_gc_maxlifetime', $options, $cookieLifetime);
+                $cookieSecure = (bool) $this->getOption('session_cookie_secure', $options, false);
+                $cookieHttpOnly = (bool) $this->getOption('session_cookie_httponly', $options, true);
+                $cookieSamesite = $this->getOption('session_cookie_samesite', $options, '');
+                $cookieLifetime = (int) $this->getOption('session_cookie_lifetime', $options, 0);
+                $gcMaxlifetime = (int) $this->getOption('session_gc_maxlifetime', $options, $cookieLifetime);
                 if ($gcMaxlifetime > 0) {
                     ini_set('session.gc_maxlifetime', $gcMaxlifetime);
                 }
                 $site_sessionname = $this->getOption('session_name', $options, '');
                 if (!empty($site_sessionname)) session_name($site_sessionname);
-                session_set_cookie_params($cookieLifetime, $cookiePath, $cookieDomain, $cookieSecure, $cookieHttpOnly);
+                if (PHP_VERSION_ID < 70300) {
+                    session_set_cookie_params(
+                        $cookieLifetime,
+                        $cookiePath,
+                        $cookieDomain,
+                        $cookieSecure,
+                        $cookieHttpOnly
+                    );
+                } else {
+                    $cookie_params = [
+                        'lifetime' => $cookieLifetime,
+                        'path' => $cookiePath,
+                        'domain' => $cookieDomain,
+                        'secure' => $cookieSecure,
+                        'httponly' => $cookieHttpOnly
+                    ];
+                    if ($cookieSamesite !== '') {
+                        $cookie_params['samesite'] = $cookieSamesite;
+                    }
+                    session_set_cookie_params($cookie_params);
+                }
                 if ($this->getOption('anonymous_sessions', $options, true) || isset($_COOKIE[session_name()])) {
                     if (!$this->startSession()) {
                         $this->log(modX::LOG_LEVEL_ERROR, 'Unable to initialize a session', '', __METHOD__, __FILE__, __LINE__);
@@ -2731,8 +2760,29 @@ class modX extends xPDO {
                             if ($sessionCookieLifetime) {
                                 $cookieExpiration = time() + $sessionCookieLifetime;
                             }
-                            setcookie(session_name(), session_id(), $cookieExpiration, $cookiePath, $cookieDomain,
-                                $cookieSecure, $cookieHttpOnly);
+                            $cookie_settings = [
+                                'expires' => $cookieExpiration,
+                                'path' => $cookiePath,
+                                'domain' => $cookieDomain,
+                                'secure' => $cookieSecure,
+                                'httponly' => $cookieHttpOnly
+                            ];
+                            if ($cookieSamesite !== '') {
+                                $cookie_settings['samesite'] = $cookieSamesite;
+                            }
+                            if (PHP_VERSION_ID < 70300) {
+                                setcookie(
+                                    session_name(),
+                                    session_id(),
+                                    $cookieExpiration,
+                                    $cookiePath,
+                                    $cookieDomain,
+                                    $cookieSecure,
+                                    $cookieHttpOnly
+                                );
+                            } else {
+                                setcookie(session_name(), session_id(), $cookie_settings);
+                            }
                         }
                     }
                 } else {

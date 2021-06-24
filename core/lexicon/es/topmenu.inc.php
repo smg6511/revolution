@@ -7,7 +7,6 @@
  * @subpackage lexicon
  */
 $_lang['about'] = 'Acerca de';
-$_lang['about_desc'] = 'Más información acerca de MODX Revolution.';
 $_lang['access_permissions'] = 'Permisos de Acceso';
 $_lang['access_permissions_desc'] = 'Administrar el acceso del grupo de usuarios a recursos y contextos.';
 $_lang['acls'] = 'Listas de Control de Acceso';
@@ -60,7 +59,6 @@ $_lang['logout'] = 'Salir';
 $_lang['logout_desc'] = 'Salir de la Administración de MODX.';
 $_lang['manage'] = 'Gestionar';
 $_lang['media'] = 'Multimedia';
-$_lang['media_desc'] = 'Edit Media and Media Sources';
 $_lang['messages'] = 'Mensajes';
 $_lang['messages_desc'] = 'Accede a tus mensajes y envía mensajes a otros usuarios.';
 $_lang['namespaces'] = 'Espacio de nombres';
@@ -86,7 +84,7 @@ $_lang['propertysets'] = 'Conjunto de Propiedades';
 $_lang['propertysets_desc'] = 'Administra todas los conjuntos de propiedades de tu sitio y los elementos a los que están asignados';
 $_lang['refresh_site'] = 'Limpiar Caché';
 $_lang['refresh_site_desc'] = 'Limpiar la cache del sitio.';
-$_lang['refreshuris'] = 'Refresh URIs';
+$_lang['refreshuris'] = 'Actualizar URIs';
 $_lang['refreshuris_desc'] = 'Regenerate system Resource URIs.';
 $_lang['remove_locks'] = 'Delete Locks';
 $_lang['remove_locks_desc'] = 'Delete all locks on Manager pages';
@@ -122,7 +120,7 @@ $_lang['tools_desc'] = 'Utilidades para mantener el sitio ordenado';
 $_lang['topnav'] = 'Main Navigation';
 $_lang['topnav_desc'] = '';
 $_lang['user'] = 'Usuario';
-$_lang['usernav'] = 'User Navigation';
+$_lang['usernav'] = 'Menú de Usuario';
 $_lang['usernav_desc'] = '';
 $_lang['users'] = 'Usuarios';
 $_lang['user_management'] = 'Administrar usuarios';

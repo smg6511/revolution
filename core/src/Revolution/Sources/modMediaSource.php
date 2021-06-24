@@ -377,7 +377,7 @@ abstract class modMediaSource extends modAccessibleSimpleObject implements modMe
                 if (preg_match($re, $object['path'])) {
                     continue;
                 }
-                $file_name = array_pop(explode(DIRECTORY_SEPARATOR, $object['path']));
+                $file_name = basename($object['path']);
 
                 if ($object['type'] == 'dir' && $this->hasPermission('directory_list')) {
                     $cls = $this->getExtJSDirClasses();
@@ -407,7 +407,7 @@ abstract class modMediaSource extends modAccessibleSimpleObject implements modMe
                     // @TODO review/refactor extension and mime_type would be better for filesystems that
                     // may not always have an extension on it. For example would be S3 and you have an HTML file
                     // but the name is just myPage - $this->filesystem->getMimetype($object['path']);
-                    $ext = array_pop(explode('.', $object['path']));
+                    $ext = pathinfo($object['path'], PATHINFO_EXTENSION);
                     $ext = $properties['use_multibyte']
                         ? mb_strtolower($ext, $properties['modx_charset'])
                         : strtolower($ext);
@@ -492,7 +492,7 @@ abstract class modMediaSource extends modAccessibleSimpleObject implements modMe
                 // @TODO review/refactor ext and mime_type would be better for filesystems that may not always have an extension on it
                 // example would be S3 and you have an HTML file but the name is just myPage
                 //$this->filesystem->getMimetype($object['path']);
-                $ext = array_pop(explode('.', $object['path']));
+                $ext = pathinfo($object['path'], PATHINFO_EXTENSION);
                 $ext = $properties['use_multibyte']
                     ? mb_strtolower($ext, $properties['modx_charset'])
                     : strtolower($ext);
@@ -565,7 +565,7 @@ abstract class modMediaSource extends modAccessibleSimpleObject implements modMe
         $imageExtensions = array_map('trim', explode(',', $this->getOption('imageExtensions', $properties, 'jpg,jpeg,png,gif,svg')));
         $fa = [
             'name' => rtrim($path, DIRECTORY_SEPARATOR),
-            'basename' => array_pop(explode(DIRECTORY_SEPARATOR, $file->getPath())),
+            'basename' => basename($file->getPath()),
             'path' => $file->getPath(),
             'size' => $file->getSize(),
             'last_accessed' => $file->getTimestamp(),
@@ -633,6 +633,17 @@ abstract class modMediaSource extends modAccessibleSimpleObject implements modMe
 
 
     /**
+     * Checks `upload_file_exists` system setting to allow or disallow overwriting files with the same name
+     *
+     * @return boolean
+     */
+    public function checkFileExists()
+    {
+        return (bool)$this->xpdo->getOption('upload_file_exists', null, true);
+    }
+
+
+    /**
      * Create a file
      *
      * @param string $path
@@ -655,7 +666,7 @@ abstract class modMediaSource extends modAccessibleSimpleObject implements modMe
         }
 
         try {
-            if ($this->filesystem->has($path)) {
+            if ($this->checkFileExists() && $this->filesystem->has($path)) {
                 $this->addError('name', sprintf($this->xpdo->lexicon('file_err_ae'), $name));
 
                 return false;
@@ -701,7 +712,7 @@ abstract class modMediaSource extends modAccessibleSimpleObject implements modMe
     {
         $path = $this->postfixSlash($from);
         $to = $this->postfixSlash($to);
-        $newPath = rtrim($to, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . array_pop(explode(DIRECTORY_SEPARATOR, rtrim($from, DIRECTORY_SEPARATOR)));
+        $newPath = rtrim($to, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . basename($from);
 
         try {
             /** @var Directory|File $originalObject */
@@ -945,7 +956,7 @@ abstract class modMediaSource extends modAccessibleSimpleObject implements modMe
             $this->addError('name', $this->xpdo->lexicon('file_err_invalid'));
 
             return false;
-        } elseif ($this->filesystem->has($newPath)) {
+        } elseif ($this->checkFileExists() && $this->filesystem->has($newPath)) {
             $this->addError('name', sprintf($this->xpdo->lexicon('file_err_ae'), $newName));
 
             return false;
@@ -1074,8 +1085,17 @@ abstract class modMediaSource extends modAccessibleSimpleObject implements modMe
                 continue;
             }
 
+            if ((boolean)$this->xpdo->getOption('upload_translit')) {
+                $file['name'] = $this->xpdo->filterPathSegment($file['name']);
+            }
+
             $newPath = $container . $this->sanitizePath($file['name']);
             try {
+                if ($this->checkFileExists() && $this->filesystem->has($newPath)) {
+                    $this->addError('path', sprintf($this->xpdo->lexicon('file_err_ae'), $file['name']));
+
+                    return false;
+                }
                 if (!$this->filesystem->put($newPath, file_get_contents($file['tmp_name']))) {
                     $this->addError('path', $this->xpdo->lexicon('file_err_upload'));
                     continue;
@@ -1480,7 +1500,7 @@ abstract class modMediaSource extends modAccessibleSimpleObject implements modMe
         }
 
         $properties = $this->getPropertyList();
-        if ($properties['url']) {
+        if (isset($properties['url'])) {
             $src = $properties['url'] . DIRECTORY_SEPARATOR . ltrim($src, DIRECTORY_SEPARATOR);
         }
 
@@ -1739,7 +1759,7 @@ abstract class modMediaSource extends modAccessibleSimpleObject implements modMe
             $this->setOption('allowedFileTypes', $allowedFileTypes);
         }
 
-        $ext = strtolower(array_pop(explode('.', $filename)));
+        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
         if (!empty($allowedFileTypes) && !in_array($ext, $allowedFileTypes)) {
             $this->addError('path', $this->xpdo->lexicon('file_err_ext_not_allowed', [
                 'ext' => $ext,
@@ -1763,7 +1783,7 @@ abstract class modMediaSource extends modAccessibleSimpleObject implements modMe
      */
     protected function buildFileList($path, $ext, $image_extensions, $bases, $properties)
     {
-        $file_name = array_pop(explode(DIRECTORY_SEPARATOR, $path));
+        $file_name = basename($path);
 
         $editAction = $this->getEditActionId();
         $canSave = $this->checkPolicy('save');
@@ -1859,7 +1879,7 @@ abstract class modMediaSource extends modAccessibleSimpleObject implements modMe
 
         $width = $this->ctx->getOption('filemanager_image_width', 800);
         $height = $this->ctx->getOption('filemanager_image_height', 600);
-        $preview_image_info = [
+        $original = $preview_image_info = [
             'width' => $width,
             'height' => $height,
         ];
@@ -1876,6 +1896,7 @@ abstract class modMediaSource extends modAccessibleSimpleObject implements modMe
             $preview = 1;
             $preview_image_info = $this->buildManagerImagePreview($path, $ext, $width, $height, $bases, $properties);
             $thumb_image_info = $this->buildManagerImagePreview($path, $ext, $thumb_width, $thumb_height, $bases, $properties);
+            $original = $this->getImageDimensions($path, $ext);
         }
 
         $visibility = $this->visibility_files ? $this->getVisibility($path) : false;
@@ -1890,8 +1911,10 @@ abstract class modMediaSource extends modAccessibleSimpleObject implements modMe
         $file_list = [
             'id' => $path,
             'sid' => $this->get('id'),
-            'name' => array_pop(explode(DIRECTORY_SEPARATOR, $path)),
+            'name' => basename($path),
             'cls' => 'icon-' . $ext,
+            'original_width' => $original['width'],
+            'original_height' => $original['height'],
             // preview
             'preview' => $preview,
             'image' => $preview_image_info['src'],
@@ -2018,7 +2041,7 @@ abstract class modMediaSource extends modAccessibleSimpleObject implements modMe
         }
         if ($this->hasPermission('directory_update') && $canSave) {
             $menu[] = [
-                'text' => $this->xpdo->lexicon('rename'),
+                'text' => $this->xpdo->lexicon('file_folder_rename'),
                 'handler' => 'this.renameDirectory',
             ];
         }
@@ -2114,7 +2137,7 @@ abstract class modMediaSource extends modAccessibleSimpleObject implements modMe
                 'handler' => 'this.downloadFile',
             ];
         }
-        if ($this->hasPermission('file_unpack') && $canView && array_pop(explode('.', $path)) === 'zip') {
+        if ($this->hasPermission('file_unpack') && $canView && strtolower(pathinfo($path, PATHINFO_EXTENSION)) === 'zip') {
             if ($this instanceof modFileMediaSource) {
                 $menu[] = [
                     'text' => $this->xpdo->lexicon('file_download_unzip'),
@@ -2159,6 +2182,22 @@ abstract class modMediaSource extends modAccessibleSimpleObject implements modMe
             } catch (Exception $E) {
                 $timestamp = 0;
             }
+
+            if ($bases['pathIsRelative']) {
+                $absolute_path = $bases['pathAbsolute'] . $path;
+            } else {
+                $absolute_path = $path;
+            }
+            if (function_exists('exif_read_data')) {
+                $exif = @exif_read_data($absolute_path);
+                if (!empty($exif) && $exif['Orientation'] >= 5) {
+                    // This image was rotated
+                    $new_width = $size['height'];
+                    $new_height = $size['width'];
+                    $size['width'] = $new_width;
+                    $size['height'] = $new_height;
+                }
+            }
             // get original image size for proportional scaling
             if ($size['width'] > $size['height']) {
                 // landscape
@@ -2184,6 +2223,7 @@ abstract class modMediaSource extends modAccessibleSimpleObject implements modMe
                 'wctx' => $this->ctx->get('key'),
                 'source' => $this->get('id'),
                 't' => $timestamp,
+                'ar' => 'x'
             ]);
             $image = $this->ctx->getOption('connectors_url', MODX_CONNECTORS_URL) . 'system/phpthumb.php?' . $imageQuery;
         }
@@ -2279,7 +2319,7 @@ abstract class modMediaSource extends modAccessibleSimpleObject implements modMe
     {
         try {
             $mime = $this->filesystem->getMimetype($file);
-            $ext = strtolower(array_pop(explode(DIRECTORY_SEPARATOR, trim($file, DIRECTORY_SEPARATOR))));
+            $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
 
             return strpos($mime, 'image') === 0 || in_array($ext, array_map('strtolower', $image_extensions));
         } catch (Exception $e) {

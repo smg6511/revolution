@@ -69,7 +69,11 @@ class GetList extends GetListProcessor
         if (!empty($context)) {
             $c->where(['modResource.context_key' => $context]);
         }
-        $c->where(['modResource.id:IN' => $this->getDeleted()]);
+        if ($deleted = $this->getDeleted()) {
+            $c->where(['modResource.id:IN' => $deleted]);
+        } else {
+            $c->where(['modResource.id:IN' => 0]);
+        }
 
         return $c;
     }
@@ -77,7 +81,6 @@ class GetList extends GetListProcessor
     public function getDeleted()
     {
         $c = $this->modx->newQuery($this->classKey);
-        $c->leftJoin($this->classKey, 'Children');
         $c->select($this->modx->getSelectColumns($this->classKey, $c->getAlias(), '', ['id', 'context_key']));
         $c->where([
             $c->getAlias() . '.deleted' => true
@@ -123,7 +126,7 @@ class GetList extends GetListProcessor
             if ($parentObject) {
                 $parents[] = $parentObject;
                 $parent = $parentObject->get('parent');
-            } 
+            }
             else {
                 break;
             }
@@ -138,12 +141,12 @@ class GetList extends GetListProcessor
         //  TODO implement permission checks for every resource and return only resources user is allowed to see
 
         // show the permissions for the context
-        $canView = $this->modx->hasPermission('view');
+        $canView = $this->modx->hasPermission('view_document');
         $canPurge = $this->modx->hasPermission('purge_deleted');
         $canUndelete = $this->modx->hasPermission('undelete_document');
-        $canPublish = $this->modx->hasPermission('publish');
-        $canSave = $this->modx->hasPermission('save');
-        $canEdit = $this->modx->hasPermission('edit');
+        $canPublish = $this->modx->hasPermission('publish_document');
+        $canSave = $this->modx->hasPermission('save_document');
+        $canEdit = $this->modx->hasPermission('edit_document');
         $canList = $this->modx->hasPermission('list');
         $canLoad = $this->modx->hasPermission('load');
 

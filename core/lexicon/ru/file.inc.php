@@ -7,7 +7,6 @@
  * @subpackage lexicon
  */
 $_lang['directory'] = 'Каталог';
-$_lang['file_confirm_remove'] = 'Вы уверены, что хотите удалить этот файл? Удаление файла может нарушить работу сайта.';
 $_lang['file_create'] = 'Создать файл';
 $_lang['file_deleted'] = 'Успешно!';
 $_lang['file_delete_file'] = 'Удалить файл';
@@ -68,16 +67,22 @@ $_lang['file_folder_err_rename'] = 'Возникла неизвестная ош
 $_lang['file_folder_err_rename_protected'] = 'Переименование защищенного системного каталога не допускается.';
 $_lang['file_folder_err_remove'] = 'Произошла ошибка при попытке удалить папку.';
 $_lang['file_folder_err_remove_protected'] = 'Удаление защищенного системного каталога не допускается.';
+$_lang['file_folder_err_update'] = 'Произошла ошибка при редактировании категории.';
 $_lang['file_folder_parent'] = 'Родительский каталог';
+$_lang['file_folder_parent_desc'] = 'Относительно пути в параметре "basePath" источника файлов';
 $_lang['file_folder_remove'] = 'Удалить каталог';
-$_lang['file_folder_remove_confirm'] = 'Вы уверены, что хотите удалить эту папку? Это может нарушить работу сайта.';
+$_lang['file_folder_remove_confirm'] = 'Вы уверены, что хотите удалить каталог: «[[+directory]]»?<br />Это может нарушить работу сайта.';
+$_lang['file_folder_rename'] = 'Переименовать каталог';
 $_lang['file_last_accessed'] = 'Последнее обращение';
 $_lang['file_last_modified'] = 'Изменён';
 $_lang['file_name'] = 'Название файла';
 $_lang['file_quick_create'] = 'Быстро создать файл';
 $_lang['file_quick_update'] = 'Быстро редактировать файл';
+$_lang['file_package_err_invalid_directory'] = 'Каталог для пакета не существует!';
+$_lang['file_package_err_invalid_name'] = 'Файл [[+name]] имеет недопустимое название для транспортного пакета';
+$_lang['file_package_err_invalid_type'] = 'Файл не является транспортным пакетом';
 $_lang['file_remove'] = 'Удалить файл';
-$_lang['file_remove_confirm'] = 'Вы уверены, что хотите удалить этот файл?';
+$_lang['file_remove_confirm'] = 'Вы уверены, что хотите удалить файл: «[[+file]]»?<br />Это может нарушить работу сайта.';
 $_lang['file_saved'] = 'Файл успешно загружен!';
 $_lang['file_size'] = 'Размер файла';
 $_lang['file_size_bytes'] = 'байтов';

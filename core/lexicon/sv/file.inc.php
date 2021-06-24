@@ -7,7 +7,6 @@
  * @subpackage lexicon
  */
 $_lang['directory'] = 'Katalog';
-$_lang['file_confirm_remove'] = 'Är du säker på att du vill ta bort den här filen? Det här kan potentiellt ha sönder din webbplats. Försäkra dig om att du vet vad filen gör innan du tar bort den.';
 $_lang['file_create'] = 'Skapa fil';
 $_lang['file_deleted'] = 'Klart!';
 $_lang['file_delete_file'] = 'Ta bort fil';
@@ -68,16 +67,22 @@ $_lang['file_folder_err_rename'] = 'Ett okänt fel inträffade när namnet på k
 $_lang['file_folder_err_rename_protected'] = 'Det är inte tillåtet att ändra namn på den skyddade systemmappen.';
 $_lang['file_folder_err_remove'] = 'Ett fel inträffade när katalogen skulle tas bort.';
 $_lang['file_folder_err_remove_protected'] = 'Det är inte tillåtet att ta bort den skyddade systemmappen.';
+$_lang['file_folder_err_update'] = 'Ett fel inträffade när katalogen skulle uppdateras.';
 $_lang['file_folder_parent'] = 'Föräldrakatalog';
+$_lang['file_folder_parent_desc'] = 'Relative to the basePath of the media source';
 $_lang['file_folder_remove'] = 'Ta bort katalog';
-$_lang['file_folder_remove_confirm'] = 'Är du säker på att du vill ta bort den här katalogen? Detta kan potentiellt ha sönder din webbplats.';
+$_lang['file_folder_remove_confirm'] = 'Är du säker på att du vill ta bort katalogen: "[[+directory]]"?<br />Detta kan potentiellt ha sönder din webbplats.';
+$_lang['file_folder_rename'] = 'Döp om katalog';
 $_lang['file_last_accessed'] = 'Senast använd';
 $_lang['file_last_modified'] = 'Senast ändrad';
 $_lang['file_name'] = 'Filnamn';
 $_lang['file_quick_create'] = 'Snabbskapa fil';
 $_lang['file_quick_update'] = 'Snabbredigera fil';
+$_lang['file_package_err_invalid_directory'] = 'Paketkatalogen finns inte!';
+$_lang['file_package_err_invalid_name'] = 'Den här filen [[+name]] har ett ogiltigt namn för transportpaketet.';
+$_lang['file_package_err_invalid_type'] = 'Denna fil verkar inte vara ett transportpaket.';
 $_lang['file_remove'] = 'Ta bort fil';
-$_lang['file_remove_confirm'] = 'Är du säker på att du vill ta bort den här filen helt och hållet?';
+$_lang['file_remove_confirm'] = 'Är du säker på att du vill ta bort filen: "[[+file]]"?<br />Att ta bort en fil kan potentiellt ha sönder din webbplats. Se till att du vet vad den här filen gör innan du tar bort den.';
 $_lang['file_saved'] = 'Filen uppdaterades utan problem!';
 $_lang['file_size'] = 'Filstorlek';
 $_lang['file_size_bytes'] = 'byte';

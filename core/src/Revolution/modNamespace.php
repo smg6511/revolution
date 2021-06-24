@@ -22,7 +22,6 @@ use xPDO\xPDO;
  * @property modUserSetting[]      $UserSettings
  * @property modExtensionPackage[] $ExtensionPackages
  * @property modAccessNamespace[]  $Acls
- * @property modAction[]           $Actions
  *
  * @package MODX\Revolution
  */
@@ -144,7 +143,7 @@ class modNamespace extends modAccessibleObject
             $query = new xPDOCriteria($this->xpdo, $sql, $bindings);
             if ($query->stmt && $query->stmt->execute()) {
                 while ($row = $query->stmt->fetch(PDO::FETCH_ASSOC)) {
-                    $policy['modAccessNamespace'][$row['target']][] = [
+                    $policy[modAccessNamespace::class][$row['target']][] = [
                         'principal' => $row['principal'],
                         'authority' => $row['authority'],
                         'policy' => $row['data'] ? $this->xpdo->fromJSON($row['data'], true) : [],

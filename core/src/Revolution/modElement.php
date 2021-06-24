@@ -4,7 +4,9 @@ namespace MODX\Revolution;
 
 use MODX\Revolution\Filters\modInputFilter;
 use MODX\Revolution\Filters\modOutputFilter;
+use MODX\Revolution\Sources\modFileMediaSource;
 use MODX\Revolution\Sources\modMediaSource;
+use MODX\Revolution\Sources\modMediaSourceElement;
 use MODX\Revolution\Sources\modMediaSourceInterface;
 use PDO;
 use xPDO\Om\xPDOCriteria;
@@ -479,7 +481,7 @@ class modElement extends modAccessibleSimpleObject
                 $query = new xPDOCriteria($this->xpdo, $sql, $bindings);
                 if ($query->stmt && $query->stmt->execute()) {
                     while ($row = $query->stmt->fetch(PDO::FETCH_ASSOC)) {
-                        $policy['modAccessCategory'][$row['target']][] = [
+                        $policy[modAccessCategory::class][$row['target']][] = [
                             'principal' => $row['principal'],
                             'authority' => $row['authority'],
                             'policy' => $row['data'] ? $this->xpdo->fromJSON($row['data'], true) : [],
@@ -976,14 +978,14 @@ class modElement extends modAccessibleSimpleObject
         $source = $this->_source;
 
         if (empty($source)) {
-            $c = $this->xpdo->newQuery('sources.modMediaSource');
-            $c->innerJoin('sources.modMediaSourceElement', 'SourceElement');
+            $c = $this->xpdo->newQuery(modMediaSource::class);
+            $c->innerJoin(modMediaSourceElement::class, 'SourceElement');
             $c->where([
                 'SourceElement.object' => $this->get('id'),
                 'SourceElement.object_class' => $this->_class,
                 'SourceElement.context_key' => $contextKey,
             ]);
-            $source = $this->xpdo->getObject('sources.modMediaSource', $c);
+            $source = $this->xpdo->getObject(modMediaSource::class, $c);
             if (!$source && $fallbackToDefault) {
                 $source = modMediaSource::getDefaultSource($this->xpdo, $this->get('source'));
             }
@@ -1089,7 +1091,7 @@ class modElement extends modAccessibleSimpleObject
         if (!empty($oldFilePath)) {
             if ($sourceId > 0) {
                 /** @var modMediaSource $source */
-                $source = $this->xpdo->getObject('sources.modFileMediaSource', ['id' => $sourceId]);
+                $source = $this->xpdo->getObject(modFileMediaSource::class, ['id' => $sourceId]);
                 if ($source && $source->get('is_stream')) {
                     $source->initialize();
                     $oldFilePath = $source->getBasePath() . $oldFilePath;

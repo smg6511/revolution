@@ -442,6 +442,9 @@ abstract class ResourceManagerController extends modManagerController
         $this->setPlaceholder('tvCounts', json_encode($this->tvCounts));
         $this->setPlaceholder('tvMap', json_encode($tvMap));
         $this->setPlaceholder('hidden', $hidden);
+        if (is_null($this->getPlaceholder('tvcount'))) {
+            $this->setPlaceholder('tvcount', 0);
+        }
 
         if (!empty($this->scriptProperties['showCheckbox'])) {
             $this->setPlaceholder('showCheckbox', 1);
@@ -583,8 +586,22 @@ abstract class ResourceManagerController extends modManagerController
         $ctx = null;
         $height = $this->modx->getOption('resource_panel_max_crumbs', null, 3);
         $columns = ['id', 'pagetitle', 'published', 'hidemenu', 'parent'];
-        if (!$id = $this->resource->get('id')) {
-            if ($this->parent && $id = $this->parent->get('id')) {
+
+        if (empty($this->resource->id) && (empty($this->parent) || empty($this->parent->id))) {
+            $parentGet = (int)$this->modx->getOption('parent', $this->resourceArray, $this->modx->getOption('parent', $_GET));
+            if (!empty($parentGet)) {
+                $this->parent = $this->modx->getObject(modResource::class, ['id' => $parentGet]);
+            } else {
+                $ctx = $this->modx->getOption('context_key', $_GET);
+            }
+        }
+
+        $id = $this->resource->get('id');
+        $entryPoint = $this->resource;
+        if (!$id) {
+            $id = $this->parent->get('id');
+            $entryPoint = $this->parent;
+            if ($this->parent && $id) {
                 $ctx = $this->parent->get('context_key');
                 $parents[] = $this->parent->get($columns);
                 $height--;
@@ -593,15 +610,24 @@ abstract class ResourceManagerController extends modManagerController
             $ctx = $this->resource->get('context_key');
         }
 
-        if ($id) {
-            $pids = $this->modx->getParentIds($id, $height, ['context' => $ctx]);
-            foreach ($pids as $pid) {
-                if ($parent = $this->modx->getObject(modResource::class, $pid)) {
+        if ($entryPoint) {
+            $parent = $entryPoint->getOne('Parent');
+            if ($parent) {
+                $parents[] = $parent->get($columns);
+                $height--;
+            }
+
+            while($parent && ($height > 0)) {
+                $parent = $parent->getOne('Parent');
+                if ($parent) {
                     $parents[] = $parent->get($columns);
+                    $height--;
                 }
             }
         }
-        if ($context = $this->modx->getObject(modContext::class, ['key' => $ctx])) {
+
+        $context = $this->modx->getObject(modContext::class, ['key' => $ctx]);
+        if ($context) {
             $parents[] = $context->get(['name','key']);
         }
 

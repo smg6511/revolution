@@ -28,8 +28,13 @@ class modOutputFilterTest extends MODxTestCase {
     /** @var modPlaceholderTag $tag */
     public $tag;
 
-    public function setUp() {
-        parent::setUp();
+    /**
+     * Setup fixtures before each test.
+     *
+     * @before
+     */
+    public function setUpFixtures() {
+        parent::setUpFixtures();
         $this->modx->getParser();
         $this->tag = new modPlaceholderTag($this->modx);
         $this->tag->setCacheable(false);
@@ -749,7 +754,7 @@ goes here'
         $this->tag->set('name','utp:jsToBottom=`'.($plainText ? 1 : 0).'`');
         $this->tag->process();
         if ($addTag) {
-            $value = '<script type="text/javascript" src="'.$value.'"></script>';
+            $value = '<script src="'.$value.'"></script>';
         }
         $this->assertContains($value,$this->modx->jscripts);
         unset($this->modx->jscripts[$value]);
@@ -760,7 +765,7 @@ goes here'
     public function providerJsToBottom() {
         return [
             ['assets/js/script.js',true,false],
-            ['<script type="text/javascript" src="assets/js/script2.js"></script>',false,false],
+            ['<script src="assets/js/script2.js"></script>',false,false],
             ['assets/js/script3.js',false,true],
         ];
     }
@@ -778,7 +783,7 @@ goes here'
         $this->tag->set('name','utp:jsToHead=`'.($plainText ? 1 : 0).'`');
         $this->tag->process();
         if ($addTag) {
-            $value = '<script type="text/javascript" src="'.$value.'"></script>';
+            $value = '<script src="'.$value.'"></script>';
         }
         $this->assertContains($value,$this->modx->sjscripts);
         unset($this->modx->sjscripts[$value]);
@@ -789,7 +794,7 @@ goes here'
     public function providerJsToHead() {
         return [
             ['assets/js/hscript.js',true,false],
-            ['<script type="text/javascript" src="assets/js/hscript2.js"></script>',false,false],
+            ['<script src="assets/js/hscript2.js"></script>',false,false],
             ['assets/js/hscript3.js',false,true],
         ];
     }

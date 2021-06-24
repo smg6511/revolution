@@ -36,6 +36,7 @@ MODx.panel.User = function(config) {
     MODx.panel.User.superclass.constructor.call(this,config);
     Ext.getCmp('modx-user-panel-newpassword').getEl().dom.style.display = 'none';
     Ext.getCmp('modx-user-password-genmethod-s').on('check',this.showNewPassword,this);
+    Ext.getCmp('modx-extended-form').disable();
 };
 Ext.extend(MODx.panel.User,MODx.FormPanel,{
     setup: function() {
@@ -231,7 +232,10 @@ Ext.extend(MODx.panel.User,MODx.FormPanel,{
                         ,prefix: 'extended'
                         ,enableDD: true
                         ,listeners: {
-                            'dragdrop': {fn:function() {
+                            'click': {fn:function() {
+                                Ext.getCmp('modx-extended-form').enable();
+                            },scope:this}
+                            ,'dragdrop': {fn:function() {
                                 this.markDirty();
                             },scope:this}
                         }
@@ -277,6 +281,20 @@ Ext.extend(MODx.panel.User,MODx.FormPanel,{
             ,cls: 'danger'
             ,xtype: 'xcheckbox'
             ,inputValue: 1
+            ,listeners: {
+                'check': {
+                    fn: function (e, checked) {
+                        let blockeduntil = Ext.getCmp('modx-user-blockeduntil');
+                        if (checked) {
+                            blockeduntil.enable();
+                        } else {
+                            blockeduntil.disable();
+                            Ext.getCmp('modx-user-blockedafter').setValue(null);
+                        }
+                    }
+                    ,scope: this
+                }
+            }
         }];
         if (MODx.perm.set_sudo) {
             itemsRight.push({
@@ -305,6 +323,18 @@ Ext.extend(MODx.panel.User,MODx.FormPanel,{
             ,dateFormat: MODx.config.manager_date_format
             ,timeFormat: MODx.config.manager_time_format
             ,hiddenFormat: 'Y-m-d H:i:s'
+            ,listeners: {
+                'beforerender': {
+                    fn: function (e) {
+                        let blocked = Ext.getCmp('modx-user-blocked');
+                        if (blocked.checked) {
+                            e.enable();
+                        } else {
+                            e.disable();
+                        }
+                    }
+                }
+            }
         },{
             id: 'modx-user-blockedafter'
             ,name: 'blockedafter'
@@ -387,7 +417,7 @@ Ext.extend(MODx.panel.User,MODx.FormPanel,{
             ,description: _('user_class_key_desc')
             ,xtype: 'textfield'
             ,anchor: '100%'
-            ,value: 'modUser'
+            ,value: 'MODX\\Revolution\\modUser'
         },{
             id: 'modx-user-comment'
             ,name: 'comment'
@@ -490,6 +520,7 @@ Ext.extend(MODx.panel.User,MODx.FormPanel,{
             ,fieldLabel: _('username')
             ,description: _('user_username_desc')
             ,xtype: 'textfield'
+            ,allowBlank: false
             ,anchor: '100%'
             ,autoCreate: {tag: "input", type: "text", size: "20", autocomplete: "off", msgTarget: "under"}
             ,listeners: {
@@ -513,7 +544,8 @@ Ext.extend(MODx.panel.User,MODx.FormPanel,{
             ,anchor: '100%'
             ,maxLength: 255
         },{
-            fieldLabel: _('user_photo')
+            id: 'modx-user-photo'
+            ,fieldLabel: _('user_photo')
             ,name: 'photo'
             ,xtype: 'modx-combo-browser'
             ,hideFiles: true
@@ -602,7 +634,6 @@ Ext.extend(MODx.panel.User,MODx.FormPanel,{
             ,fieldLabel: _('user_country')
             ,xtype: 'modx-combo-country'
             ,anchor: '100%'
-            ,value: ''
         },{
             layout: 'column'
             ,border: false

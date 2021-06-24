@@ -10,6 +10,7 @@
 
 use MODX\Revolution\modContextSetting;
 use MODX\Revolution\modResource;
+use MODX\Revolution\modUser;
 
 require_once dirname(__FILE__) . '/resource.class.php';
 
@@ -49,7 +50,6 @@ class ResourceUpdateManagerController extends ResourceManagerController
             'xtype' => 'modx-page-resource-update',
             'resource' => $this->resource->get('id'),
             'record' => $this->resourceArray,
-            'parents' => $this->getParents(),
             'publish_document' => $this->canPublish,
             'preview_url' => $this->previewUrl,
             'locked' => (int)$this->locked,
@@ -139,7 +139,7 @@ class ResourceUpdateManagerController extends ResourceManagerController
         $this->resourceArray = array_merge($this->resourceArray, $overridden);
         $this->resourceArray['parents'] = $this->getParents();
 
-        $fields = ['published', 'hidemenu', 'isfolder', 'richtext', 'searchable', 'cacheable', 'deleted', 'uri_override'];
+        $fields = ['published', 'hidemenu', 'isfolder', 'richtext', 'searchable', 'cacheable', 'deleted', 'uri_override', 'alias_visible'];
         foreach ($fields as $field) {
             $this->resourceArray[$field] = !empty($this->resourceArray[$field]);
         }

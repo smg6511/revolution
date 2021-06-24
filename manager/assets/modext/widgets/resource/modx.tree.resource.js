@@ -149,7 +149,7 @@ Ext.extend(MODx.tree.Resource,MODx.tree.Tree,{
         var node = this.cm.activeNode;
         var key = node.attributes.pk;
         MODx.msg.confirm({
-            title: _('context_remove')
+            title: _('remove_context')
             ,text: _('context_remove_confirm')
             ,url: MODx.config.connector_url
             ,params: {
@@ -177,10 +177,11 @@ Ext.extend(MODx.tree.Resource,MODx.tree.Tree,{
     ,deleteDocument: function(itm,e) {
         var node = this.cm.activeNode;
         var id = node.id.split('_');id = id[1];
-        var pagetitle = node.ui.textNode.innerText;
+        var resource = node.ui.textNode.innerText;
         MODx.msg.confirm({
-            title: pagetitle ? _('resource_delete') + ' ' + pagetitle : _('resource_delete')
-            ,text: _('resource_delete_confirm')
+            text: _('resource_delete_confirm',{
+                resource: resource
+            })
             ,url: MODx.config.connector_url
             ,params: {
                 action: 'Resource/Delete'
@@ -408,7 +409,7 @@ Ext.extend(MODx.tree.Resource,MODx.tree.Tree,{
     }
 
     ,quickCreate: function(itm,e,cls,ctx,p) {
-        cls = cls || 'modDocument';
+        cls = cls || 'MODX\\Revolution\\modDocument';
         var r = {
             class_key: cls
             ,context_key: ctx || 'web'
@@ -507,7 +508,7 @@ Ext.extend(MODx.tree.Resource,MODx.tree.Tree,{
             });
         }
         m.push({
-            text: _('context_refresh')
+            text: _('refresh_context')
             ,handler: function() {
                 this.refreshNode(this.cm.activeNode.id,true);
             }
@@ -518,14 +519,14 @@ Ext.extend(MODx.tree.Resource,MODx.tree.Tree,{
         }
         if (ui.hasClass('pnew')) {
             m.push({
-                text: _('context_duplicate')
+                text: _('duplicate_context')
                 ,handler: this.duplicateContext
             });
         }
         if (ui.hasClass('pdelete')) {
             m.push('-');
             m.push({
-                text: _('context_remove')
+                text: _('remove_context')
                 ,handler: this.removeContext
             });
         }
@@ -626,7 +627,7 @@ Ext.extend(MODx.tree.Resource,MODx.tree.Tree,{
         if (ui.hasClass('pview') && a.preview_url != '') {
             m.push('-');
             m.push({
-                text: _('resource_view')
+                text: _('resource_preview')
                 ,handler: this.preview
             });
         }
@@ -657,7 +658,7 @@ Ext.extend(MODx.tree.Resource,MODx.tree.Tree,{
         if (Ext.isObject(o)) {
             Ext.apply(types,o);
         }
-        var coreTypes = ['modDocument','modWebLink','modSymLink','modStaticResource'];
+        var coreTypes = ['MODX\Revolution\modDocument','MODX\Revolution\modWebLink','MODX\Revolution\modSymLink','MODX\Revolution\modStaticResource'];
         var ct = [];
         var qct = [];
         for (var k in types) {
@@ -808,7 +809,7 @@ Ext.extend(MODx.tree.Resource,MODx.tree.Tree,{
         this.cm.activeNode = node;
         var itm = {
             usePk: '0'
-            ,classKey: 'modDocument'
+            ,classKey: 'MODX\\Revolution\\modDocument'
         };
 
         this.createResourceHere(itm);
@@ -817,7 +818,7 @@ Ext.extend(MODx.tree.Resource,MODx.tree.Tree,{
     ,handleDirectCreateClick: function(node){
         this.cm.activeNode = node;
         this.createResourceHere({
-            classKey: 'modDocument'
+            classKey: 'MODX\\Revolution\\modDocument'
         });
     }
 
@@ -1050,7 +1051,7 @@ MODx.getQRContentField = function(id,cls) {
                 ,id: 'modx-'+id+'-content'
                 ,anchor: '100%'
                 ,maxLength: 255
-                ,value: 'http://'
+                ,value: ''
             };
             break;
         case 'MODX\\Revolution\\modStaticResource':
@@ -1145,7 +1146,7 @@ MODx.getQRSettings = function(id,va) {
                 ,hiddenName: 'class_key'
                 ,id: 'modx-'+id+'-class-key'
                 ,anchor: '100%'
-                ,value: va['class_key'] != undefined ? va['class_key'] : 'modDocument'
+                ,value: va['class_key'] != undefined ? va['class_key'] : 'MODX\\Revolution\\modDocument'
             },{
                 xtype: 'modx-combo-content-type'
                 ,fieldLabel: _('resource_content_type')

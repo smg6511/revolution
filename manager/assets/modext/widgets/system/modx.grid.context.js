@@ -25,6 +25,7 @@ MODx.panel.Contexts = function(config) {
                 ,xtype: 'modx-description'
             },{
                 xtype: 'modx-grid-contexts'
+                ,urlFilters: ['search']
                 ,cls:'main-wrapper'
                 ,preventRender: true
             }]
@@ -88,7 +89,7 @@ MODx.grid.Context = function(config) {
             ,editor: { xtype: 'numberfield' }
         }]
         ,tbar: [{
-            text: _('context_create')
+            text: _('create')
             ,cls:'primary-button'
             ,handler: this.create
             ,scope: this
@@ -98,15 +99,33 @@ MODx.grid.Context = function(config) {
             ,id: 'modx-ctx-search'
             ,cls: 'x-form-filter'
             ,emptyText: _('search_ellipsis')
+            ,value: MODx.request.search
             ,listeners: {
-                'change': {fn: this.search, scope: this}
-                ,'render': {fn: function(cmp) {
-                    new Ext.KeyMap(cmp.getEl(), {
-                        key: Ext.EventObject.ENTER
-                        ,fn: this.blur
-                        ,scope: cmp
-                    });
-                },scope:this}
+                'change': {
+                    fn: function (cb, rec, ri) {
+                        this.ctxSearch(cb, rec, ri);
+                    }
+                    ,scope: this
+                },
+                'afterrender': {
+                    fn: function (cb){
+                        if (MODx.request.search) {
+                            this.ctxSearch(cb, cb.value);
+                            MODx.request.search = '';
+                        }
+                    }
+                    ,scope: this
+                }
+                ,'render': {
+                    fn: function(cmp) {
+                        new Ext.KeyMap(cmp.getEl(), {
+                            key: Ext.EventObject.ENTER
+                            ,fn: this.blur
+                            ,scope: cmp
+                        });
+                    }
+                    ,scope: this
+                }
             }
         },{
             xtype: 'button'
@@ -131,7 +150,7 @@ Ext.extend(MODx.grid.Context,MODx.grid.Grid,{
         var m = [];
         if (p.indexOf('pnew') != -1) {
             m.push({
-                text: _('context_duplicate')
+                text: _('duplicate')
                 ,handler: this.duplicateContext
                 ,scope: this
             });
@@ -139,7 +158,7 @@ Ext.extend(MODx.grid.Context,MODx.grid.Grid,{
 
         if (p.indexOf('pedit') != -1) {
             m.push({
-                text: _('context_update')
+                text: _('edit')
                 ,handler: this.updateContext
             });
         }
@@ -147,7 +166,7 @@ Ext.extend(MODx.grid.Context,MODx.grid.Grid,{
         if (p.indexOf('premove') != -1) {
             m.push('-');
             m.push({
-                text: _('context_remove')
+                text: _('delete')
                 ,handler: this.remove
                 ,scope: this
             });
@@ -160,14 +179,14 @@ Ext.extend(MODx.grid.Context,MODx.grid.Grid,{
             this.createWindow.destroy();
         }
         this.createWindow = MODx.load({
-            xtype		: 'modx-window-context-create',
-            closeAction	:'close',
-            listeners	: {
-                'success'	: {
-                    fn			: function() {
+            xtype: 'modx-window-context-create',
+            closeAction:'close',
+            listeners: {
+                'success': {
+                    fn: function() {
                         this.afterAction();
                     },
-                    scope		: this
+                    scope: this
                 }
             }
         });
@@ -201,36 +220,40 @@ Ext.extend(MODx.grid.Context,MODx.grid.Grid,{
 
     ,remove: function(btn, e) {
         MODx.msg.confirm({
-            title 		: _('warning'),
-            text		: _('context_remove_confirm'),
-            url			: this.config.url,
-            params		: {
-                action		: 'Context/Remove',
-                key			: this.menu.record.key
+            title: _('warning'),
+            text: _('context_remove_confirm'),
+            url: this.config.url,
+            params: {
+                action: 'Context/Remove',
+                key: this.menu.record.key
             },
-            listeners	: {
-                'success'	: {
-                    fn			: function() {
+            listeners: {
+                'success': {
+                    fn: function() {
                         this.afterAction();
                     },
-                    scope		: this
+                    scope: this
                 }
             }
         });
     }
 
-    ,search: function(tf,newValue,oldValue) {
-        var nv = newValue || tf;
-        this.getStore().baseParams.search = Ext.isEmpty(nv) || Ext.isObject(nv) ? '' : nv;
+    ,ctxSearch: function(tf,newValue,oldValue) {
+        var s = this.getStore();
+        s.baseParams.search = newValue;
+        this.replaceState();
         this.getBottomToolbar().changePage(1);
-        return true;
     }
 
     ,clearFilter: function() {
-        this.getStore().baseParams = {
+        var s = this.getStore();
+        var ctxSearch = Ext.getCmp('modx-ctx-search');
+        s.baseParams = {
             action: 'Context/GetList'
         };
-        Ext.getCmp('modx-ctx-search').reset();
+        MODx.request.search = '';
+        ctxSearch.setValue('');
+        this.replaceState();
         this.getBottomToolbar().changePage(1);
     }
 
@@ -251,7 +274,7 @@ Ext.extend(MODx.grid.Context,MODx.grid.Grid,{
             actions.push({
                 action: 'updateContext',
                 icon: 'pencil-square-o',
-                text: _('context_update')
+                text: _('edit')
             });
         }
 
@@ -259,7 +282,7 @@ Ext.extend(MODx.grid.Context,MODx.grid.Grid,{
             actions.push({
                 action: 'remove',
                 icon: 'trash-o',
-                text: _('context_remove')
+                text: _('delete')
             });
         }
 
@@ -279,7 +302,7 @@ Ext.reg('modx-grid-contexts',MODx.grid.Context);
 MODx.window.CreateContext = function(config) {
     config = config || {};
     Ext.applyIf(config,{
-        title: _('context_create')
+        title: _('create')
         ,url: MODx.config.connector_url
         ,action: 'Context/Create'
         ,fields: [{

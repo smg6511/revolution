@@ -36,7 +36,6 @@ $_lang['namespace'] = 'Namespace';
 $_lang['namespace_desc'] = 'Namespace ini berkaitan dengan pengaturan. Leksikon topik akan dimuat untuk Namespace ini ketika meraih pengaturan standar.';
 $_lang['namespace_filter'] = 'pilih berdasarkan namespace...';
 $_lang['search_by_key'] = 'Cari dengan kata kunci...';
-$_lang['setting_create'] = 'Create Setting';
 $_lang['setting_err'] = 'Silakan periksa data Anda untuk bidang-bidang berikut: ';
 $_lang['setting_err_ae'] = 'Pengaturan dengan kata kunci sudah ada. Silakan tentukan nama kunci lain.';
 $_lang['setting_err_nf'] = 'Pengaturan tidak ditemukan.';
@@ -46,9 +45,7 @@ $_lang['setting_err_remove'] = 'An error occurred while trying to delete the set
 $_lang['setting_err_save'] = 'Terjadi kesalahan saat mencoba untuk menyimpan pengaturan.';
 $_lang['setting_err_startint'] = 'Pengaturan mungkin tidak dimulai dengan bilangan bulat.';
 $_lang['setting_err_invalid_document'] = 'Ada tidak ada dokumen dengan ID %d. Silakan tentukan dokumen yang ada.';
-$_lang['setting_remove'] = 'Hapus pengaturan';
 $_lang['setting_remove_confirm'] = 'Apakah Anda yakin Anda ingin menghapus pengaturan ini? Ini mungkin akan menghentikan instalasi MODX.';
-$_lang['setting_update'] = 'Edit Setting';
 $_lang['settings_after_install'] = 'Sebagai instalasi baru, Anda diminta untuk mengendalikan pengaturan ini, dan merubah apapun yang mungkin Anda ingin. Setelah Anda telah menguasai pengaturan, tekan \'Simpan\' untuk memperbarui pengaturan database. <br /><br />';
 $_lang['settings_desc'] = 'Here you can set general preferences and configuration settings for the MODX manager interface, as well as how your MODX site runs. <b>Each setting will be available via the [[++key]] placeholder.</b><br />Double-click on the value column for the setting you\'d like to edit to dynamically edit via the grid, or right-click on a setting for more options. You can also click the "+" sign for a description of the setting.';
 $_lang['settings_furls'] = 'URL yang berkaitan';
@@ -384,6 +381,9 @@ $_lang['setting_mail_smtp_port_desc'] = 'Menetapkan default SMTP server port.';
 $_lang['setting_mail_smtp_prefix'] = 'Awalan koneksi SMTP';
 $_lang['setting_mail_smtp_prefix_desc'] = 'Set sambungan awalan. Pilihan "", "ssl" atau "tls"';
 
+$_lang['setting_mail_smtp_autotls'] = 'SMTP Auto TLS';
+$_lang['setting_mail_smtp_autotls_desc'] = 'Whether to enable TLS encryption automatically if a server supports it, even if "SMTP Encryption" is not set to "tls"';
+
 $_lang['setting_mail_smtp_single_to'] = 'SMTP tunggal untuk';
 $_lang['setting_mail_smtp_single_to_desc'] = 'Menyediakan kemampuan untuk memiliki untuk bidang proses individu email, bukan pengiriman ke seluruh alamat.';
 
@@ -571,6 +571,12 @@ $_lang['setting_publish_default'] = 'Penerbitan standar';
 $_lang['setting_publish_default_desc'] = 'Pilih \'Ya\' untuk membuat semua sumber daya baru yang diterbitkan oleh default.';
 $_lang['setting_publish_default_err'] = 'Tolong nyatakan apakah Anda ingin dokumen diterbitkan secara default atau tidak.';
 
+$_lang['setting_quick_search_in_content'] = 'Allow search in content';
+$_lang['setting_quick_search_in_content_desc'] = 'If \'Yes\', then the content of the element (resource, template, chunk, etc.) will also be available for quick search.';
+
+$_lang['setting_quick_search_result_max'] = 'Number of items in search result';
+$_lang['setting_quick_search_result_max_desc'] = 'Maximum number of elements for each type (resource, template, chunk, etc.) in the quick search result.';
+
 $_lang['setting_request_controller'] = 'Permintaan pengaturan Filename';
 $_lang['setting_request_controller_desc'] = 'Nama file dari pengontrol permintaan utama dari mana MODX dimuat. Sebagian besar pengguna bisa meninggalkan ini sebagai index.php.';
 
@@ -604,6 +610,9 @@ $_lang['setting_server_offset_time_desc'] = 'Pilih jumlah perbedaan waktu jam di
 
 $_lang['setting_session_cookie_domain'] = 'Session Cookie Domain';
 $_lang['setting_session_cookie_domain_desc'] = 'Gunakan setelan ini untuk menyesuaikan domain cookie sesi. Biarkan kosong untuk menggunakan domain saat ini.';
+
+$_lang['setting_session_cookie_samesite'] = 'Session Cookie Samesite';
+$_lang['setting_session_cookie_samesite_desc'] = 'Choose Lax or Strict.';
 
 $_lang['setting_session_cookie_lifetime'] = 'Session Cookie Lifetime';
 $_lang['setting_session_cookie_lifetime_desc'] = 'Gunakan setelan ini untuk menyesuaikan masa pakai cookie sesi dalam hitungan detik. Ini digunakan untuk mengatur masa pakai cookie sesi klien saat mereka memilih opsi \'remember me\' saat masuk.';
@@ -667,8 +676,8 @@ $_lang['setting_site_unavailable_page_err'] = 'Please specify the document ID fo
 $_lang['setting_static_elements_automate_templates'] = 'Automate static elements for templates?';
 $_lang['setting_static_elements_automate_templates_desc'] = 'This will automate the handling of static files, such as creating and deleting static files for templates.';
 
-$_lang['setting_static_elements_automate_tvs'] = 'Automate static elements for template variables?';
-$_lang['setting_static_elements_automate_tvs_desc'] = 'This will automate the handling of static files, such as creating and deleting static files for template variables.';
+$_lang['setting_static_elements_automate_tvs'] = 'Automate static elements for TVs?';
+$_lang['setting_static_elements_automate_tvs_desc'] = 'This will automate the handling of static files, such as creating and deleting static files for TVs.';
 
 $_lang['setting_static_elements_automate_chunks'] = 'Automate static elements for chunks?';
 $_lang['setting_static_elements_automate_chunks_desc'] = 'This will automate the handling of static files, such as creating and deleting static files for chunks.';
@@ -705,7 +714,7 @@ $_lang['setting_tree_root_id'] = 'Tree Root ID';
 $_lang['setting_tree_root_id_desc'] = 'Set this to a valid ID of a Resource to start the left Resource tree at below that node as the root. The user will only be able to see Resources that are children of the specified Resource.';
 
 $_lang['setting_tvs_below_content'] = 'Move TVs Below Content';
-$_lang['setting_tvs_below_content_desc'] = 'Set this to Yes to move Template Variables below the Content when editing Resources.';
+$_lang['setting_tvs_below_content_desc'] = 'Set this to Yes to move TVs below the Content when editing Resources.';
 
 $_lang['setting_ui_debug_mode'] = 'UI Debug Mode';
 $_lang['setting_ui_debug_mode_desc'] = 'Set this to Yes to output debug messages when using the UI for the default manager theme. You must use a browser that supports console.log.';
@@ -717,6 +726,9 @@ $_lang['setting_unauthorized_page_err'] = 'Silakan tentukan ID Sumber daya untuk
 $_lang['setting_upload_files'] = 'Jenis berkas yang dapat diunggah';
 $_lang['setting_upload_files_desc'] = 'Di sini Anda bisa memasukkan daftar berkas yang bisa diunggah ke \'assets/files/\' menggunakan Resource Manager. Harap masukkan ekstensi untuk tipe berkas, dipisahkan dengan koma.';
 
+$_lang['setting_upload_file_exists'] = 'Check if uploaded file exists';
+$_lang['setting_upload_file_exists_desc'] = 'When enabled an error will be shown when uploading a file that already exists with the same name. When disabled, the existing file will be quietly replaced with the new file.';
+
 $_lang['setting_upload_images'] = 'Jenis gambar yang dapat diunggah';
 $_lang['setting_upload_images_desc'] = 'Di sini Anda bisa memasukkan daftar berkas yang bisa diunggah menjadi \'asset/images/\' menggunakan Resource Manager. Harap masukkan ekstensi untuk jenis gambar, dipisahkan dengan tanda koma.';
 
@@ -725,6 +737,9 @@ $_lang['setting_upload_maxsize_desc'] = 'Masukkan ukuran berkas maksimal yang bi
 
 $_lang['setting_upload_media'] = 'Jenis meida yang dapat diunggah';
 $_lang['setting_upload_media_desc'] = 'Di sini Anda bisa memasukkan daftar berkas yang bisa diunggah menjadi \'asset/media/\' menggunakan Resource Manager. Harap masukkan ekstensi untuk jenis media, dipisahkan dengan koma.';
+
+$_lang['setting_upload_translit'] = 'Transliterate names of uploaded files?';
+$_lang['setting_upload_translit_desc'] = 'If this option is enabled, the name of an uploaded file will be transliterated according to the global transliteration rules.';
 
 $_lang['setting_use_alias_path'] = 'Gunakan sahabat alias diri sendiri';
 $_lang['setting_use_alias_path_desc'] = 'Atur pilihan ini menjadi \'ya\' akan menampilkan path lengkap ke sumber jika sumber memiliki alias. Misalnya, jika sumber dengan alias bernama \'child\' berada di dalam lingkupan sumber dengan alias disebut \'parent\', maka seluruh alias path ke sumber akan ditampilkan sebagai \'/parent/child.html\'.<br/><strong>CATATAN: Saat menyetel opsi ini ke \'Ya\' (mengaktifkan jalur alias), item referensi (seperti gambar, CSS, JavaScripts, dll.) gunakan jalur absolut, misalnya \'/ aset / gambar\' sebagai bertentangan dengan \'aset / gambar\'. Dengan demikian Anda akan mencegah pencarian (atau jaringan pencarian) menambahkan jalur relatif ke jalur alias.</strong>';

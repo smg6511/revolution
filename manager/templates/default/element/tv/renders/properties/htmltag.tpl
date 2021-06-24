@@ -1,7 +1,7 @@
 <div id="tv-wprops-form{$tv|default}"></div>
 {literal}
 
-<script type="text/javascript">
+<script>
 // <![CDATA[
 var params = {
 {/literal}{foreach from=$params key=k item=v name='p'}
@@ -26,10 +26,10 @@ MODx.load({
         ,anchor: '100%'
     },{
         xtype: 'textfield'
-        ,fieldLabel: _('tag_id')
-        ,name: 'prop_tagid'
-        ,id: 'prop_tagid{/literal}{$tv|default}{literal}'
-        ,value: params['tagid'] || ''
+        ,fieldLabel: _('id')
+        ,name: 'prop_id'
+        ,id: 'prop_id{/literal}{$tv|default}{literal}'
+        ,value: params['id'] || ''
         ,listeners: oc
         ,anchor: '100%'
     },{
@@ -51,9 +51,9 @@ MODx.load({
     },{
         xtype: 'textfield'
         ,fieldLabel: _('attributes')
-        ,name: 'prop_attrib'
-        ,id: 'prop_attrib{/literal}{$tv|default}{literal}'
-        ,value: params['attrib'] || ''
+        ,name: 'prop_attributes'
+        ,id: 'prop_attributes{/literal}{$tv|default}{literal}'
+        ,value: params['attributes'] || ''
         ,listeners: oc
         ,anchor: '100%'
     }]

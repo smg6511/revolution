@@ -2,7 +2,7 @@
 /**
  * Common upgrade script for 3.0 to clean up files removed since 2.x
  *
- * @var modX
+ * @var $modx modX
  *
  * @package setup
  */
@@ -142,6 +142,16 @@ $cleanup = [
         'src/Revolution/sqlsrv/modAction.php',
         'src/Revolution/sqlsrv/modAccessAction.php',
         'src/Revolution/modManagerControllerDeprecated.php',
+        'src/Revolution/Processors/Element/TemplateVar/Renders/mgr/input/list-multiple-legacy.class.php',
+        'src/Revolution/Processors/Element/TemplateVar/Renders/mgr/inputproperties/list-multiple-legacy.php',
+
+        // remove modClassMap and dependencies
+        'src/Revolution/Processors/Element/GetClasses.php',
+        'src/Revolution/Processors/System/ClassMap/GetList.php',
+        'src/Revolution/modClassMap.php',
+        'src/Revolution/mysql/modClassMap.php',
+        'src/Revolution/sqlsrv/modClassMap.php',
+
     ],
     'manager' => [
         'min/',
@@ -149,6 +159,8 @@ $cleanup = [
         'assets/modext/widgets/security/modx.grid.role.user.js',
         'assets/modext/workspace/lexicon/language.grid.js',
         'assets/modext/workspace/lexicon/lexicon.topic.grid.js',
+        'templates/default/element/tv/renders/input/list-multiple-legacy.tpl',
+        'templates/default/element/tv/renders/inputproperties/list-multiple-legacy.tpl',
     ],
 ];
 

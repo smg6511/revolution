@@ -12,6 +12,7 @@ MODx.tree.ResourceGroup = function(config) {
         title: _('resource_groups')
         ,url: MODx.config.connector_url
         ,action: 'Security/ResourceGroup/GetNodes'
+        ,rootIconCls: 'icon-files-o'
         ,root_id: '0'
         ,root_name: _('resource_groups')
         ,enableDrag: false
@@ -102,9 +103,12 @@ Ext.extend(MODx.tree.ResourceGroup,MODx.tree.Tree,{
     ,removeResourceGroup: function(item,e) {
         var n = this.cm.activeNode;
         var id = n.id.substr(2).split('_'); id = id[1];
+        var resource_group = n.text;
 
         MODx.msg.confirm({
-            text: _('resource_group_remove_confirm')
+            text: _('resource_group_remove_confirm',{
+                resource_group: resource_group
+            })
             ,url: this.config.url
             ,params: {
                 action: 'Security/ResourceGroup/Remove'
@@ -213,7 +217,12 @@ Ext.extend(MODx.tree.ResourceGroup,MODx.tree.Tree,{
 });
 Ext.reg('modx-tree-resource-group',MODx.tree.ResourceGroup);
 
-
+/**
+ * @class MODx.window.CreateResourceGroup
+ * @extends MODx.Window
+ * @param {Object} config An object of configuration resource groups
+ * @xtype modx-window-resourcegroup-create
+ */
 MODx.window.CreateResourceGroup = function(config) {
     config = config || {};
     this.ident = config.ident || 'modx-crgrp'+Ext.id();
@@ -330,6 +339,12 @@ MODx.window.CreateResourceGroup = function(config) {
 Ext.extend(MODx.window.CreateResourceGroup,MODx.Window);
 Ext.reg('modx-window-resourcegroup-create',MODx.window.CreateResourceGroup);
 
+/**
+ * @class MODx.window.UpdateResourceGroup
+ * @extends MODx.Window
+ * @param {Object} config An object of configuration resource groups
+ * @xtype modx-window-resourcegroup-update
+ */
 MODx.window.UpdateResourceGroup = function(config) {
     config = config || {};
     this.ident = config.ident || 'urgrp'+Ext.id();

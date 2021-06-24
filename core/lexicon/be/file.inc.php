@@ -7,7 +7,6 @@
  * @subpackage lexicon
  */
 $_lang['directory'] = 'Папка';
-$_lang['file_confirm_remove'] = 'Are you sure you want to delete this file? Deleting a file could potentially break your website. Make sure you know what this file does before deleting it.';
 $_lang['file_create'] = 'Стварыць файл';
 $_lang['file_deleted'] = 'Паспяхова!';
 $_lang['file_delete_file'] = 'Выдаліць файл';
@@ -68,16 +67,22 @@ $_lang['file_folder_err_rename'] = 'Адбылася невядомая памы
 $_lang['file_folder_err_rename_protected'] = 'Перайменаванне абароненай сістэмнай дырэкторыі не дапускаецца.';
 $_lang['file_folder_err_remove'] = 'An error occurred while trying to delete the directory.';
 $_lang['file_folder_err_remove_protected'] = 'Выдаленне абароненага сістэмнага каталога не дапускаецца.';
+$_lang['file_folder_err_update'] = 'An error occurred while trying to update the directory.';
 $_lang['file_folder_parent'] = 'Бацькоўскі каталог';
+$_lang['file_folder_parent_desc'] = 'Relative to the basePath of the media source';
 $_lang['file_folder_remove'] = 'Выдаліць каталог';
-$_lang['file_folder_remove_confirm'] = 'Are you sure you want to delete this directory? This could potentially break your website.';
+$_lang['file_folder_remove_confirm'] = 'Are you sure you want to delete the directory: "[[+directory]]"?<br />This could potentially break your website.';
+$_lang['file_folder_rename'] = 'Rename Directory';
 $_lang['file_last_accessed'] = 'Апошні зварот';
 $_lang['file_last_modified'] = 'Апошняя змена';
 $_lang['file_name'] = 'Імя файла';
 $_lang['file_quick_create'] = 'Хутка стварыць файл';
 $_lang['file_quick_update'] = 'Quick Edit File';
+$_lang['file_package_err_invalid_directory'] = 'The packages directory does not exist!';
+$_lang['file_package_err_invalid_name'] = 'This file [[+name]] has an invalid name for the transport package';
+$_lang['file_package_err_invalid_type'] = 'This file does not appear to be a transport package';
 $_lang['file_remove'] = 'Выдаліць файл';
-$_lang['file_remove_confirm'] = 'Are you sure you want to delete this file entirely?';
+$_lang['file_remove_confirm'] = 'Are you sure you want to delete the file: "[[+file]]"?<br />Deleting a file could potentially break your website. Make sure you know what this file does before deleting it.';
 $_lang['file_saved'] = 'Файл паспяхова адноўлены!';
 $_lang['file_size'] = 'Памер файла';
 $_lang['file_size_bytes'] = 'байтаў';

@@ -36,7 +36,6 @@ $_lang['namespace'] = 'İsim Alanı';
 $_lang['namespace_desc'] = 'Bu ayar ile ilişkili isim alanı. Ayarlar alınırken varsayılan Veri Sözlüğü Konusu bu İsim Alanı için yüklenecek.';
 $_lang['namespace_filter'] = 'İsim alanına göre filtrele...';
 $_lang['search_by_key'] = 'Anahtara göre ara...';
-$_lang['setting_create'] = 'Create Setting';
 $_lang['setting_err'] = 'Lütfen aşağıda ki alanlar için verinizi kontrol edin: ';
 $_lang['setting_err_ae'] = 'Bu anahtar ile ayar zaten var. Lütfen başka anahtar ismi belirleyin.';
 $_lang['setting_err_nf'] = 'Ayar bulunamadı.';
@@ -46,9 +45,7 @@ $_lang['setting_err_remove'] = 'An error occurred while trying to delete the set
 $_lang['setting_err_save'] = 'Ayar kaydedilmeye çalışılırken hata meydana geldi.';
 $_lang['setting_err_startint'] = 'Ayarlar bir tam sayı ile başlamayabilir.';
 $_lang['setting_err_invalid_document'] = '%d kimliği ile belge yok. Lütfen varolan bir belge belirleyin.';
-$_lang['setting_remove'] = 'Ayarı Sil';
 $_lang['setting_remove_confirm'] = 'Bu ayarı silmek istediğinizden emin misiniz? Bu MODX kurulumunu bozabilir.';
-$_lang['setting_update'] = 'Edit Setting';
 $_lang['settings_after_install'] = 'Bu yeni bir kurulum olduğu için bu ayarları kontrol etmeniz, ve istediğiniz ayarları değiştirmeniz gerekmektedir. Ayarları kontrol ettikten sonra, ayarlar veri tabanını güncelleştirmek için \'Kaydet\'e basınız.<br /><br />';
 $_lang['settings_desc'] = 'Here you can set general preferences and configuration settings for the MODX manager interface, as well as how your MODX site runs. <b>Each setting will be available via the [[++key]] placeholder.</b><br />Double-click on the value column for the setting you\'d like to edit to dynamically edit via the grid, or right-click on a setting for more options. You can also click the "+" sign for a description of the setting.';
 $_lang['settings_furls'] = 'Kullanıcı Dostu URLler';
@@ -384,6 +381,9 @@ $_lang['setting_mail_smtp_port_desc'] = 'Varsayılam SMTP sunucu bağlantı nokt
 $_lang['setting_mail_smtp_prefix'] = 'SMTP Bağlantısı Öneki';
 $_lang['setting_mail_smtp_prefix_desc'] = 'Bağlantı önekini ayarlar. Seçenekler "", "ssl ya da "tls"dir';
 
+$_lang['setting_mail_smtp_autotls'] = 'SMTP Auto TLS';
+$_lang['setting_mail_smtp_autotls_desc'] = 'Whether to enable TLS encryption automatically if a server supports it, even if "SMTP Encryption" is not set to "tls"';
+
 $_lang['setting_mail_smtp_single_to'] = 'SMTP Tek';
 $_lang['setting_mail_smtp_single_to_desc'] = 'Tüm TO adreslere göndermek yerine, bireysel TO e-postaları işleme alan için yeteneği sağlar.';
 
@@ -571,6 +571,12 @@ $_lang['setting_publish_default'] = 'Yayınlananlar önceden tanımlanmış';
 $_lang['setting_publish_default_desc'] = 'Bütün yeni kaynakları varsayılan olarak yayınlanır yapmak için \'Evet\'i seçin.';
 $_lang['setting_publish_default_err'] = 'Lütfen belgelerin varsayılan olarak yayınlanmasını isteyip istemediğinizi belirtin.';
 
+$_lang['setting_quick_search_in_content'] = 'Allow search in content';
+$_lang['setting_quick_search_in_content_desc'] = 'If \'Yes\', then the content of the element (resource, template, chunk, etc.) will also be available for quick search.';
+
+$_lang['setting_quick_search_result_max'] = 'Number of items in search result';
+$_lang['setting_quick_search_result_max_desc'] = 'Maximum number of elements for each type (resource, template, chunk, etc.) in the quick search result.';
+
 $_lang['setting_request_controller'] = 'Denetleyici Dosya Adı İste';
 $_lang['setting_request_controller_desc'] = 'MODX\'in yüklendiği ana istem kontrolcüsünün dosya ismi. Bir çok kullanıcı bunu index.php şeklinde bırakabilir.';
 
@@ -604,6 +610,9 @@ $_lang['setting_server_offset_time_desc'] = 'Bulunduğunuz yer ile sunucunun bul
 
 $_lang['setting_session_cookie_domain'] = 'Oturum Tanımlama Bilgisi';
 $_lang['setting_session_cookie_domain_desc'] = 'Oturum tanımlama bilgisi alan adını özelleştirmek için bu ayarı kullanın. Geçerli alanı kullanmak için boş bırakın.';
+
+$_lang['setting_session_cookie_samesite'] = 'Session Cookie Samesite';
+$_lang['setting_session_cookie_samesite_desc'] = 'Choose Lax or Strict.';
 
 $_lang['setting_session_cookie_lifetime'] = 'Oturum Çerezi Ömrü';
 $_lang['setting_session_cookie_lifetime_desc'] = 'Oturum çerezi ömrünü saniyeler içinde özelleştirmek için bu ayarı kullanın. Bu, oturum açma sırasında \'beni hatırla\' seçeneğini belirlediklerinde bir istemci oturum tanımlama bilgisinin ömrünü ayarlamak için kullanılır.';
@@ -667,8 +676,8 @@ $_lang['setting_site_unavailable_page_err'] = 'Lütfen sitenin kullanılamayan s
 $_lang['setting_static_elements_automate_templates'] = 'Automate static elements for templates?';
 $_lang['setting_static_elements_automate_templates_desc'] = 'This will automate the handling of static files, such as creating and deleting static files for templates.';
 
-$_lang['setting_static_elements_automate_tvs'] = 'Automate static elements for template variables?';
-$_lang['setting_static_elements_automate_tvs_desc'] = 'This will automate the handling of static files, such as creating and deleting static files for template variables.';
+$_lang['setting_static_elements_automate_tvs'] = 'Automate static elements for TVs?';
+$_lang['setting_static_elements_automate_tvs_desc'] = 'This will automate the handling of static files, such as creating and deleting static files for TVs.';
 
 $_lang['setting_static_elements_automate_chunks'] = 'Automate static elements for chunks?';
 $_lang['setting_static_elements_automate_chunks_desc'] = 'This will automate the handling of static files, such as creating and deleting static files for chunks.';
@@ -705,7 +714,7 @@ $_lang['setting_tree_root_id'] = 'Ağaç kök kimliği';
 $_lang['setting_tree_root_id_desc'] = 'Bunu, kök olarak o düğümün altındaki sol Kaynak ağacını başlatmak için bir Kaynağın geçerli bir kimliği olarak ayarlayın. Kullanıcı, yalnızca belirtilen Kaynak\'ın alt öğelerindeki Kaynakları görebilir.';
 
 $_lang['setting_tvs_below_content'] = 'TV\'leri İçerik Altında Taşı';
-$_lang['setting_tvs_below_content_desc'] = 'Kaynakları düzenlerken Şablon Değişkenlerini İçeriğin altına taşımak için Evet olarak ayarlayın.';
+$_lang['setting_tvs_below_content_desc'] = 'Set this to Yes to move TVs below the Content when editing Resources.';
 
 $_lang['setting_ui_debug_mode'] = 'UI Hata Ayıklama Modu';
 $_lang['setting_ui_debug_mode_desc'] = 'Varsayılan yönetici teması için kullanıcı arayüzünü kullanırken hata ayıklama iletileri çıkartmak için Evet olarak ayarlayın. Console.log dosyasını destekleyen bir tarayıcı kullanmalısınız.';
@@ -717,6 +726,9 @@ $_lang['setting_unauthorized_page_err'] = 'Yetkilendirilmemiş sayfa için lütf
 $_lang['setting_upload_files'] = 'Yüklenebilir Dosya Türleri';
 $_lang['setting_upload_files_desc'] = 'Buraya, Kaynak Yöneticisini kullanarak \'asset/files/\' içine yüklenebilecek dosyalar listesini girebilirsiniz. Lütfen dosya türü uzantılarını virgül ile ayırarak girin.';
 
+$_lang['setting_upload_file_exists'] = 'Check if uploaded file exists';
+$_lang['setting_upload_file_exists_desc'] = 'When enabled an error will be shown when uploading a file that already exists with the same name. When disabled, the existing file will be quietly replaced with the new file.';
+
 $_lang['setting_upload_images'] = 'Yüklenebilir Resim Türleri';
 $_lang['setting_upload_images_desc'] = 'Buraya, Kaynak Yöneticisini kullanarak \'asset/images/\' içine yüklenebilecek dosyalar listesini girebilirsiniz. Lütfen resim türü uzantılarını virgül ile ayırarak girin.';
 
@@ -725,6 +737,9 @@ $_lang['setting_upload_maxsize_desc'] = 'Dosya yöneticisi aracılığıyla yük
 
 $_lang['setting_upload_media'] = 'Yüklenebilir Medya Türleri';
 $_lang['setting_upload_media_desc'] = 'Burada, Kaynak Yöneticisi\'ni kullanarak \'assets / media /\' dosyasına yüklenebilecek dosyaların bir listesini girebilirsiniz. Lütfen medya türleri için virgüllerle ayrılmış uzantıları girin.';
+
+$_lang['setting_upload_translit'] = 'Transliterate names of uploaded files?';
+$_lang['setting_upload_translit_desc'] = 'If this option is enabled, the name of an uploaded file will be transliterated according to the global transliteration rules.';
 
 $_lang['setting_use_alias_path'] = 'Arkadaşça diğer yolu kullan';
 $_lang['setting_use_alias_path_desc'] = 'Kaynakta bir takma ad varsa, bu seçeneği \'evet\' olarak ayarlamak, Kaynağın tam yolunu görüntüleyecektir. Örneğin, \'alt\' adlı bir takma ada sahip bir Kaynak, \'üst\' olarak adlandırılan bir takma ada sahip bir kapsayıcı Kaynak içerisinde yer alıyorsa, Kaynak için tam takma ad yolu \'/parent/child.html\' olarak görüntülenecektir. <br /><strong> NOT: Bu seçeneği \'Evet\' (diğer ad yollarını açma) olarak ayarlarsanız, referans öğeler (resimler, CSS, JavaScript\'ler vb.) mutlak yolu, örn. \'/ assets / images\' olarak kullanır \'varlıklara / resimlere\' karşı. Böylece tarayıcının (veya web sunucusunun) takma ad yoluna göre yol eklemesini engelleyeceksiniz.</strong>';

@@ -12,7 +12,7 @@ $_lang['area_caching'] = 'Caching';
 $_lang['area_core'] = 'Core-Code';
 $_lang['area_editor'] = 'Rich-Text-Editor';
 $_lang['area_file'] = 'Dateisystem';
-$_lang['area_filter'] = 'Nach Bereich filtern...';
+$_lang['area_filter'] = 'Nach Bereich filtern …';
 $_lang['area_furls'] = 'Suchmaschinenfreundliche URLs';
 $_lang['area_gateway'] = 'Gateway';
 $_lang['area_language'] = 'Lexikon und Sprache';
@@ -34,9 +34,8 @@ $_lang['key_desc'] = 'Der Schlüssel der Einstellung. Er ist in Ihren Inhalten �
 $_lang['name_desc'] = 'Ein Name für die Einstellung. Dies kann auch ein Lexikon-Eintrag basierend auf dem Schlüssel sein, der dem Format "setting_" + Schlüssel entspricht.';
 $_lang['namespace'] = 'Namensraum';
 $_lang['namespace_desc'] = 'Der Namensraum, mit dem diese Einstellung verbunden ist. Das Standard-Lexikon-Thema wird für diesen Namensraum geladen, wenn die Einstellungen eingelesen werden.';
-$_lang['namespace_filter'] = 'Nach Namensraum filtern...';
-$_lang['search_by_key'] = 'Nach Schlüssel suchen...';
-$_lang['setting_create'] = 'Einstellung erstellen';
+$_lang['namespace_filter'] = 'Nach Namensraum filtern …';
+$_lang['search_by_key'] = 'Nach Schlüssel suchen …';
 $_lang['setting_err'] = 'Bitte überprüfen Sie Ihre Daten für die folgenden Felder: ';
 $_lang['setting_err_ae'] = 'Eine Einstellung mit diesem Schlüssel existiert bereits. Bitte geben Sie einen anderen Namen für den Schlüssel an.';
 $_lang['setting_err_nf'] = 'Einstellung nicht gefunden.';
@@ -46,9 +45,7 @@ $_lang['setting_err_remove'] = 'Beim Versuch, die Einstellung zu löschen, ist e
 $_lang['setting_err_save'] = 'Beim Versuch, die Einstellung zu speichern, ist ein Fehler aufgetreten.';
 $_lang['setting_err_startint'] = 'Schlüsselnamen von Einstellungen dürfen nicht mit einer Ziffer beginnen.';
 $_lang['setting_err_invalid_document'] = 'Es gibt kein Dokument mit der ID %d. Bitte geben Sie ein existierendes Dokument an.';
-$_lang['setting_remove'] = 'Einstellung löschen';
 $_lang['setting_remove_confirm'] = 'Sind Sie sicher, dass Sie diese Einstellung löschen möchten? Das könnte Ihre MODX-Installation unbrauchbar machen.';
-$_lang['setting_update'] = 'Einstellung bearbeiten';
 $_lang['settings_after_install'] = 'Da dies eine neue MODX-Installation ist, müssen Sie diese Einstellungen kontrollieren und ggf. einige Ihren Wünschen entsprechend ändern. Nachdem Sie die Einstellungen kontrolliert und ggf. angepasst haben, klicken Sie auf "Speichern", um die Daten in der Datenbank zu aktualisieren.<br /><br />';
 $_lang['settings_desc'] = 'Hier können Sie sowohl generelle Konfigurationseinstellungen für die MODX-Manager-Benutzeroberfläche vornehmen als auch festlegen, wie sich Ihre MODX-Website verhält. <b>Jede Einstellung ist ist mit dem [[++key]] Platzhalter verfügbar.</b><br />Doppelklicken Sie über der Einstellung, die Sie ändern möchten, auf die Werte-Spalte, um den Wert dynamisch direkt in der Tabelle zu bearbeiten, oder führen Sie einen Rechtsklick auf einer Einstellung aus, um weitere Optionen angeboten zu bekommen. Sie können, wo vorhanden, auch auf das "+"-Icon klicken, um eine Erläuterung zu der jeweiligen Einstellung zu bekommen.';
 $_lang['settings_furls'] = 'Suchmaschinenfreundliche URLs';
@@ -384,6 +381,9 @@ $_lang['setting_mail_smtp_port_desc'] = 'Legt den Standard-SMTP-Port fest.';
 $_lang['setting_mail_smtp_prefix'] = 'SMTP-Verbindungs-Präfix';
 $_lang['setting_mail_smtp_prefix_desc'] = 'Legt den Verbindungs-Präfix fest. Möglich sind "", "ssl" oder "tls"';
 
+$_lang['setting_mail_smtp_autotls'] = 'SMTP Auto TLS';
+$_lang['setting_mail_smtp_autotls_desc'] = 'TLS-Verschlüsselung automatisch aktivieren, wenn ein Server dies unterstützt, auch wenn die "SMTP-Verschlüsselung" nicht auf "tls" eingestellt ist.';
+
 $_lang['setting_mail_smtp_single_to'] = 'SMTP: Mails einzeln versenden';
 $_lang['setting_mail_smtp_single_to_desc'] = 'Wird diese Einstellung auf "Ja" gesetzt, werden Mails an jeden Empfänger einzeln versendet, anderenfalls wird eine einzige Mail versendet, bei der alle Empfänger im entsprechenden Adressfeld stehen.';
 
@@ -571,6 +571,12 @@ $_lang['setting_publish_default'] = 'Ressourcen standardmäßig veröffentlichen
 $_lang['setting_publish_default_desc'] = 'Wählen Sie "Ja", wenn alle neuen Ressourcen standardmäßig veröffentlicht werden sollen.';
 $_lang['setting_publish_default_err'] = 'Bitte geben Sie an, ob neue Dokumente standardmäßig veröffentlicht werden sollen.';
 
+$_lang['setting_quick_search_in_content'] = 'Suchen im Inhalt erlauben';
+$_lang['setting_quick_search_in_content_desc'] = 'Wenn diese Einstellung auf "Ja" gesetzt wird, dann wird der Inhalt des Elements (Ressource, Template, Chunk, etc.) auch in der Schnellsuche durchsucht.';
+
+$_lang['setting_quick_search_result_max'] = 'Anzahl der Elemente im Suchergebnis';
+$_lang['setting_quick_search_result_max_desc'] = 'Maximale Anzahl von Elementen für jeden Typ (Ressource, Template, Chunk usw.) im Suchergebnis.';
+
 $_lang['setting_request_controller'] = 'Dateiname des Request-Controllers';
 $_lang['setting_request_controller_desc'] = 'Der Dateiname des Haupt-Request-Controllers, von dem aus MODX geladen wird. Die meisten Benutzer können hier "index.php" eingestellt lassen.';
 
@@ -604,6 +610,9 @@ $_lang['setting_server_offset_time_desc'] = 'Geben Sie die Zeitdifferenz zwische
 
 $_lang['setting_session_cookie_domain'] = 'Session-Cookie-Domain';
 $_lang['setting_session_cookie_domain_desc'] = 'Verwenden Sie diese Einstellung, um die Session-Cookie-Domain anzupassen. Lassen Sie das Feld leer, wenn die aktuelle Domain verwendet werden soll.';
+
+$_lang['setting_session_cookie_samesite'] = 'Session Cookie Samesite';
+$_lang['setting_session_cookie_samesite_desc'] = 'Choose Lax or Strict.';
 
 $_lang['setting_session_cookie_lifetime'] = 'Session-Cookie-Lebensdauer';
 $_lang['setting_session_cookie_lifetime_desc'] = 'Verwenden Sie diese Einstellung, um die Session-Cookie-Lebensdauer anzupassen (in Sekunden). Diese gibt an, wie lange ein Session-Cookie gültig ist, wenn die Login-Option "An mich erinnern" gewählt wurde. Standardeinstellung ist "604800" (= 7 Tage).';
@@ -639,7 +648,7 @@ $_lang['setting_send_poweredby_header'] = 'Sende X-Powered-By-Header';
 $_lang['setting_send_poweredby_header_desc'] = 'Wenn diese Option aktiviert ist, sendet MODX den "X-Powered-By"-Header, um diese Site als auf MODX basierend zu kennzeichnen. Dies hilft dabei, die Ermittlung der globalen MODX-Nutzung durch externe Tracker, die Ihre Site inspizieren, zu ermöglichen. Da dies erleichtert, zu erkennen, auf welchem System Ihre Site basiert, könnte dies ein leicht erhöhtes Sicherheitsrisiko darstellen, wenn eine Sicherheitslücke in MODX gefunden wird.';
 
 $_lang['setting_show_tv_categories_header'] = 'Reiter-Überschrift "Kategorien" für TVs anzeigen';
-$_lang['setting_show_tv_categories_header_desc'] = 'Wenn diese Einstellung auf "Ja" gesetzt wurde, zeigt MODX die Überschrift "Kategorien" über dem ersten Kategorien-Reiter an, wenn Template-Variablen in einer Ressource bearbeitet werden.';
+$_lang['setting_show_tv_categories_header_desc'] = 'Wenn diese Einstellung auf "Ja" gesetzt wurde, zeigt MODX die Überschrift "Kategorien" über dem ersten Kategorien-Reiter an, wenn TVs in einer Ressource bearbeitet werden.';
 
 $_lang['setting_signupemail_message'] = 'E-Mail nach Account-Erstellung';
 $_lang['setting_signupemail_message_desc'] = 'Hier können Sie die Nachricht eingeben, die an einen Benutzer gesendet wird, wenn Sie einen Account für ihn erstellen und MODX ihm eine E-Mail senden lassen, die seinen Benutzernamen und sein Passwort enthält.<br /><strong>Hinweis:</strong> Die folgenden Platzhalter werden vom System ersetzt, wenn die Nachricht versendet wird:<br /><br />[[+sname]] - Name Ihrer Website,<br />[[+saddr]] - E-Mail-Adresse ihrer Website (bzw. des Webmasters),<br />[[+surl]] - URL Ihrer Website,<br />[[+uid]] - Benutzername oder ID des Benutzers,<br />[[+pwd]] - Passwort des Benutzers,<br />[[+ufn]] - Vollständiger Name des Benutzers.<br /><br /><strong>Achten Sie darauf, dass zumindest [[+uid]] und [[+pwd]] in der E-Mail enthalten sind, da sonst der Benutzername und das Passwort nicht mit der Mail versendet werden und Ihre Benutzer folglich ihre Zugangsdaten nicht kennen!</strong>';
@@ -667,8 +676,8 @@ $_lang['setting_site_unavailable_page_err'] = 'Bitte geben Sie die Ressourcen-ID
 $_lang['setting_static_elements_automate_templates'] = 'Statische Elemente für Templates automatisieren?';
 $_lang['setting_static_elements_automate_templates_desc'] = 'Dies wird das Verarbeiten von statischen Dateien für Templates, z. B. das Erstellen und Löschen von statischen Dateien, automatisieren.';
 
-$_lang['setting_static_elements_automate_tvs'] = 'Statische Elemente für Template-Variablen automatisieren?';
-$_lang['setting_static_elements_automate_tvs_desc'] = 'Dies wird das Verarbeiten von statischen Dateien für Template-Variablen, z. B. das Erstellen und Löschen von statischen Dateien, automatisieren.';
+$_lang['setting_static_elements_automate_tvs'] = 'Statische Elemente für TVs automatisieren?';
+$_lang['setting_static_elements_automate_tvs_desc'] = 'Dies wird das Verarbeiten von statischen Dateien für TVs, z. B. das Erstellen und Löschen von statischen Dateien, automatisieren.';
 
 $_lang['setting_static_elements_automate_chunks'] = 'Statische Elemente für Chunks automatisieren?';
 $_lang['setting_static_elements_automate_chunks_desc'] = 'Dies wird das Verarbeiten von statischen Dateien für Chunks, z. B. das Erstellen und Löschen von statischen Dateien, automatisieren.';
@@ -704,8 +713,8 @@ $_lang['setting_tree_default_sort_desc'] = 'Das Feld, nach dem der Ressourcen-Ba
 $_lang['setting_tree_root_id'] = 'Ressourcen-Baum-Basis-ID';
 $_lang['setting_tree_root_id_desc'] = 'Geben Sie hier eine gültige ID einer Ressource ein, um den Ressourcen-Baum links bei dieser Ressource als Basis beginnen zu lassen. Benutzer können dann nur Ressourcen sehen, die Kinder der angegebenen Ressource sind.';
 
-$_lang['setting_tvs_below_content'] = 'Template-Variablen unter den Inhalt verschieben';
-$_lang['setting_tvs_below_content_desc'] = 'Setzen Sie diese Einstellung auf "Ja", um Template-Variablen beim Bearbeiten von Ressourcen unter das Eingabefeld für den Inhalt zu verschieben.';
+$_lang['setting_tvs_below_content'] = 'TVs unter den Inhalt verschieben';
+$_lang['setting_tvs_below_content_desc'] = 'Setzen Sie diese Einstellung auf "Ja", um TVs beim Bearbeiten von Ressourcen unter das Eingabefeld für den Inhalt zu verschieben.';
 
 $_lang['setting_ui_debug_mode'] = 'Benutzerschnittstellen-Debug-Modus';
 $_lang['setting_ui_debug_mode_desc'] = 'Setzen Sie diese Einstellung auf "Ja", um Debug-Meldungen auszugeben, wenn Sie die Benutzerschnittstelle für das Standard-Manager-Theme verwenden. Sie müssen einen Browser verwenden, der console.log unterstützt.';
@@ -717,6 +726,9 @@ $_lang['setting_unauthorized_page_err'] = 'Bitte geben Sie eine Ressourcen-ID f�
 $_lang['setting_upload_files'] = 'Hochladbare Dateitypen';
 $_lang['setting_upload_files_desc'] = 'Hier können Sie eine Liste von Dateitypen eingeben, die über den Ressourcen-Manager in das Verzeichnis assets/files/ hochgeladen werden können. Bitte geben Sie die Dateiendungen der Dateitypen ein, durch Kommata getrennt.';
 
+$_lang['setting_upload_file_exists'] = 'Überprüfen, ob die hochgeladene Datei existiert';
+$_lang['setting_upload_file_exists_desc'] = 'Wenn diese Einstellung aktiviert ist, wird ein Fehler beim Hochladen einer Datei mit gleichem Namen angezeigt. Wenn sie deaktiviert ist, wird die vorhandene Datei ohne Nachfrage durch die neue Datei ersetzt.';
+
 $_lang['setting_upload_images'] = 'Hochladbare Bild-Dateitypen';
 $_lang['setting_upload_images_desc'] = 'Hier können Sie eine Liste von Dateitypen eingeben, die über den Ressourcen-Manager in das Verzeichnis assets/images/ hochgeladen werden können. Bitte geben Sie die Dateiendungen der Bildtypen ein, durch Kommata getrennt.';
 
@@ -725,6 +737,9 @@ $_lang['setting_upload_maxsize_desc'] = 'Geben Sie die maximale Größe für Dat
 
 $_lang['setting_upload_media'] = 'Hochladbare Medien-Dateitypen';
 $_lang['setting_upload_media_desc'] = 'Hier können Sie eine Liste von Dateitypen eingeben, die über den Ressourcen-Manager in das Verzeichnis assets/media/ hochgeladen werden können. Bitte geben Sie die Dateiendungen der Medientypen ein, durch Kommata getrennt.';
+
+$_lang['setting_upload_translit'] = 'Namen von hochgeladenen Dateien transliterieren?';
+$_lang['setting_upload_translit_desc'] = 'Wenn diese Option aktiviert ist, wird der Name einer hochgeladenen Datei gemäß den globalen Transliterationsregeln transliteriert.';
 
 $_lang['setting_use_alias_path'] = 'Suchmaschinenfreundliche Alias-Pfade';
 $_lang['setting_use_alias_path_desc'] = 'Wenn Sie diese Einstellung auf "Ja" setzen, wird der komplette Pfad zur Ressource angezeigt, wenn diese einen Alias hat. Wenn z.B. eine Ressource mit dem Alias "kind" in einer Container-Ressource mit dem Alias "eltern" abgelegt ist, wird der komplette Alias-Pfad zu dieser Ressource als "/eltern/kind.html" angezeigt.<br /><strong>HINWEIS: Wenn Sie diese Option auf "Ja" setzen (also Alias-Pfade aktivieren), verwenden Referenz-Elemente (wie Bilder, CSS- und JavaScript-Dateien etc.) absolute Pfade, also z.B. "/assets/images" im Gegensatz zu "assets/images". Dadurch wird verhindert, dass der Browser (oder der Webserver) die relativen Pfade an die Alias-Pfade anhängt.</strong>';

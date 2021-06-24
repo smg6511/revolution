@@ -36,7 +36,6 @@ $_lang['namespace'] = 'Namespace';
 $_lang['namespace_desc'] = 'De Namespace waar deze Instelling bij hoort. Het "default" Lexicon Topic voor de Namespace zal beschikbaar zijn wanneer Instellingen worden geladen.';
 $_lang['namespace_filter'] = 'Filter op namespace...';
 $_lang['search_by_key'] = 'Zoek op key...';
-$_lang['setting_create'] = 'Create Setting';
 $_lang['setting_err'] = 'Controleer jouw gegevens voor de volgende velden: ';
 $_lang['setting_err_ae'] = 'Instelling met deze key bestaat reeds. Definieer een andere keynaam.';
 $_lang['setting_err_nf'] = 'Instelling niet gevonden.';
@@ -46,9 +45,7 @@ $_lang['setting_err_remove'] = 'An error occurred while trying to delete the set
 $_lang['setting_err_save'] = 'Er is een fout opgetreden tijdens het proberen op te slaan van de instelling.';
 $_lang['setting_err_startint'] = 'Instelling mag niet starten met een cijfer.';
 $_lang['setting_err_invalid_document'] = 'Er is geen document met ID %d. Definieer een geldig document.';
-$_lang['setting_remove'] = 'Instelling verwijderen';
 $_lang['setting_remove_confirm'] = 'Weet je zeker dat je deze insteling wilt verwijderen? Dit kan jouw MODX installatie kapot maken.';
-$_lang['setting_update'] = 'Edit Setting';
 $_lang['settings_after_install'] = 'Aangezien dit een nieuwe installatie is, ben je verplicht deze instellingen te controleren en daar waar je wenst aan te passen. Nadat je deze instellingen hebt gecontroleerd, klik op \'opslaan\' om de instellingen in de database weg te schrijven.<br /><br />';
 $_lang['settings_desc'] = 'Here you can set general preferences and configuration settings for the MODX manager interface, as well as how your MODX site runs. <b>Each setting will be available via the [[++key]] placeholder.</b><br />Double-click on the value column for the setting you\'d like to edit to dynamically edit via the grid, or right-click on a setting for more options. You can also click the "+" sign for a description of the setting.';
 $_lang['settings_furls'] = 'Vriendelijke URLs';
@@ -384,6 +381,9 @@ $_lang['setting_mail_smtp_port_desc'] = 'Stel de standaard SMTP poort in.';
 $_lang['setting_mail_smtp_prefix'] = 'SMTP verbinding voorvoegsel';
 $_lang['setting_mail_smtp_prefix_desc'] = 'Stel het voorvoegsel van de verbinding in. Mogelijk zijn "", "ssl" of "tls"';
 
+$_lang['setting_mail_smtp_autotls'] = 'SMTP Auto TLS';
+$_lang['setting_mail_smtp_autotls_desc'] = 'Whether to enable TLS encryption automatically if a server supports it, even if "SMTP Encryption" is not set to "tls"';
+
 $_lang['setting_mail_smtp_single_to'] = 'SMTP Single To';
 $_lang['setting_mail_smtp_single_to_desc'] = 'Biedt de mogelijkheid om e-mail berichten afzonderlijk te sturen in plaats van het versturen naar alle \'naar\' adressen.';
 
@@ -571,6 +571,12 @@ $_lang['setting_publish_default'] = 'Standaard gepubliceerd';
 $_lang['setting_publish_default_desc'] = 'Selecteer \'Ja\' om alle nieuwe documenten standaard gepubliceerd te maken.';
 $_lang['setting_publish_default_err'] = 'Vul in om wel of niet documenten standaard gepubliceerd te maken.';
 
+$_lang['setting_quick_search_in_content'] = 'Allow search in content';
+$_lang['setting_quick_search_in_content_desc'] = 'If \'Yes\', then the content of the element (resource, template, chunk, etc.) will also be available for quick search.';
+
+$_lang['setting_quick_search_result_max'] = 'Number of items in search result';
+$_lang['setting_quick_search_result_max_desc'] = 'Maximum number of elements for each type (resource, template, chunk, etc.) in the quick search result.';
+
 $_lang['setting_request_controller'] = 'Request controller bestandsnaam';
 $_lang['setting_request_controller_desc'] = 'De bestandsnaam van de hoofd request controller vanwaar MODX geladen is. De meeste gebruikers kunnen dit laten staan op index.php.';
 
@@ -604,6 +610,9 @@ $_lang['setting_server_offset_time_desc'] = 'Selecteer het aantal uren in tijdsv
 
 $_lang['setting_session_cookie_domain'] = 'Sessie cookie domein';
 $_lang['setting_session_cookie_domain_desc'] = 'Gebruik deze instelling om de sessie cookie domein aan te passen.';
+
+$_lang['setting_session_cookie_samesite'] = 'Sessie Cookie Samesite';
+$_lang['setting_session_cookie_samesite_desc'] = 'Kies Lax of Strict.';
 
 $_lang['setting_session_cookie_lifetime'] = 'Sessie cookie verlooptijd';
 $_lang['setting_session_cookie_lifetime_desc'] = 'Gebruik deze instelling om de sessie cookie verlooptijd in seconden aan te passen. Dit wordt gebruikt om de verlooptijd van de sessie cookie wanneer er gekozen wordt voor \'onthoud mij\' optie bij het inloggen.';
@@ -667,8 +676,8 @@ $_lang['setting_site_unavailable_page_err'] = 'Vul een document ID in voor de ni
 $_lang['setting_static_elements_automate_templates'] = 'Automate static elements for templates?';
 $_lang['setting_static_elements_automate_templates_desc'] = 'This will automate the handling of static files, such as creating and deleting static files for templates.';
 
-$_lang['setting_static_elements_automate_tvs'] = 'Automate static elements for template variables?';
-$_lang['setting_static_elements_automate_tvs_desc'] = 'This will automate the handling of static files, such as creating and deleting static files for template variables.';
+$_lang['setting_static_elements_automate_tvs'] = 'Automate static elements for TVs?';
+$_lang['setting_static_elements_automate_tvs_desc'] = 'This will automate the handling of static files, such as creating and deleting static files for TVs.';
 
 $_lang['setting_static_elements_automate_chunks'] = 'Automate static elements for chunks?';
 $_lang['setting_static_elements_automate_chunks_desc'] = 'This will automate the handling of static files, such as creating and deleting static files for chunks.';
@@ -705,7 +714,7 @@ $_lang['setting_tree_root_id'] = 'Structuur Root ID';
 $_lang['setting_tree_root_id_desc'] = 'Stel dit in naar een geldig ID van een document om boomstructuur aan de linkerkant te starten als root. De gebruiker zal alleen de documenten zien dat subs zijn van dit document.';
 
 $_lang['setting_tvs_below_content'] = 'Verplaats TVs onder Content';
-$_lang['setting_tvs_below_content_desc'] = 'Stel in op Ja om Template Variabelen onder de Content te verplaatsen bij het bewerken van een Resourcen.';
+$_lang['setting_tvs_below_content_desc'] = 'Set this to Yes to move TVs below the Content when editing Resources.';
 
 $_lang['setting_ui_debug_mode'] = 'UI Debug Modus';
 $_lang['setting_ui_debug_mode_desc'] = 'Stel in op Ja om debug meldingen te tonen wanneer u de standaard manager theme gebruikt. Je moet een browser gebruiken die console.log ondersteunt.';
@@ -717,6 +726,9 @@ $_lang['setting_unauthorized_page_err'] = 'Vul een document ID in voor de onbevo
 $_lang['setting_upload_files'] = 'Uploadbare bestandstypen';
 $_lang['setting_upload_files_desc'] = 'Hier kun je een lijst van bestandstypen invullen welke geupload kunnen worden in \'assets/files/\' bij gebruik van de document manager. Vul de extenties van de bestandstypen in gescheiden door een komma.';
 
+$_lang['setting_upload_file_exists'] = 'Check if uploaded file exists';
+$_lang['setting_upload_file_exists_desc'] = 'When enabled an error will be shown when uploading a file that already exists with the same name. When disabled, the existing file will be quietly replaced with the new file.';
+
 $_lang['setting_upload_images'] = 'Uploadbare afbeeldingstypen';
 $_lang['setting_upload_images_desc'] = 'Hier kun je een lijst van bestandstypen invullen welke geupload kunnen worden in \'assets/images/\' bij gebruik van de document manager. Vul de extenties van de bestandstypen in gescheiden door een komma.';
 
@@ -725,6 +737,9 @@ $_lang['setting_upload_maxsize_desc'] = 'Vul een maximale bestandsgrootte in dat
 
 $_lang['setting_upload_media'] = 'Uploadbare mediatypen';
 $_lang['setting_upload_media_desc'] = 'Hier kun je een lijst van bestandstypen invullen welke geupload kunnen worden in \'assets/media/\' bij gebruik van de document manager. Vul de extenties van de bestandstypen in gescheiden door een komma.';
+
+$_lang['setting_upload_translit'] = 'Transliterate names of uploaded files?';
+$_lang['setting_upload_translit_desc'] = 'If this option is enabled, the name of an uploaded file will be transliterated according to the global transliteration rules.';
 
 $_lang['setting_use_alias_path'] = 'Gebruik vriendelijke aliaspaden';
 $_lang['setting_use_alias_path_desc'] = 'Stel deze optie in op \'Ja\' zal een volledig pad tonen naar het document als het een alias heeft. Ter voorbeeld, als een document met een alias genaamd \'child\' in een container document zit met een alias genaamd \'parent\', dan is het volledige pad naar het document dat getoond word zoiets als \'parent/child.html\'<br /><strong>Let op: wanneer je deze instelling instelt op \'Ja\' (aanzetten aliaspaden), refereer items (zoals afbeeldingen, css, javascripts, etc.) middels gebruik van absolute paden: bijv., \'/assets/images\' in tegenstelling tot \'assets/images\'. Als je dit doet dan voorkom je dat de browser (of webserver) dat ze het pad toevoegen aan het alias pad.</strong>';

@@ -2,6 +2,7 @@
 namespace MODX\Revolution\Tests\Controllers\Resources\SymLink;
 
 
+use MODX\Revolution\modSymLink;
 use MODX\Revolution\Tests\Controllers\Resources\ResourceCreateControllerTest;
 
 class SymLinkCreateControllerTest extends ResourceCreateControllerTest
@@ -12,10 +13,12 @@ class SymLinkCreateControllerTest extends ResourceCreateControllerTest
     public $controllerName = 'SymLinkCreateManagerController';
     public $controllerPath = 'resource/symlink/create';
 
-
-    public function setUp()
+    /**
+     * @before
+     */
+    public function setUpFixtures()
     {
-        parent::setUp();
+        parent::setUpFixtures();
         $this->controller->setProperties([
             'id' => 0,
             'class_key' => modSymlink::class,

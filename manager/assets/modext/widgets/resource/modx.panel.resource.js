@@ -6,7 +6,7 @@ MODx.panel.Resource = function(config) {
         url: MODx.config.connector_url
         ,baseParams: {}
         ,id: 'modx-panel-resource'
-        ,class_key: 'modDocument'
+        ,class_key: 'MODX\\Revolution\\modDocument'
         ,resource: ''
         ,bodyStyle: ''
         ,cls: 'container form-with-labels'
@@ -34,7 +34,7 @@ MODx.panel.Resource = function(config) {
 };
 Ext.extend(MODx.panel.Resource,MODx.FormPanel,{
     initialized: false
-    ,defaultClassKey: 'modDocument'
+    ,defaultClassKey: 'MODX\\Revolution\\modDocument'
     ,classLexiconKey: 'document'
     ,rteElements: 'ta'
     ,rteLoaded: false
@@ -57,7 +57,7 @@ Ext.extend(MODx.panel.Resource,MODx.FormPanel,{
                 var title = Ext.util.Format.stripTags(this.config.record.pagetitle);
                 title = Ext.util.Format.htmlEncode(title);
                 if (MODx.perm.tree_show_resource_ids) {
-                    title = title+ ' <small>('+this.config.record.id+')</small>';
+                    title = title + (this.config.record.id ? ' <small>('+this.config.record.id+')</small>' : '');
                 }
                 Ext.getCmp('modx-header-breadcrumbs').updateHeader(title);
             }
@@ -471,7 +471,7 @@ Ext.extend(MODx.panel.Resource,MODx.FormPanel,{
                     }
                     trail.push({
                         text: parents[i].pagetitle
-                        ,href: MODx.config.manager_url + '?a=Resource/Update&id=' + parents[i].id
+                        ,href: MODx.config.manager_url + '?a=resource/update&id=' + parents[i].id
                         ,cls: function(data) {
                             var cls = [];
                             if (!data.published) {
@@ -502,7 +502,7 @@ Ext.extend(MODx.panel.Resource,MODx.FormPanel,{
             xtype: 'modx-panel-resource-tv'
             ,collapsed: false
             ,resource: config.resource
-            ,class_key: config.record.class_key || 'modDocument'
+            ,class_key: config.record.class_key || 'MODX\\Revolution\\modDocument'
             ,template: config.record.template
             ,anchor: '100%'
             ,border: true
@@ -616,21 +616,27 @@ Ext.extend(MODx.panel.Resource,MODx.FormPanel,{
                     ,description: '<b>[[*pagetitle]]</b><br />'+_('resource_pagetitle_help')
                     ,name: 'pagetitle'
                     ,id: 'modx-resource-pagetitle'
-                    ,maxLength: 255
+                    ,maxLength: 191
                     ,anchor: '100%'
                     ,allowBlank: false
                     ,enableKeyEvents: true
                     ,listeners: {
-                'keyup': {fn: function(f) {
+                        'keyup': {
+                            fn: function(f) {
                                 var title = Ext.util.Format.stripTags(f.getValue());
 
-                    this.generateAliasRealTime(title);
+                                this.generateAliasRealTime(title);
 
                                 title = Ext.util.Format.htmlEncode(title);
                                 if (MODx.request.a !== 'resource/create' && MODx.perm.tree_show_resource_ids === true) {
                                     title = title+ ' <small>('+this.config.record.id+')</small>';
                                 }
-                                Ext.getCmp('modx-header-breadcrumbs').updateHeader(title);
+                                var breadCrumbsHeader = Ext.getCmp('modx-header-breadcrumbs');
+                                if (breadCrumbsHeader) {
+                                    breadCrumbsHeader.updateHeader(title);
+                                } else {
+                                    Ext.getCmp('modx-resource-header').el.dom.innerText = title;
+                                }
 
                                 // check some system settings before doing real time alias transliteration
                                 if (parseInt(MODx.config.friendly_alias_realtime, 10) && parseInt(MODx.config.automatic_alias, 10)) {
@@ -639,14 +645,19 @@ Ext.extend(MODx.panel.Resource,MODx.FormPanel,{
                                         this.translitAlias(title);
                                     }
                                 }
-                            }, scope: this}
+                            },
+                            scope: this
+                        }
                         // also do realtime transliteration of alias on blur of pagetitle field
                         // as sometimes (when typing very fast) the last letter(s) are not catched
-                        ,'blur': {fn: function(f,e) {
+                        ,'blur': {
+                            fn: function(f,e) {
                                 var title = Ext.util.Format.stripTags(f.getValue());
 
-                    this.generateAliasRealTime(title);
-                            }, scope: this}
+                                this.generateAliasRealTime(title);
+                            },
+                            scope: this
+                        }
                     }
                 }]
             },{
@@ -657,7 +668,7 @@ Ext.extend(MODx.panel.Resource,MODx.FormPanel,{
                     ,description: '<b>[[*alias]]</b><br />'+_('resource_alias_help')
                     ,name: 'alias'
                     ,id: 'modx-resource-alias'
-                    ,maxLength: (aliasLength > 255 || aliasLength === 0) ? 255 : aliasLength
+                    ,maxLength: (aliasLength > 191 || aliasLength === 0) ? 191 : aliasLength
                     ,anchor: '100%'
                     ,value: config.record.alias || ''
                     ,listeners: {
@@ -677,7 +688,7 @@ Ext.extend(MODx.panel.Resource,MODx.FormPanel,{
             ,description: '<b>[[*longtitle]]</b><br />'+_('resource_longtitle_help')
             ,name: 'longtitle'
             ,id: 'modx-resource-longtitle'
-            ,maxLength: 255
+            ,maxLength: 191
             ,anchor: '100%'
             ,value: config.record.longtitle || ''
         },{
@@ -935,7 +946,7 @@ Ext.extend(MODx.panel.Resource,MODx.FormPanel,{
             ,hiddenName: 'class_key'
             ,id: 'modx-resource-class-key'
             ,allowBlank: false
-            ,value: config.record.class_key || 'modDocument'
+            ,value: config.record.class_key || 'MODX\\Revolution\\modDocument'
             ,anchor: '100%'
         },{
             xtype: 'modx-combo-content-type'

@@ -13,7 +13,6 @@ namespace MODX\Revolution\Tests\Model\Request;
 
 
 use MODX\Revolution\Error\modError;
-use MODX\Revolution\modAction;
 use MODX\Revolution\modNamespace;
 use MODX\Revolution\modRequest;
 use MODX\Revolution\MODxTestCase;
@@ -31,8 +30,13 @@ class modRequestTest extends MODxTestCase {
     /** @var modRequest $request */
     public $request;
 
-    public function setUp() {
-        parent::setUp();
+    /**
+     * Setup fixtures before each test.
+     *
+     * @before
+     */
+    public function setUpFixtures() {
+        parent::setUpFixtures();
         /** @var modNamespace $namespace */
         $namespace = $this->modx->newObject(modNamespace::class);
         $namespace->set('name','unit-test');
@@ -47,10 +51,11 @@ class modRequestTest extends MODxTestCase {
     }
 
     /**
+     * @after
      * @return void
      */
-    public function tearDown() {
-        parent::tearDown();
+    public function tearDownFixtures() {
+        parent::tearDownFixtures();
 
         /** @var modNamespace $namespace */
         $namespace = $this->modx->getObject(modNamespace::class, ['name' => 'unit-test']);
@@ -289,6 +294,14 @@ class modRequestTest extends MODxTestCase {
                 "MODX [[\$chunk? &property=`test`\n &across=`lines
 
 ` &test=1]] Tags",'MODX  Tags'
+            ],
+            ["Nested MODX [[test?
+                &ids = `[[!getids
+                &field=`id`
+                &resource=`[[+resource]]`
+                ]]`
+                &parents=`2`
+                `]] Tags",'Nested MODX  Tags'
             ],
             ['Javascript! <script>alert(\'test\');</script> Yay.','Javascript!  Yay.'],
             ["Javascript line break! <script>alert('test');\n</script>Yay.","Javascript line break! Yay."],

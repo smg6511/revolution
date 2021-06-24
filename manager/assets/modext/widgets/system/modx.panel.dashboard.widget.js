@@ -216,7 +216,12 @@ MODx.panel.DashboardWidget = function(config) {
                     ,prefix: 'properties'
                     ,enableDD: true
                     ,listeners: {
-                        'dragdrop': {fn:this.markDirty,scope:this}
+                        'click': {fn:function() {
+                            Ext.getCmp('modx-extended-form').enable();
+                        },scope:this}
+                        ,'dragdrop': {fn:function() {
+                            this.markDirty();
+                        },scope:this}
                     }
                 }
             },{
@@ -263,6 +268,7 @@ MODx.panel.DashboardWidget = function(config) {
         }
     });
     MODx.panel.DashboardWidget.superclass.constructor.call(this,config);
+    Ext.getCmp('modx-extended-form').disable();
 };
 Ext.extend(MODx.panel.DashboardWidget,MODx.FormPanel,{
     initialized: false
@@ -335,6 +341,7 @@ MODx.grid.DashboardWidgetDashboards = function(config) {
     config = config || {};
     Ext.applyIf(config,{
         id: 'modx-grid-dashboard-widget-dashboards'
+        ,showActionsColumn: false
         ,url: MODx.config.connector_url
         ,action: 'System/Dashboard/GetList'
         ,fields: ['id','name','description']

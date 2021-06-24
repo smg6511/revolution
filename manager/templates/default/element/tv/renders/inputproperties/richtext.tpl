@@ -1,7 +1,7 @@
 <div id="tv-input-properties-form{$tv|default}"></div>
 {literal}
 
-<script type="text/javascript">
+<script>
 // <![CDATA[
 var params = {
 {/literal}{foreach from=$params key=k item=v name='p'}
@@ -9,11 +9,6 @@ var params = {
 {/foreach}{literal}
 };
 var oc = {'change':{fn:function(){Ext.getCmp('modx-panel-tv').markDirty();},scope:this}};
-
-var element = Ext.getCmp('modx-tv-elements');
-if (element) {
-  element.hide();
-}
 
 MODx.load({
     xtype: 'panel'

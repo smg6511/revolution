@@ -36,7 +36,6 @@ $_lang['namespace'] = 'Namnrymd';
 $_lang['namespace_desc'] = 'Den namnrymd som denna inställning är associerad med. Standardlexikonämnet kommer att laddas för denna namnrymd när inställningar hämtas.';
 $_lang['namespace_filter'] = 'Filtrera efter namnrymd...';
 $_lang['search_by_key'] = 'Sök på nyckel...';
-$_lang['setting_create'] = 'Skapa inställning';
 $_lang['setting_err'] = 'Kontrollera dina uppgifter i följande fält: ';
 $_lang['setting_err_ae'] = 'Det finns redan en inställning med den nyckeln. Ange ett annat nyckelnamn.';
 $_lang['setting_err_nf'] = 'Inställningen kunde inte hittas.';
@@ -46,9 +45,7 @@ $_lang['setting_err_remove'] = 'Ett fel inträffade när inställningen skulle t
 $_lang['setting_err_save'] = 'Ett fel inträffade när inställningen skulle sparas.';
 $_lang['setting_err_startint'] = 'Inställningar får inte börja med en siffra.';
 $_lang['setting_err_invalid_document'] = 'Det finns inget dokument som har ID %d. Ange ett existerande dokument.';
-$_lang['setting_remove'] = 'Ta bort inställning';
 $_lang['setting_remove_confirm'] = 'Är du säker på att du vill ta bort den här inställningen? Det kan innebära att din MODX-installation slutar fungera.';
-$_lang['setting_update'] = 'Redigera inställning';
 $_lang['settings_after_install'] = 'Eftersom detta är en ny installation, måste du gå igenom dessa inställningar och ändra det du vill. När du är klar med kontrollen av alla inställningar, klicka på \'Spara\' för att uppdatera inställningsdatabasen.<br /><br />';
 $_lang['settings_desc'] = 'Här gör du allmänna inställningar och konfigurationer för användargränssnittet i MODX hanterare, samt för hur din MODX-webbplats fungerar. <b>Varje inställning blir tillgänglig via platshållaren [[++key]].</b><br />Dubbelklicka i värdekolumnen för den inställning som du vill redigera för att göra ändringarna dynamiskt i rutnätet eller högerklicka på en inställning för att se fler val. Du kan också klicka på plustecknet för att få en beskrivning av inställningen.';
 $_lang['settings_furls'] = 'Vänliga URL:er';
@@ -384,6 +381,9 @@ $_lang['setting_mail_smtp_port_desc'] = 'Anger SMTP-serverns standardport.';
 $_lang['setting_mail_smtp_prefix'] = 'Anslutningsprefix för SMTP';
 $_lang['setting_mail_smtp_prefix_desc'] = 'Anger anslutningsprefixet. Möjliga värden är "", "ssl" eller "tls".';
 
+$_lang['setting_mail_smtp_autotls'] = 'SMTP Auto TLS';
+$_lang['setting_mail_smtp_autotls_desc'] = 'Anger om TLS-kryptering ska aktiveras automatiskt om en server stödjer det även om "SMTP-kryptering" inte är satt till "tls".';
+
 $_lang['setting_mail_smtp_single_to'] = 'SMTP individuella meddelanden';
 $_lang['setting_mail_smtp_single_to_desc'] = 'Ger möjligheten att låta till-fältet processas som individuella meddelanden istället för att sända till hela TO-adressen.';
 
@@ -571,6 +571,12 @@ $_lang['setting_publish_default'] = 'Publicerade som standard';
 $_lang['setting_publish_default_desc'] = 'Välj "Ja" för att göra alla nya resurser publicerade som standard.';
 $_lang['setting_publish_default_err'] = 'Ange om du vill att dokument ska publiceras som standard eller inte.';
 
+$_lang['setting_quick_search_in_content'] = 'Tillåt sökningar i innehåll';
+$_lang['setting_quick_search_in_content_desc'] = 'Om den här sätts till "Ja" så kommer även innehåll i element (resurser, mallar, chunks etc) att vara tillgängligt vid snabbsökning.';
+
+$_lang['setting_quick_search_result_max'] = 'Antal träffar i sökresultat';
+$_lang['setting_quick_search_result_max_desc'] = 'Maximalt antal träffar för varje typ (resurs, mall, chunk etc) i snabbsökresultat.';
+
 $_lang['setting_request_controller'] = 'Anropscontrollerns filnamn';
 $_lang['setting_request_controller_desc'] = 'Filnamnet på den huvudsakliga anropscontrollern från vilken MODX laddas. De flesta användare kan låta denna vara index.php.';
 
@@ -604,6 +610,9 @@ $_lang['setting_server_offset_time_desc'] = 'Välj det antal timmar som skiljer 
 
 $_lang['setting_session_cookie_domain'] = 'Sessionscookiens domän';
 $_lang['setting_session_cookie_domain_desc'] = 'Använd den här inställningen för att anpassa domänen för sessionscookien. Lämna tom för att använda den nuvarande domänen.';
+
+$_lang['setting_session_cookie_samesite'] = 'Session Cookie Samesite';
+$_lang['setting_session_cookie_samesite_desc'] = 'Choose Lax or Strict.';
 
 $_lang['setting_session_cookie_lifetime'] = 'Sessionscookiens livslängd';
 $_lang['setting_session_cookie_lifetime_desc'] = 'Använd denna inställning för att anpassa sessionscookiens livslängd i sekunder. Den bestämmer livslängden på en användares sessionscookie när den valt \'Kom ihåg mig\' vid inloggningen.';
@@ -717,6 +726,9 @@ $_lang['setting_unauthorized_page_err'] = 'Ange ett resurs-ID för otillåten-si
 $_lang['setting_upload_files'] = 'Uppladdningsbara filtyper';
 $_lang['setting_upload_files_desc'] = 'Här kan du skriva en lista med de typer av filer som kan laddas upp till "assets/files/" med filhanteraren. Skriv i suffixen för filtyperna, separerade med kommatecken.';
 
+$_lang['setting_upload_file_exists'] = 'Kontrollera om uppladdad fil redan finns';
+$_lang['setting_upload_file_exists_desc'] = 'När denna är aktiverad visas ett fel vid uppladdning av en fil om det redan finns en fil med samma namn. När den är inaktiverad kommer den befintliga filen att ersättas med den nya filen.';
+
 $_lang['setting_upload_images'] = 'Uppladdningsbara bildtyper';
 $_lang['setting_upload_images_desc'] = 'Här kan du skriva en lista med de typer av bildfiler som kan laddas upp till "assets/images/" med filhanteraren. Skriv filändelserna för bildfilerna, separerade med kommatecken.';
 
@@ -725,6 +737,9 @@ $_lang['setting_upload_maxsize_desc'] = 'Skriv den största filstorleken som kan
 
 $_lang['setting_upload_media'] = 'Uppladdningsbara mediatyper';
 $_lang['setting_upload_media_desc'] = 'Här kan du skriva en lista med de typer av mediafiler som kan laddas upp till "assets/media/" med filhanteraren. Skriv filändelserna för mediatyperna, separerade med kommatecken.';
+
+$_lang['setting_upload_translit'] = 'Omtolka namn på uppladdade filer?';
+$_lang['setting_upload_translit_desc'] = 'Om detta alternativ är aktiverat kommer namnet på en uppladdad fil att translitereras enligt de globala translitterationsreglerna.';
 
 $_lang['setting_use_alias_path'] = 'Använd vänliga aliassökvägar';
 $_lang['setting_use_alias_path_desc'] = 'Sätts detta val till "Ja", kommer hela sökvägen till resursen att visas om resursen har ett alias. Till exempel, om en resurs med aliaset "barn" befinner sig i en behållare med aliaset "foralder", kommer hela sökvägen att visas som "/foralder/barn.html".<br /><strong>Notera: När detta sätts till "Ja" (slår på aliassökvägar), måste du referera objekt (som bilder, css, javascript etc) med en absolut sökväg. Exempel: "/assets/images" istället för "assets/images". Genom att göra så förhindrar du att webbläsaren (eller webbservern) lägger till den relativa sökvägen till aliassökvägen.</strong>';

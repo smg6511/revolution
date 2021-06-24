@@ -8,7 +8,7 @@ MODx.panel.PropertySet = function(config) {
     config = config || {};
     Ext.applyIf(config,{
         id: 'modx-panel-property-sets'
-		,cls: 'container'
+        ,cls: 'container'
         ,items: [{
             html: _('propertysets')
             ,xtype: 'modx-header'
@@ -24,7 +24,7 @@ MODx.panel.PropertySet = function(config) {
             },{
                 layout: 'column'
                 ,border: false
-				,cls: 'main-wrapper'
+                ,cls: 'main-wrapper'
                 ,items: [{
                     columnWidth: .3
                     ,cls: 'left-col'
@@ -97,6 +97,7 @@ MODx.grid.PropertySetProperties = function(config) {
             ,scope: this
         }]
     });
+    Ext.getCmp('right-column').disable();
     MODx.grid.PropertySetProperties.superclass.constructor.call(this,config);
 };
 Ext.extend(MODx.grid.PropertySetProperties,MODx.grid.ElementProperties);
@@ -111,11 +112,13 @@ Ext.reg('modx-grid-property-set-properties',MODx.grid.PropertySetProperties);
 MODx.tree.PropertySets = function(config) {
     config = config || {};
     Ext.applyIf(config,{
-        rootVisible: false
-        ,enableDD: false
-        ,title: ''
+        title: _('propertysets')
         ,url: MODx.config.connector_url
         ,action: 'Element/PropertySet/GetNodes'
+        ,rootIconCls: 'icon-sitemap'
+        ,root_name: _('propertysets')
+        ,rootVisible: false
+        ,enableDD: false
         ,tbar: ['->', {
             text: _('propertyset_new')
             ,cls: 'primary-button'
@@ -129,6 +132,7 @@ MODx.tree.PropertySets = function(config) {
 };
 Ext.extend(MODx.tree.PropertySets,MODx.tree.Tree,{
     loadGrid: function(n,e) {
+        Ext.getCmp('right-column').enable();
         var ar = n.id.split('_');
         if (ar[0] == 'ps') {
             MODx.Ajax.request({
@@ -215,6 +219,7 @@ Ext.extend(MODx.tree.PropertySets,MODx.tree.Tree,{
         this.winDupeSet.setValues(r);
         this.winDupeSet.show(e.target);
     }
+
     ,updateSet: function(btn,e) {
         var id = this.cm.activeNode.id.split('_');
         var r = this.cm.activeNode.attributes.data;
@@ -234,6 +239,7 @@ Ext.extend(MODx.tree.PropertySets,MODx.tree.Tree,{
         this.winUpdateSet.setValues(r);
         this.winUpdateSet.show(e.target);
     }
+
     ,removeSet: function(btn,e) {
         var id = this.cm.activeNode.id.split('_');
         id = id[1];
@@ -255,6 +261,7 @@ Ext.extend(MODx.tree.PropertySets,MODx.tree.Tree,{
             }
         });
     }
+
     ,addElement: function(btn,e) {
         var id = this.cm.activeNode.id.split('_'); id = id[1];
         var t = this.cm.activeNode.text;
@@ -276,6 +283,7 @@ Ext.extend(MODx.tree.PropertySets,MODx.tree.Tree,{
         this.winPSEA.fp.getForm().setValues(r);
         this.winPSEA.show(e.target);
     }
+
     ,removeElement: function(btn,e) {
         var d = this.cm.activeNode.attributes;
         MODx.msg.confirm({
@@ -349,13 +357,12 @@ Ext.extend(MODx.window.AddElementToPropertySet,MODx.Window,{
     }
     ,onElementSelect: function(cb) {
         var ec = Ext.getCmp('modx-combo-element-class');
-        if (ec.getValue() == '') {
-            ec.setValue('modSnippet');
+        if (ec.getValue() === '') {
+            ec.setValue('MODX\\Revolution\\modSnippet');
         }
     }
 });
 Ext.reg('modx-window-propertyset-element-add',MODx.window.AddElementToPropertySet);
-
 
 /**
  * @class MODx.combo.ElementClass
@@ -402,7 +409,7 @@ MODx.combo.Elements = function(config) {
         ,url: MODx.config.connector_url
         ,baseParams: {
             action: 'Element/GetListByClass'
-            ,element_class: 'modSnippet'
+            ,element_class: 'MODX\\Revolution\\modSnippet'
         }
     });
     MODx.combo.Elements.superclass.constructor.call(this,config);
@@ -456,7 +463,6 @@ MODx.window.CreatePropertySet = function(config) {
 Ext.extend(MODx.window.CreatePropertySet,MODx.Window);
 Ext.reg('modx-window-property-set-create',MODx.window.CreatePropertySet);
 
-
 /**
  * @class MODx.window.UpdatePropertySet
  * @extends MODx.Window
@@ -476,8 +482,6 @@ MODx.window.UpdatePropertySet = function(config) {
 };
 Ext.extend(MODx.window.UpdatePropertySet,MODx.window.CreatePropertySet);
 Ext.reg('modx-window-property-set-update',MODx.window.UpdatePropertySet);
-
-
 
 /**
  * @class MODx.window.DuplicatePropertySet

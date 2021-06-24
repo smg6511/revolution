@@ -50,7 +50,7 @@ MODx.grid.AccessPolicy = function(config) {
         ,baseParams: {
             action: 'Security/Access/Policy/GetList'
         }
-        ,fields: ['id','name','description','class','data','parent','template','template_name','active_permissions','total_permissions','active_of','cls']
+        ,fields: ['id','name','description', 'description_trans', 'class','data','parent','template','template_name','active_permissions','total_permissions','active_of','cls']
         ,paging: true
         ,autosave: true
         ,save_action: 'Security/Access/Policy/UpdateFromGrid'
@@ -71,7 +71,10 @@ MODx.grid.AccessPolicy = function(config) {
             header: _('description')
             ,dataIndex: 'description'
             ,width: 375
-            ,editor: { xtype: 'textarea' }
+            ,renderer: function(value, metaData, record) {
+                return Ext.util.Format.htmlEncode(record['data']['description_trans']);
+            }
+            ,editable: false
         },{
             header: _('policy_template')
             ,dataIndex: 'template_name'
@@ -89,7 +92,7 @@ MODx.grid.AccessPolicy = function(config) {
             ,editable: false
         }]
         ,tbar: [{
-            text: _('policy_create')
+            text: _('create')
             ,cls:'primary-button'
             ,scope: this
             ,handler: this.createPolicy
@@ -222,11 +225,11 @@ Ext.extend(MODx.grid.AccessPolicy,MODx.grid.Grid,{
         } else {
             if (p.indexOf('pedit') != -1) {
                 m.push({
-                    text: _('policy_update')
+                    text: _('edit')
                     ,handler: this.editPolicy
                 });
                 m.push({
-                    text: _('policy_duplicate')
+                    text: _('duplicate')
                     ,handler: this.confirm.createDelegate(this,["Security/Access/Policy/Duplicate","policy_duplicate_confirm"])
                 });
             }
@@ -238,7 +241,7 @@ Ext.extend(MODx.grid.AccessPolicy,MODx.grid.Grid,{
             if (p.indexOf('premove') != -1) {
                 if (m.length > 0) m.push('-');
                 m.push({
-                    text: _('policy_remove')
+                    text: _('delete')
                     ,handler: this.confirm.createDelegate(this,["Security/Access/Policy/Remove","policy_remove_confirm"])
                 });
             }
@@ -285,7 +288,7 @@ MODx.window.CreateAccessPolicy = function(config) {
     config = config || {};
     this.ident = config.ident || 'cacp'+Ext.id();
     Ext.applyIf(config,{
-        title: _('policy_create')
+        title: _('create')
         ,url: MODx.config.connector_url
         ,action: 'Security/Access/Policy/Create'
         ,fields: [{
@@ -354,7 +357,7 @@ MODx.combo.AccessPolicyTemplate = function(config) {
     Ext.applyIf(config,{
         name: 'template'
         ,hiddenName: 'template'
-        ,fields: ['id','name','description']
+        ,fields: ['id','name','description','description_trans']
         ,forceSelection: true
         ,typeAhead: false
         ,editable: false
@@ -365,7 +368,7 @@ MODx.combo.AccessPolicyTemplate = function(config) {
             action: 'Security/Access/Policy/Template/GetList'
         }
         ,tpl: new Ext.XTemplate('<tpl for="."><div class="x-combo-list-item"><span style="font-weight: bold">{name:htmlEncode}</span>'
-            ,'<p style="margin: 0; font-size: 11px; color: gray;">{description:htmlEncode}</p></div></tpl>')
+            ,'<p style="margin: 0; font-size: 11px; color: gray;">{description_trans:htmlEncode}</p></div></tpl>')
     });
     MODx.combo.AccessPolicyTemplate.superclass.constructor.call(this,config);
 };

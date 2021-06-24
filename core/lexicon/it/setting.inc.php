@@ -10,7 +10,7 @@ $_lang['area'] = 'Area';
 $_lang['area_authentication'] = 'Autenticazione e Sicurezza';
 $_lang['area_caching'] = 'Caching';
 $_lang['area_core'] = 'Codice Core';
-$_lang['area_editor'] = 'Rich-Text Editor';
+$_lang['area_editor'] = 'Editor di Testo Avanzato';
 $_lang['area_file'] = 'File System';
 $_lang['area_filter'] = 'Filtra per area...';
 $_lang['area_furls'] = 'URL Semplici (Friendly URL)';
@@ -36,7 +36,6 @@ $_lang['namespace'] = 'Namespace';
 $_lang['namespace_desc'] = 'Namespace a cui questa Impostazione e\' associata. Il Linguaggio di default sara\' caricato per questo Namespace quando affera la Impostazione.';
 $_lang['namespace_filter'] = 'Filtra per Namespace...';
 $_lang['search_by_key'] = 'Cerca per Chiave...';
-$_lang['setting_create'] = 'Create Setting';
 $_lang['setting_err'] = 'Controlla i dati per i seguenti campi: ';
 $_lang['setting_err_ae'] = 'Una Impostazione con questa Chiave esiste di già. Specifica una chiave diversa.';
 $_lang['setting_err_nf'] = 'Impostazione non trovata.';
@@ -46,9 +45,7 @@ $_lang['setting_err_remove'] = 'An error occurred while trying to delete the set
 $_lang['setting_err_save'] = 'Si è verificato un errore durante il tentativo di salvare l\'Impostazione.';
 $_lang['setting_err_startint'] = 'Le Impostazioni non possono cominciare con un numero intero.';
 $_lang['setting_err_invalid_document'] = 'Non esiste alcun documento con ID %d. Specificare un documento esistente.';
-$_lang['setting_remove'] = 'Rimuovi Impostazione';
 $_lang['setting_remove_confirm'] = 'Sei sicuro di voler rimuovere questa Impostazione? Questo potrebbe compromettere la tua installazione di MODX.';
-$_lang['setting_update'] = 'Edit Setting';
 $_lang['settings_after_install'] = 'Dal momento che questa è una nuova installazione, sei pregato di controllare queste impostazioni, puoi cambiare qualsiasi cosa tu voglia. Dopo aver controllato le varie opzioni, clicca su \'Salva\' per aggiornare il database delle Impostazioni.<br /><br />';
 $_lang['settings_desc'] = 'Qui puoi impostare le preferenze generali e le configurazioni per l\'interfaccia del manager di MODx, nonché per il funzionamento stesso del tuo sito. <b>Ogni impostazione sarà disponibile tramite il segnaposto [[++key]].</b><br /> Clicca due volte sulla colonna con il valore della impostazione che vorresti modificare dinamicamente dalla griglia, oppure clicca con il tasto destro su una voce per maggiori opzioni. Puoi anche cliccare sul simbolo "+" per una descrizione della impostazione.';
 $_lang['settings_furls'] = 'URLs semplici (Friendly)';
@@ -266,7 +263,7 @@ $_lang['setting_enable_gravatar_desc'] = 'Se abilitata, l\'immagine Gravatar ver
 $_lang['setting_failed_login_attempts'] = 'Tentativi Login Falliti';
 $_lang['setting_failed_login_attempts_desc'] = 'Il numero di tentativi errati di login concessi a un Utente prima che sia \'bloccato\'.';
 
-$_lang['setting_feed_modx_news'] = 'MODX News Feed URL';
+$_lang['setting_feed_modx_news'] = 'Feed Novita\' MODX';
 $_lang['setting_feed_modx_news_desc'] = 'Imposta l\'URL dei feed RSS per il pannello MODX News nel manager.';
 
 $_lang['setting_feed_modx_news_enabled'] = 'MODX News Feed Abilitati';
@@ -383,6 +380,9 @@ $_lang['setting_mail_smtp_port_desc'] = 'Imposta la porta di default del server 
 
 $_lang['setting_mail_smtp_prefix'] = 'Prefisso Connessione SMTP';
 $_lang['setting_mail_smtp_prefix_desc'] = 'Imposta il prefisso della connessione. Le Opzioni sono "", "ssl" or "tls"';
+
+$_lang['setting_mail_smtp_autotls'] = 'SMTP Auto TLS';
+$_lang['setting_mail_smtp_autotls_desc'] = 'Whether to enable TLS encryption automatically if a server supports it, even if "SMTP Encryption" is not set to "tls"';
 
 $_lang['setting_mail_smtp_single_to'] = 'SMTP Invio Singolo A:';
 $_lang['setting_mail_smtp_single_to_desc'] = 'Abilita l\'invio selettivo ai singoli destinatari "A:" delle mails, invece di inviare all\'intero elenco A: dei destinatari.';
@@ -571,6 +571,12 @@ $_lang['setting_publish_default'] = 'Pubblicato di Default';
 $_lang['setting_publish_default_desc'] = 'Scegli \'SI\' per impostare che tutte le nuove risorse siano "pubblicate di default".';
 $_lang['setting_publish_default_err'] = 'Per favore scegli se vuoi o no che i nuovi documenti siano pubblicati di default.';
 
+$_lang['setting_quick_search_in_content'] = 'Allow search in content';
+$_lang['setting_quick_search_in_content_desc'] = 'If \'Yes\', then the content of the element (resource, template, chunk, etc.) will also be available for quick search.';
+
+$_lang['setting_quick_search_result_max'] = 'Number of items in search result';
+$_lang['setting_quick_search_result_max_desc'] = 'Maximum number of elements for each type (resource, template, chunk, etc.) in the quick search result.';
+
 $_lang['setting_request_controller'] = 'Nome File Controllore Richieste';
 $_lang['setting_request_controller_desc'] = 'Il nome del file del controllore delle richieste con cui è caricato MODX. La maggior parte degli utenti possono lasciare index.php.';
 
@@ -605,6 +611,9 @@ $_lang['setting_server_offset_time_desc'] = 'Seleziona il numero di ore di diffe
 $_lang['setting_session_cookie_domain'] = 'Dominio Cookie Sessione';
 $_lang['setting_session_cookie_domain_desc'] = 'Usa questa impostazione per personalizzare la voce: dominio dei cookie della sessione.';
 
+$_lang['setting_session_cookie_samesite'] = 'Session Cookie Samesite';
+$_lang['setting_session_cookie_samesite_desc'] = 'Choose Lax or Strict.';
+
 $_lang['setting_session_cookie_lifetime'] = 'Durata Cookie Sessione';
 $_lang['setting_session_cookie_lifetime_desc'] = 'Usa questa impostazione per personalizzare la voce: durata in secondi dei cookie della sessione.  Così si imposta la durata del cookie della sessione di un cliente che abbia scelto l\'opzione \'ricordami\' al momento del login.';
 
@@ -614,7 +623,7 @@ $_lang['setting_session_cookie_path_desc'] = 'Con questa impostazione puoi perso
 $_lang['setting_session_cookie_secure'] = 'Sicurezza Cookie Sessione';
 $_lang['setting_session_cookie_secure_desc'] = 'Abilita questa opzione per usare cookies per sessioni sicure.';
 
-$_lang['setting_session_cookie_httponly'] = 'Session Cookie HttpOnly';
+$_lang['setting_session_cookie_httponly'] = 'Cookie Sessione HttpOnly';
 $_lang['setting_session_cookie_httponly_desc'] = 'Utilizza questa opzione per spuntare il flag HttpOnly sui cookies della sessione.';
 
 $_lang['setting_session_gc_maxlifetime'] = 'Durata Max sessione Garbage Collector';
@@ -667,8 +676,8 @@ $_lang['setting_site_unavailable_page_err'] = 'Per favore specifica l\'ID della 
 $_lang['setting_static_elements_automate_templates'] = 'Automatizzare gli elementi statici per i templates?';
 $_lang['setting_static_elements_automate_templates_desc'] = 'This will automate the handling of static files, such as creating and deleting static files for templates.';
 
-$_lang['setting_static_elements_automate_tvs'] = 'Automatizzare gli elementi statici per le Variabili di Template?';
-$_lang['setting_static_elements_automate_tvs_desc'] = 'This will automate the handling of static files, such as creating and deleting static files for template variables.';
+$_lang['setting_static_elements_automate_tvs'] = 'Automate static elements for TVs?';
+$_lang['setting_static_elements_automate_tvs_desc'] = 'This will automate the handling of static files, such as creating and deleting static files for TVs.';
 
 $_lang['setting_static_elements_automate_chunks'] = 'Automatizzare gli elementi statici per i Chunks?';
 $_lang['setting_static_elements_automate_chunks_desc'] = 'This will automate the handling of static files, such as creating and deleting static files for chunks.';
@@ -705,7 +714,7 @@ $_lang['setting_tree_root_id'] = 'ID Radice Albero';
 $_lang['setting_tree_root_id_desc'] = 'Imposta un ID valido di una Risorsa. Il nodo della Risorsa diventerà la radice dell\'Albero a sinistra. L\'utente potrà vedere soltanto le Risorse che sono figli della Risorsa specificata. Impostando 0 sarà possibile vedere TUTTO';
 
 $_lang['setting_tvs_below_content'] = 'Sposta le  TVs sotto il Contenuto (Content)';
-$_lang['setting_tvs_below_content_desc'] = 'Impostato su "SI" sposta le Variabili di Template sotto il contenuto (content) durante la modifica di una Risorsa.';
+$_lang['setting_tvs_below_content_desc'] = 'Set this to Yes to move TVs below the Content when editing Resources.';
 
 $_lang['setting_ui_debug_mode'] = 'UI Debug Mode (Interfaccia Utente)';
 $_lang['setting_ui_debug_mode_desc'] = 'Impostare su "SI" per i messaggi di debug in uscita quando si usa UI (Interfaccia Utente) per il tema di default del manager. E\' necessario utilizzare un browser che supporti console.log.';
@@ -717,6 +726,9 @@ $_lang['setting_unauthorized_page_err'] = 'Specifica l\'ID di una Risorsa da mos
 $_lang['setting_upload_files'] = 'Tipi File Caricabili';
 $_lang['setting_upload_files_desc'] = 'Qui puoi inserire una lista di tipi di files che possono essere caricati dentro \'assets/files/\' tramite il Manager delle Risorse. Inserisci le estensioni per i tipi di files, separate da virgola.';
 
+$_lang['setting_upload_file_exists'] = 'Controlla se il file caricato esiste';
+$_lang['setting_upload_file_exists_desc'] = 'Quando abilitato verrà mostrato un errore durante il caricamento di un file che esiste già con lo stesso nome. Se disabilitato, il file esistente verrà sostituito tranquillamente con il nuovo file.';
+
 $_lang['setting_upload_images'] = 'Tipi Immagini Caricabili';
 $_lang['setting_upload_images_desc'] = 'Qui puoi inserire una lista di tipi di files immagini che possono essere caricati dentro  \'assets/images/\' usando il Manager delle Risorse. Inserisci le estensioni per i tipi di immagini, separate da virgola.';
 
@@ -725,6 +737,9 @@ $_lang['setting_upload_maxsize_desc'] = 'Inserisci la dimensione massima (bytes)
 
 $_lang['setting_upload_media'] = 'Tipi Media Caricabili';
 $_lang['setting_upload_media_desc'] = 'Qui puoi inserire una lista di tipi di files media (video,audio) che possono essere caricati dentro  \'assets/media/\' usando il Manager delle Risorse. Inserisci le estensioni per i tipi di media, separate da virgola.';
+
+$_lang['setting_upload_translit'] = 'Transliterate names of uploaded files?';
+$_lang['setting_upload_translit_desc'] = 'If this option is enabled, the name of an uploaded file will be transliterated according to the global transliteration rules.';
 
 $_lang['setting_use_alias_path'] = 'Usa Percorsi Semplici Alias (Completi)';
 $_lang['setting_use_alias_path_desc'] = 'Impostando questa opzione su \'SI\' verrà mostrato il percorso completo della Risorsa, se la Risorsa ha un alias. Per esempio, se una Risorsa con un alias chiamato \'figlio\' si trova nella cartella con alias \'genitore\', allora il percorso dell\'alias sarà \'/genitore/figlio.html\'.<br /><strong>NOTA: Se impostato su \'SI\' (attivando il percorso alias), si deve far riferimento agli oggetti (come immagini, css, javascripts, ecc) usando il percorso assoluto: es., \'/assets/images\' invece di \'assets/images\'. In questo modo si evita che il browser (o il web-server) aggiunga il percorso relativo al percorso dell\'alias.</strong>';

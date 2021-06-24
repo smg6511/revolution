@@ -25,6 +25,7 @@ MODx.panel.Sources = function(config) {
                 ,xtype: 'modx-description'
             },{
                 xtype: 'modx-grid-sources'
+                ,urlFilters: ['query']
                 ,cls: 'main-wrapper'
                 ,preventRender: true
             }]
@@ -101,7 +102,7 @@ MODx.grid.Sources = function(config) {
             ,renderer: Ext.util.Format.htmlEncode
         }]
         ,tbar: [{
-            text: _('source_create')
+            text: _('create')
             ,handler: { xtype: 'modx-window-source-create' ,blankValues: true }
             ,cls:'primary-button'
         },{
@@ -117,15 +118,33 @@ MODx.grid.Sources = function(config) {
             ,id: 'modx-source-search'
             ,cls: 'x-form-filter'
             ,emptyText: _('search_ellipsis')
+            ,value: MODx.request.query
             ,listeners: {
-                'change': {fn: this.search, scope: this}
-                ,'render': {fn: function(cmp) {
-                    new Ext.KeyMap(cmp.getEl(), {
-                        key: Ext.EventObject.ENTER
-                        ,fn: this.blur
-                        ,scope: cmp
-                    });
-                },scope:this}
+                'change': {
+                    fn: function (cb, rec, ri) {
+                        this.sourceSearch(cb, rec, ri);
+                    }
+                    ,scope: this
+                },
+                'afterrender': {
+                    fn: function (cb){
+                        if (MODx.request.query) {
+                            this.sourceSearch(cb, cb.value);
+                            MODx.request.query = '';
+                        }
+                    }
+                    ,scope: this
+                }
+                ,'render': {
+                    fn: function(cmp) {
+                        new Ext.KeyMap(cmp.getEl(), {
+                            key: Ext.EventObject.ENTER
+                            ,fn: this.blur
+                            ,scope: cmp
+                        });
+                    }
+                    ,scope: this
+                }
             }
         },{
             xtype: 'button'
@@ -158,20 +177,20 @@ Ext.extend(MODx.grid.Sources,MODx.grid.Grid,{
         } else {
             if (p.indexOf('pupdate') != -1) {
                 m.push({
-                    text: _('source_update')
+                    text: _('edit')
                     ,handler: this.updateSource
                 });
             }
             if (p.indexOf('pduplicate') != -1) {
                 m.push({
-                    text: _('source_duplicate')
+                    text: _('duplicate')
                     ,handler: this.duplicateSource
                 });
             }
             if (p.indexOf('premove') != -1 && r.data.id != 1 && r.data.name != 'Filesystem') {
                 if (m.length > 0) m.push('-');
                 m.push({
-                    text: _('source_remove')
+                    text: _('delete')
                     ,handler: this.removeSource
                 });
             }
@@ -204,7 +223,7 @@ Ext.extend(MODx.grid.Sources,MODx.grid.Grid,{
 
     ,removeSource: function() {
         MODx.msg.confirm({
-            title: _('source_remove')
+            title: _('delete')
             ,text: _('source_remove_confirm')
             ,url: this.config.url
             ,params: {
@@ -239,18 +258,22 @@ Ext.extend(MODx.grid.Sources,MODx.grid.Grid,{
         return true;
     }
 
-    ,search: function(tf,newValue,oldValue) {
-        var nv = newValue || tf;
-        this.getStore().baseParams.query = Ext.isEmpty(nv) || Ext.isObject(nv) ? '' : nv;
+    ,sourceSearch: function(tf,newValue,oldValue) {
+        var s = this.getStore();
+        s.baseParams.query = newValue;
+        this.replaceState();
         this.getBottomToolbar().changePage(1);
-        return true;
     }
 
     ,clearFilter: function() {
-        this.getStore().baseParams = {
+        var s = this.getStore();
+        var sourceSearch = Ext.getCmp('modx-source-search');
+        s.baseParams = {
             action: 'Source/GetList'
         };
-        Ext.getCmp('modx-source-search').reset();
+        MODx.request.query = '';
+        sourceSearch.setValue('');
+        this.replaceState();
         this.getBottomToolbar().changePage(1);
     }
 });
@@ -267,7 +290,7 @@ Ext.reg('modx-grid-sources',MODx.grid.Sources);
 MODx.window.CreateSource = function(config) {
     config = config || {};
     Ext.applyIf(config,{
-        title: _('source_create')
+        title: _('create')
         ,url: MODx.config.connector_url
         ,autoHeight: true
         ,action: 'Source/Create'

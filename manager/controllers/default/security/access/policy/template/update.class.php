@@ -8,7 +8,10 @@
  * files found in the top-level directory of this distribution.
  */
 
+use MODX\Revolution\modAccessPermission;
+use MODX\Revolution\modAccessPolicyTemplate;
 use MODX\Revolution\modManagerController;
+use xPDO\xPDOException;
 
 /**
  * Loads the policy template page
@@ -43,13 +46,15 @@ class SecurityAccessPolicyTemplateUpdateManagerController extends modManagerCont
     /**
      * Register custom CSS/JS for the page
      * @return void
+     * @throws xPDOException
      */
     public function loadCustomCssJs() {
         $mgrUrl = $this->modx->getOption('manager_url',null,MODX_MANAGER_URL);
+        $this->addJavascript($mgrUrl.'assets/modext/widgets/security/modx.combo.access.policy.template.groups.js');
         $this->addJavascript($mgrUrl.'assets/modext/widgets/security/modx.panel.access.policy.template.js');
         $this->addJavascript($mgrUrl.'assets/modext/sections/security/access/policy/template/update.js');
         $this->addHtml('
-        <script type="text/javascript">
+        <script>
         // <![CDATA[
         Ext.onReady(function() {
             MODx.load({

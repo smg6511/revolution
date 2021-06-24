@@ -7,7 +7,6 @@
  * @subpackage lexicon
  */
 $_lang['directory'] = 'Direktori';
-$_lang['file_confirm_remove'] = 'Are you sure you want to delete this file? Deleting a file could potentially break your website. Make sure you know what this file does before deleting it.';
 $_lang['file_create'] = 'Membuat File';
 $_lang['file_deleted'] = 'Sukses!';
 $_lang['file_delete_file'] = 'Menghapus File';
@@ -68,16 +67,22 @@ $_lang['file_folder_err_rename'] = 'Kesalahan yang tidak dikenal terjadi saat me
 $_lang['file_folder_err_rename_protected'] = 'Renaming the protected system directory is not permitted.';
 $_lang['file_folder_err_remove'] = 'An error occurred while trying to delete the directory.';
 $_lang['file_folder_err_remove_protected'] = 'Deleting the protected system directory is not permitted.';
+$_lang['file_folder_err_update'] = 'An error occurred while trying to update the directory.';
 $_lang['file_folder_parent'] = 'Direktori induk';
+$_lang['file_folder_parent_desc'] = 'Relative to the basePath of the media source';
 $_lang['file_folder_remove'] = 'Menghapus direktori';
-$_lang['file_folder_remove_confirm'] = 'Are you sure you want to delete this directory? This could potentially break your website.';
+$_lang['file_folder_remove_confirm'] = 'Are you sure you want to delete the directory: "[[+directory]]"?<br />This could potentially break your website.';
+$_lang['file_folder_rename'] = 'Rename Directory';
 $_lang['file_last_accessed'] = 'Terakhir diakses';
 $_lang['file_last_modified'] = 'Modifikasi terakhir';
 $_lang['file_name'] = 'Nama file';
 $_lang['file_quick_create'] = 'Cepat membuat File';
 $_lang['file_quick_update'] = 'Quick Edit File';
+$_lang['file_package_err_invalid_directory'] = 'The packages directory does not exist!';
+$_lang['file_package_err_invalid_name'] = 'This file [[+name]] has an invalid name for the transport package';
+$_lang['file_package_err_invalid_type'] = 'This file does not appear to be a transport package';
 $_lang['file_remove'] = 'Menghapus File';
-$_lang['file_remove_confirm'] = 'Are you sure you want to delete this file entirely?';
+$_lang['file_remove_confirm'] = 'Are you sure you want to delete the file: "[[+file]]"?<br />Deleting a file could potentially break your website. Make sure you know what this file does before deleting it.';
 $_lang['file_saved'] = 'File yang diupdate berhasil!';
 $_lang['file_size'] = 'Ukuran file';
 $_lang['file_size_bytes'] = 'bytes';

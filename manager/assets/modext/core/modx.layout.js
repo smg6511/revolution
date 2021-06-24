@@ -125,7 +125,7 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
             ,id: 'modx-header'
             ,applyTo: 'modx-header'
             ,autoScroll: true
-            ,width: 80
+            ,width: 70
             ,listeners: {
                 afterrender: this.initPopper
                 ,scope: this
@@ -155,11 +155,11 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
 
         var tree = this.getTree(config);
         center.margins = {
-            right: -80,
+            right: -70,
             left: -8,
         };
         tree.margins = {
-            left: 80
+            left: 70
         };
 
         return {
@@ -221,8 +221,8 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
             ,applyTo: 'modx-leftbar'
             ,id: 'modx-leftbar-tabs'
             ,split: true
-            ,width: 310
-            ,minSize: 288
+            ,width: 300
+            ,minSize: 280
             ,autoScroll: true
             ,unstyled: true
             ,useSplitTips: true
@@ -328,7 +328,7 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
                 if(this.collapsed || this.el.hasFxBlock() || this.fireEvent('beforecollapse', this, animate) === false){
                     return;
                 }
-                if (animate && window.innerWidth > 640) {
+                if (animate && window.innerWidth > 960) {
                     var tree = Ext.getCmp('modx-leftbar-tabpanel').getEl();
                     tree.dom.style.opacity = 0;
                     this.el.dom.style.left = '-' + this.el.dom.style.width;
@@ -344,7 +344,7 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
                 if(!this.collapsed || this.el.hasFxBlock() || this.fireEvent('beforeexpand', this, animate) === false){
                     return;
                 }
-                if (animate && window.innerWidth > 640) {
+                if (animate && window.innerWidth > 960) {
                     var tree = Ext.getCmp('modx-leftbar-tabpanel').getEl();
                     window.setTimeout(function() {
                         tree.dom.style.visibility = 'visible';
@@ -511,7 +511,7 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
             ,shift: true
             ,fn: function() {
                 var t = Ext.getCmp('modx-resource-tree');
-                if (t) { t.quickCreate(document,{},'modDocument','web',0); }
+                if (t) { t.quickCreate(document,{},'MODX\\Revolution\\modDocument','web',0); }
             }
             ,stopEvent: true
         });
