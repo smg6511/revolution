@@ -21,7 +21,7 @@ class StaticResourceUpdateManagerController extends ResourceUpdateManagerControl
         $this->addJavascript($managerUrl.'assets/modext/widgets/resource/modx.panel.resource.static.js');
         $this->addJavascript($managerUrl.'assets/modext/sections/resource/update.js');
         $this->addJavascript($managerUrl.'assets/modext/sections/resource/static/update.js');
-        $this->addHtml('<script type="text/javascript">
+        $this->addHtml('<script>
 // <![CDATA[
 MODx.config.publish_document = "'.$this->canPublish.'";
 MODx.onDocFormRender = "'.$this->onDocFormRender.'";
@@ -82,5 +82,9 @@ MODx.perm.tree_show_resource_ids = '.($this->modx->hasPermission('tree_show_reso
      */
     public function getTemplateFile() {
         return 'resource/staticresource/update.tpl';
+    }
+
+    public function checkPermissions() {
+        return $this->modx->hasPermission('edit_document') && $this->modx->hasPermission('edit_static_resource');
     }
 }

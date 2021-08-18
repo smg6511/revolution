@@ -22,7 +22,7 @@ class SymlinkUpdateManagerController extends ResourceUpdateManagerController {
         $this->addJavascript($managerUrl.'assets/modext/sections/resource/update.js');
         $this->addJavascript($managerUrl.'assets/modext/sections/resource/symlink/update.js');
         $this->addHtml('
-        <script type="text/javascript">
+        <script>
         // <![CDATA[
         MODx.config.publish_document = "'.$this->canPublish.'";
         MODx.onDocFormRender = "'.$this->onDocFormRender.'";
@@ -58,5 +58,9 @@ class SymlinkUpdateManagerController extends ResourceUpdateManagerController {
      */
     public function getTemplateFile() {
         return 'resource/symlink/update.tpl';
+    }
+
+    public function checkPermissions() {
+        return $this->modx->hasPermission('edit_document') && $this->modx->hasPermission('edit_symlink');
     }
 }

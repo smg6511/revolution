@@ -22,6 +22,7 @@ $_lang['area_phpthumb'] = 'phpThumb';
 $_lang['area_proxy'] = 'พร็อกซี';
 $_lang['area_session'] = 'เซสซันและคุกกี้';
 $_lang['area_static_elements'] = 'Static Elements';
+$_lang['area_static_resources'] = 'Static Resources';
 $_lang['area_lexicon_string'] = 'Lexicon เอนทรี';
 $_lang['area_lexicon_string_msg'] = 'กรอกคีย์ของ lexicon เอนทรีสำหรับพื้นที่แสดงผลที่นี่ ถ้าไม่มี lexicon เอนทรี ก็จะแสดงแค่พื้นที่ของคีย์<br />พื้นที่ คอร์:<ul><li>การรับรอง</li><li>แคช</li><li>ไฟล์</li><li>furls</li><li>เกทเวย์</li><li>ภาษา</li><li>เมเนเจอร์</li><li>เซสซัน</li><li>ไซต์</li><li>ระบบ</li></ul>';
 $_lang['area_site'] = 'ไซต์';
@@ -414,8 +415,11 @@ $_lang['setting_mail_smtp_pass_desc'] = 'รหัสผ่านที่รั
 $_lang['setting_mail_smtp_port'] = 'พอร์ต SMTP';
 $_lang['setting_mail_smtp_port_desc'] = 'ตั้งค่าปริยายให้กับพอร์ตของ SMTP เซิร์ฟเวอร์';
 
-$_lang['setting_mail_smtp_prefix'] = 'คำนำหน้าการเชื่อมต่อ SMTP';
-$_lang['setting_mail_smtp_prefix_desc'] = 'ตั้งคำนำหน้าการเชื่อมต่อ เหล่าตัวเลือกคือ "" "ssl" หรือ "tls"';
+$_lang['setting_mail_smtp_prefix'] = 'SMTP Encryption';
+$_lang['setting_mail_smtp_prefix_desc'] = 'Sets the encryption of the SMTP connection. Options are "", "ssl" or "tls"';
+
+$_lang['setting_mail_smtp_autotls'] = 'SMTP Auto TLS';
+$_lang['setting_mail_smtp_autotls_desc'] = 'Whether to enable TLS encryption automatically if a server supports it, even if "SMTP Encryption" is not set to "tls"';
 
 $_lang['setting_mail_smtp_single_to'] = 'SMTP Single To';
 $_lang['setting_mail_smtp_single_to_desc'] = 'มีความสามารถในการมีฟิลด์"ถึง" ที่มีกระบวนการเฉพาะแต่ละอีเมล์ แทนที่การส่งถึงที่อยู่';
@@ -668,6 +672,9 @@ $_lang['setting_session_cookie_secure_desc'] = 'เปิดการใช้�
 $_lang['setting_session_cookie_httponly'] = 'Session Cookie HttpOnly';
 $_lang['setting_session_cookie_httponly_desc'] = 'Use this setting to set the HttpOnly flag on session cookies.';
 
+$_lang['setting_session_cookie_samesite'] = 'Session Cookie Samesite';
+$_lang['setting_session_cookie_samesite_desc'] = 'Choose Lax or Strict.';
+
 $_lang['setting_session_gc_maxlifetime'] = 'Session Garbage Collector Max Lifetime';
 $_lang['setting_session_gc_maxlifetime_desc'] = 'อนุญาตการปรับแต่งของ session.gc_maxlifetime ของการตั้งค่า PHP ini เมื่อใช้ \'modSessionHandler\'';
 
@@ -738,6 +745,12 @@ $_lang['setting_static_elements_default_category_desc'] = 'Specify a default cat
 
 $_lang['setting_static_elements_basepath'] = 'Static elements basepath';
 $_lang['setting_static_elements_basepath_desc'] = 'Basepath of where to store the static elements files.';
+
+$_lang['setting_resource_static_allow_absolute'] = 'Allow absolute static resource path';
+$_lang['setting_resource_static_allow_absolute_desc'] = 'This setting enables users to enter a fully qualified absolute path to any readable file on the server as the content of a static resource. Important: enabling this setting may be considered a significant security risk! It\'s strongly recommended to keep this setting disabled, unless you fully trust every single manager user.';
+
+$_lang['setting_resource_static_path'] = 'Static resource base path';
+$_lang['setting_resource_static_path_desc'] = 'When resource_static_allow_absolute is disabled, static resources are restricted to be within the absolute path provided here.  Important: setting this too wide may allow users to read files they shouldn\'t! It is strongly recommended to limit users to a specific directory such as {core_path}static/ or {assets_path} with this setting.';
 
 $_lang['setting_strip_image_paths'] = 'เขียนเส้นทางเบราว์เซอร์ใหม่หรือไม่?';
 $_lang['setting_strip_image_paths_desc'] = 'ถ้าตั้งเป็น \'ไม่\' MODX จะเขียนไฟล์เบราว์เซอร์ของรีซอร์สบน src (รูปภาพ ไฟล์ แฟลช และอื่นๆ) เป็น URL สัมพัทธ์ โดย URL สัมพัทธ์ จะเป็นประโยชน์ถ้าคุณต้องการย้ายการติดตั้ง MODX เช่น จากเว็บไซต์การแสดงไปเป็นเว็บไซต์การผลิต ถ้าคุณไม่เข้าใจว่าหมายถึงอะไร จะเป็นผลดีที่คุณจะปล่อยให้มันถูกตั้งเป็น \'ใช่\'';

@@ -125,7 +125,7 @@ abstract class modManagerController {
      */
     public function render() {
         if (!$this->checkPermissions()) {
-            return $this->modx->error->failure($this->modx->lexicon('access_denied'));
+            $this->failure($this->modx->lexicon('access_denied'));
         }
 
         $this->modx->invokeEvent('OnBeforeManagerPageInit',array(
@@ -148,11 +148,11 @@ abstract class modManagerController {
         $this->setCssURLPlaceholders();
         /* help url */
         $helpUrl = $this->getHelpUrl();
-        $this->addHtml('<script type="text/javascript">MODx.helpUrl = "'.($helpUrl).'"</script>');
+        $this->addHtml('<script>MODx.helpUrl = "'.($helpUrl).'"</script>');
 
         $this->modx->invokeEvent('OnManagerPageBeforeRender',array('controller' => &$this));
 
-        $placeholders = $this->process($this->scriptProperties);
+        $placeholders = !$this->isFailure ? $this->process($this->scriptProperties) : [];
         if (!$this->isFailure && !empty($placeholders) && is_array($placeholders)) {
             $this->setPlaceholders($placeholders);
         } elseif (!empty($placeholders)) {
@@ -480,8 +480,11 @@ abstract class modManagerController {
      * @return string
      */
     public function getHeader() {
+        $this->setPlaceholder('_authToken', $this->modx->user->getUserToken('mgr'));
         $this->loadController('header.php',true);
-        return $this->fetchTemplate('header.tpl');
+        $output = $this->fetchTemplate('header.tpl');
+        $this->setPlaceholder('_authToken', '');
+        return $output;
     }
 
     /**
@@ -555,7 +558,7 @@ abstract class modManagerController {
             $o = '';
             // Add script tags for the required javascript
             foreach ($externals as $js) {
-                $o .= '<script type="text/javascript" src="'.$js.'"></script>'."\n";
+                $o .= '<script src="'.$js.'"></script>'."\n";
             }
 
             // Get the state and user token for adding to the init script
@@ -571,7 +574,7 @@ abstract class modManagerController {
                 $layout = 'MODx.load({xtype: "modx-layout",accordionPanels: MODx.accordionPanels || [],auth: "'.$siteId.'"});';
             }
             $o .= <<<HTML
-<script type="text/javascript">
+<script>
 Ext.onReady(function() {
     {$state}
     {$layout}
@@ -674,7 +677,7 @@ HTML;
         $cssjs = array();
         if (!empty($jsToCompress)) {
             foreach ($jsToCompress as $scr) {
-                $cssjs[] = '<script src="'.$scr.'" type="text/javascript"></script>';
+                $cssjs[] = '<script src="'.$scr.'"></script>';
             }
         }
 
@@ -704,7 +707,7 @@ HTML;
         }
         if (!empty($lastjs)) {
             foreach ($lastjs as $scr) {
-                $cssjs[] = '<script src="'.$scr.'" type="text/javascript"></script>';
+                $cssjs[] = '<script src="'.$scr.'"></script>';
             }
         }
 
@@ -858,7 +861,7 @@ HTML;
             if (!empty($r)) $rules[] = $r;
         }
         if (!empty($rules)) {
-            $this->ruleOutput[] = '<script type="text/javascript">Ext.onReady(function() {'.implode("\n",$rules).'});</script>';
+            $this->ruleOutput[] = '<script>Ext.onReady(function() {'.implode("\n",$rules).'});</script>';
         }
         return $overridden;
     }

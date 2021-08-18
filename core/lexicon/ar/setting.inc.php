@@ -22,6 +22,7 @@ $_lang['area_phpthumb'] = 'phpThumb';
 $_lang['area_proxy'] = 'بروكسي';
 $_lang['area_session'] = 'الجلسة والكعكة';
 $_lang['area_static_elements'] = 'Static Elements';
+$_lang['area_static_resources'] = 'Static Resources';
 $_lang['area_lexicon_string'] = 'مدخل منطقة المعجم';
 $_lang['area_lexicon_string_msg'] = 'أدخل مفتاح مدخل المعجم من أجل المنطقة هنا. اذا لم يكن هناك مدخل للمعجم، عندها سيكون فقط إظهار لمفتاح المنطقة.</ br>المناطق الأساسية: المصادقة، التخزين المؤقت، ملف، التجميع، بوابة، لغة، مدير، جلسة، موقع، نظام';
 $_lang['area_site'] = 'موقع';
@@ -419,8 +420,11 @@ $_lang['setting_mail_smtp_pass_desc'] = 'كلمة المرور للمصادقة 
 $_lang['setting_mail_smtp_port'] = 'منفذ SMTP';
 $_lang['setting_mail_smtp_port_desc'] = 'ضبط منفذ المخدم SMTP الافتراضي.';
 
-$_lang['setting_mail_smtp_prefix'] = 'بادئة اتصال SMTP';
-$_lang['setting_mail_smtp_prefix_desc'] = 'ضبط بادئة الاتصال. الخيارات هي ""،"ssl" أو "tls"';
+$_lang['setting_mail_smtp_prefix'] = 'SMTP Encryption';
+$_lang['setting_mail_smtp_prefix_desc'] = 'Sets the encryption of the SMTP connection. Options are "", "ssl" or "tls"';
+
+$_lang['setting_mail_smtp_autotls'] = 'SMTP Auto TLS';
+$_lang['setting_mail_smtp_autotls_desc'] = 'Whether to enable TLS encryption automatically if a server supports it, even if "SMTP Encryption" is not set to "tls"';
 
 $_lang['setting_mail_smtp_single_to'] = 'SMTP Single To';
 $_lang['setting_mail_smtp_single_to_desc'] = 'يوفر قدرة الحصول على معالجة الحقل TO لرسائل البريد الإلكتروني المستقلة، بدلا من الإرسال إلى كل العناوين TO.';
@@ -673,6 +677,9 @@ $_lang['setting_session_cookie_secure_desc'] = 'تفعيل هذا الإعداد
 $_lang['setting_session_cookie_httponly'] = 'HttpOnly لكوكي الجلسة';
 $_lang['setting_session_cookie_httponly_desc'] = 'استخدم هذا الإعداد لضبط علامة HttpOnly على كوكي الجلسة.';
 
+$_lang['setting_session_cookie_samesite'] = 'Session Cookie Samesite';
+$_lang['setting_session_cookie_samesite_desc'] = 'Choose Lax or Strict.';
+
 $_lang['setting_session_gc_maxlifetime'] = 'وقت الحياة الأعظمي لجامع قمامة الجلسة';
 $_lang['setting_session_gc_maxlifetime_desc'] = 'السماح بتخصيص session.gc_maxlifetime في إعداد PHP ini عند استخدام \'modSessionHandler\'.';
 
@@ -743,6 +750,12 @@ $_lang['setting_static_elements_default_category_desc'] = 'Specify a default cat
 
 $_lang['setting_static_elements_basepath'] = 'Static elements basepath';
 $_lang['setting_static_elements_basepath_desc'] = 'Basepath of where to store the static elements files.';
+
+$_lang['setting_resource_static_allow_absolute'] = 'Allow absolute static resource path';
+$_lang['setting_resource_static_allow_absolute_desc'] = 'This setting enables users to enter a fully qualified absolute path to any readable file on the server as the content of a static resource. Important: enabling this setting may be considered a significant security risk! It\'s strongly recommended to keep this setting disabled, unless you fully trust every single manager user.';
+
+$_lang['setting_resource_static_path'] = 'Static resource base path';
+$_lang['setting_resource_static_path_desc'] = 'When resource_static_allow_absolute is disabled, static resources are restricted to be within the absolute path provided here.  Important: setting this too wide may allow users to read files they shouldn\'t! It is strongly recommended to limit users to a specific directory such as {core_path}static/ or {assets_path} with this setting.';
 
 $_lang['setting_strip_image_paths'] = 'إعادة كتابة مسارات المستعرض؟';
 $_lang['setting_strip_image_paths_desc'] = 'إذا كانت هذه مضبوطة إلى ’لا’، سيقوم مودكس بكتابة src (صور، ملفات، فلاش، وغيرها.) المصدر لمتصفح الملفات  كـ URL مطلق. URLs ذات الصلة مفيدة إذا كنت ترغب أن تنقل تثبيت مودكس الخاص بك، مثلا، من موقع مؤقت إلى موقع منتج. إذا لم يكن لديك فكرة ماذا يعني هذا، من الأفضل أن تتركها مضبوطة إلى ’نعم’.';

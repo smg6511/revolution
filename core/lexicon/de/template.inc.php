@@ -8,7 +8,7 @@
  */
 
 $_lang['access'] = 'Zugriff';
-$_lang['filter_by_category'] = 'Nach Kategorie filtern...';
+$_lang['filter_by_category'] = 'Nach Kategorie filtern …';
 $_lang['rank'] = 'Rang';
 $_lang['template'] = 'Template';
 $_lang['template_assignedtv_tab'] = 'Zugeordnete Template-Variablen';
@@ -52,4 +52,4 @@ $_lang['template_tv_msg'] = 'Die diesem Template zugeordneten Template-Variablen
 $_lang['template_untitled'] = 'Unbenanntes Template';
 $_lang['templates'] = 'Templates';
 $_lang['tvt_err_nf'] = 'Die Template-Variable hat keinen Zugriff auf das angegebene Template.';
-$_lang['tvt_err_remove'] = 'Beim Versuch, die Template-Variable aus dem Template zu löschen, ist ein Fehler aufgetreten.';
+$_lang['tvt_err_remove'] = 'Beim Versuch, die Template-Variable vom Template zu entfernen, ist ein Fehler aufgetreten.';

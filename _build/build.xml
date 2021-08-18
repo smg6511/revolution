@@ -20,7 +20,7 @@
     <property name="project.manager.dir" value="${project.root.dir}/manager" />
 
     <!-- Set the project version -->
-    <property name="modx.core.version" value="2.8.1" />
+    <property name="modx.core.version" value="2.8.4" />
     <property name="modx.core.release" value="dev" />
 
     <!-- Set some common build properties -->
@@ -54,6 +54,17 @@
         <phingcall target="generate-core-transport" />
         <phingcall target="build-traditional" />
         <phingcall target="build-advanced" />
+    </target>
+
+    <!-- =================================
+      target: nightly
+     ================================= -->
+    <target name="nightly" description="--> Nightly Build">
+        <phingcall target="prepare-build-image" />
+        <phingcall target="git-export-build-image" />
+        <phingcall target="prepare-build-distrib" />
+        <phingcall target="generate-core-transport" />
+        <phingcall target="build-traditional" />
     </target>
 
     <!-- Make sure the image directory exists and is clean -->

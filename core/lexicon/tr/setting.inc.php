@@ -22,6 +22,7 @@ $_lang['area_phpthumb'] = 'phpThumb';
 $_lang['area_proxy'] = 'Vekil Sunucu';
 $_lang['area_session'] = 'Oturum ve Çerez';
 $_lang['area_static_elements'] = 'Static Elements';
+$_lang['area_static_resources'] = 'Static Resources';
 $_lang['area_lexicon_string'] = 'Alan Veri Sözlüğü Girişi';
 $_lang['area_lexicon_string_msg'] = 'Buradaki alan için veri sözlüğü girişi anahtarını girin. Eğer veri sözlüğü girişi yoksa, sadece alan anahtarını görüntüleyecek.<br />Esas Alanlar: kimlik doğrulama, önbellekleme, dosya, toplamalar, ağ geçidi, dil, yönetici, oturum, site, sistem';
 $_lang['area_site'] = 'Site';
@@ -414,8 +415,11 @@ $_lang['setting_mail_smtp_pass_desc'] = 'SMTP\'ye karşı doğrulama için parol
 $_lang['setting_mail_smtp_port'] = 'SMTP bağlantı noktası';
 $_lang['setting_mail_smtp_port_desc'] = 'Varsayılam SMTP sunucu bağlantı noktasını ayarlar.';
 
-$_lang['setting_mail_smtp_prefix'] = 'SMTP Bağlantısı Öneki';
-$_lang['setting_mail_smtp_prefix_desc'] = 'Bağlantı önekini ayarlar. Seçenekler "", "ssl ya da "tls"dir';
+$_lang['setting_mail_smtp_prefix'] = 'SMTP Encryption';
+$_lang['setting_mail_smtp_prefix_desc'] = 'Sets the encryption of the SMTP connection. Options are "", "ssl" or "tls"';
+
+$_lang['setting_mail_smtp_autotls'] = 'SMTP Auto TLS';
+$_lang['setting_mail_smtp_autotls_desc'] = 'Whether to enable TLS encryption automatically if a server supports it, even if "SMTP Encryption" is not set to "tls"';
 
 $_lang['setting_mail_smtp_single_to'] = 'SMTP Tek';
 $_lang['setting_mail_smtp_single_to_desc'] = 'Tüm TO adreslere göndermek yerine, bireysel TO e-postaları işleme alan için yeteneği sağlar.';
@@ -670,6 +674,9 @@ $_lang['setting_session_cookie_secure_desc'] = 'Güvenli oturum çerezlerini kul
 $_lang['setting_session_cookie_httponly'] = 'Oturum Çerezi Yalnızca Http';
 $_lang['setting_session_cookie_httponly_desc'] = 'Oturum tanımlama bilgilerinde HttpOnly bayrağını ayarlamak için bu ayarı kullanın.';
 
+$_lang['setting_session_cookie_samesite'] = 'Session Cookie Samesite';
+$_lang['setting_session_cookie_samesite_desc'] = 'Choose Lax or Strict.';
+
 $_lang['setting_session_gc_maxlifetime'] = 'Oturum Çöp Toplayıcısı Maximum Ömrü';
 $_lang['setting_session_gc_maxlifetime_desc'] = 'Oturumun özelleştirmesini sağlar..gc_maxlifetime PHP ini ayarı \'modSessionHandler\'kullanırken.';
 
@@ -740,6 +747,12 @@ $_lang['setting_static_elements_default_category_desc'] = 'Specify a default cat
 
 $_lang['setting_static_elements_basepath'] = 'Static elements basepath';
 $_lang['setting_static_elements_basepath_desc'] = 'Basepath of where to store the static elements files.';
+
+$_lang['setting_resource_static_allow_absolute'] = 'Allow absolute static resource path';
+$_lang['setting_resource_static_allow_absolute_desc'] = 'This setting enables users to enter a fully qualified absolute path to any readable file on the server as the content of a static resource. Important: enabling this setting may be considered a significant security risk! It\'s strongly recommended to keep this setting disabled, unless you fully trust every single manager user.';
+
+$_lang['setting_resource_static_path'] = 'Static resource base path';
+$_lang['setting_resource_static_path_desc'] = 'When resource_static_allow_absolute is disabled, static resources are restricted to be within the absolute path provided here.  Important: setting this too wide may allow users to read files they shouldn\'t! It is strongly recommended to limit users to a specific directory such as {core_path}static/ or {assets_path} with this setting.';
 
 $_lang['setting_strip_image_paths'] = 'Tarayıcı yollarını yeniden yazın?';
 $_lang['setting_strip_image_paths_desc'] = 'Bu \'Hayır\' olarak ayarlanırsa, MODX dosya tarayıcı kaynak src\'lerini (resimler, dosyalar, flaş vb.) Mutlak URL\'ler olarak yazacaktır. MODX yüklemenizi, örneğin bir hazırlama sitesinden bir üretim sitesine taşımak isterseniz göreceli URL\'ler yardımcı olur. Bunun anlamı hakkında hiçbir fikriniz yoksa, sadece \'Evet\' olarak bırakmak en iyisidir.';

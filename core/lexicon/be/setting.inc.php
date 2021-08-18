@@ -22,6 +22,7 @@ $_lang['area_phpthumb'] = 'phpThumb';
 $_lang['area_proxy'] = 'Проксі';
 $_lang['area_session'] = 'Сеансы і кукі';
 $_lang['area_static_elements'] = 'Статычныя элементы';
+$_lang['area_static_resources'] = 'Static Resources';
 $_lang['area_lexicon_string'] = 'Запіс слоўніка для раздзела';
 $_lang['area_lexicon_string_msg'] = 'Увядзіце ключ запісу слоўніка для раздзела. Калі запіс з такім ключом не будзе знойдзены, адлюструецца сам ключ.<br />Раздзелы прасторы «core»: authentication, caching, file, furls, gateway, language, manager, session, site, system';
 $_lang['area_site'] = 'Сайт';
@@ -415,8 +416,11 @@ $_lang['setting_mail_smtp_pass_desc'] = 'Пароль для аўтэнтыфі�
 $_lang['setting_mail_smtp_port'] = 'SMTP Порт';
 $_lang['setting_mail_smtp_port_desc'] = 'Порт SMTP сервера па змаўчанні.';
 
-$_lang['setting_mail_smtp_prefix'] = 'SMTP прэфікс для злучэнняў';
-$_lang['setting_mail_smtp_prefix_desc'] = 'Усталёўвае прэфікс злучэння. Даступныя варыянты: "", "ssl", "tls"';
+$_lang['setting_mail_smtp_prefix'] = 'SMTP Encryption';
+$_lang['setting_mail_smtp_prefix_desc'] = 'Sets the encryption of the SMTP connection. Options are "", "ssl" or "tls"';
+
+$_lang['setting_mail_smtp_autotls'] = 'SMTP Auto TLS';
+$_lang['setting_mail_smtp_autotls_desc'] = 'Whether to enable TLS encryption automatically if a server supports it, even if "SMTP Encryption" is not set to "tls"';
 
 $_lang['setting_mail_smtp_single_to'] = 'Дасылаць па аднаму для SMTP';
 $_lang['setting_mail_smtp_single_to_desc'] = 'Дае магчымасць адпраўляць лісты адрасатам з поля "to" па аднаму, замест аднарозовай адпраўкі на ўсе адрасы.';
@@ -669,6 +673,9 @@ $_lang['setting_session_cookie_secure_desc'] = 'Дазвольце гэтую н
 $_lang['setting_session_cookie_httponly'] = 'Кукі сеансаў у рэжыме HttpOnly';
 $_lang['setting_session_cookie_httponly_desc'] = 'Выкарыстоўвайце гэтую наладу для задання рэжыма HttpOnly для кукаў сеансаў.';
 
+$_lang['setting_session_cookie_samesite'] = 'Session Cookie Samesite';
+$_lang['setting_session_cookie_samesite_desc'] = 'Choose Lax or Strict.';
+
 $_lang['setting_session_gc_maxlifetime'] = 'Максімальны час жыцця сесіі прыбіральніка смецця';
 $_lang['setting_session_gc_maxlifetime_desc'] = 'Дазваляе наладзіць PHP-параметр session.gc_maxlifetime, калі выкарыстоўваецца \'modSessionHandler\'.';
 
@@ -739,6 +746,12 @@ $_lang['setting_static_elements_default_category_desc'] = 'Пазначце ка
 
 $_lang['setting_static_elements_basepath'] = 'Базавы шлях да статычных элементаў';
 $_lang['setting_static_elements_basepath_desc'] = 'Базавы шлях да месца, дзе будуць захоўвацца файлы статычных элементаў.';
+
+$_lang['setting_resource_static_allow_absolute'] = 'Allow absolute static resource path';
+$_lang['setting_resource_static_allow_absolute_desc'] = 'This setting enables users to enter a fully qualified absolute path to any readable file on the server as the content of a static resource. Important: enabling this setting may be considered a significant security risk! It\'s strongly recommended to keep this setting disabled, unless you fully trust every single manager user.';
+
+$_lang['setting_resource_static_path'] = 'Static resource base path';
+$_lang['setting_resource_static_path_desc'] = 'When resource_static_allow_absolute is disabled, static resources are restricted to be within the absolute path provided here.  Important: setting this too wide may allow users to read files they shouldn\'t! It is strongly recommended to limit users to a specific directory such as {core_path}static/ or {assets_path} with this setting.';
 
 $_lang['setting_strip_image_paths'] = 'Перапісваць шляхі для браўзэра?';
 $_lang['setting_strip_image_paths_desc'] = 'Калі ўсталявана значэнне «Не», MODX будзе выкарыстоўваць абсалютныя спасылкі для выяваў, файлаў, flash і таму падобнага. Адносныя спасылкі зручней, калі вы ў будучыні збіраецеся перамясціць свой сайт, напрыклад, з тэставага сервера на канчатковы. Калі вы не разумееце пра што ідзе гаворка, пакіньце значэнне «Так».';

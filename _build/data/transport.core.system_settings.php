@@ -126,7 +126,7 @@ $settings['automatic_template_assignment']->fromArray(array (
 $settings['base_help_url']= $xpdo->newObject('modSystemSetting');
 $settings['base_help_url']->fromArray(array (
   'key' => 'base_help_url',
-  'value' => '//docs.modx.com/display/revolution20/',
+  'value' => '//docs.modx.com/help/',
   'xtype' => 'textfield',
   'namespace' => 'core',
   'area' => 'manager',
@@ -971,6 +971,15 @@ $settings['mail_smtp_prefix']->fromArray(array (
   'area' => 'mail',
   'editedon' => null,
 ), '', true, true);
+$settings['mail_smtp_autotls']= $xpdo->newObject('modSystemSetting');
+$settings['mail_smtp_autotls']->fromArray(array (
+  'key' => 'mail_smtp_autotls',
+  'value' => true,
+  'xtype' => 'combo-boolean',
+  'namespace' => 'core',
+  'area' => 'mail',
+  'editedon' => null,
+), '', true, true);
 $settings['mail_smtp_single_to']= $xpdo->newObject('modSystemSetting');
 $settings['mail_smtp_single_to']->fromArray(array (
   'key' => 'mail_smtp_single_to',
@@ -1630,6 +1639,17 @@ $settings['session_cookie_httponly']->fromArray(array (
   'area' => 'session',
   'editedon' => null,
 ), '', true, true);
+$settings['session_cookie_samesite']= $xpdo->newObject('modSystemSetting');
+$settings['session_cookie_samesite']->fromArray(array (
+    'key' => 'session_cookie_samesite',
+    'name' => 'setting_session_cookie_samesite',
+    'description' => 'setting_session_cookie_samesite_desc',
+    'value' => '',
+    'xtype' => 'textfield',
+    'namespace' => 'core',
+    'area' => 'session',
+    'editedon' => null,
+), '', true, true);
 $settings['session_gc_maxlifetime']= $xpdo->newObject('modSystemSetting');
 $settings['session_gc_maxlifetime']->fromArray(array (
   'key' => 'session_gc_maxlifetime',
@@ -1819,6 +1839,24 @@ $settings['static_elements_basepath']->fromArray(array (
   'namespace' => 'core',
   'area' => 'static_elements',
   'editedon' => null,
+), '', true, true);
+$settings['resource_static_allow_absolute']= $xpdo->newObject('modSystemSetting');
+$settings['resource_static_allow_absolute']->fromArray(array (
+    'key' => 'resource_static_allow_absolute',
+    'value' => '0',
+    'xtype' => 'combo-boolean',
+    'namespace' => 'core',
+    'area' => 'static_resources',
+    'editedon' => null,
+), '', true, true);
+$settings['resource_static_path']= $xpdo->newObject('modSystemSetting');
+$settings['resource_static_path']->fromArray(array (
+    'key' => 'resource_static_path',
+    'value' => '{assets_path}',
+    'xtype' => 'textfield',
+    'namespace' => 'core',
+    'area' => 'static_resources',
+    'editedon' => null,
 ), '', true, true);
 $settings['strip_image_paths']= $xpdo->newObject('modSystemSetting');
 $settings['strip_image_paths']->fromArray(array (

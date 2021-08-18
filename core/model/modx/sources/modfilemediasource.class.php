@@ -276,7 +276,7 @@ class modFileMediaSource extends modMediaSource implements modMediaSourceInterfa
                                     'source' => $this->get('id'),
                                     't' => $file->getMTime(),
                                 ));
-                                $image = $this->ctx->getOption('connectors_url', MODX_CONNECTORS_URL).'system/phpthumb.php?'.urldecode($imageQuery);
+                                $image = $this->ctx->getOption('connectors_url', MODX_CONNECTORS_URL).'system/phpthumb.php?'.rawurldecode($imageQuery);
                             } else {
                                 $preview = false;
                                 $this->xpdo->log(modX::LOG_LEVEL_ERROR,'Thumbnail could not be created for file: '.$bases['pathAbsoluteWithPath'].$fileName);
@@ -711,6 +711,9 @@ class modFileMediaSource extends modMediaSource implements modMediaSourceInterfa
         $bases = $this->getBases($objectPath);
 
         $fullPath = $bases['pathAbsolute'].$objectPath;
+        if (!$this->checkFiletype($fullPath)) {
+            return false;
+        }
         if (!file_exists($fullPath)) {
             $this->addError('file',$this->xpdo->lexicon('file_folder_err_ns').': '.$fullPath);
             return false;
@@ -759,6 +762,9 @@ class modFileMediaSource extends modMediaSource implements modMediaSourceInterfa
         $bases = $this->getBases($objectPath);
 
         $fullPath = $bases['pathAbsolute'].ltrim($objectPath,'/');
+        if (!$this->checkFiletype($fullPath)) {
+            return false;
+        }
 
         /** @var modFile $file */
         $file = $this->fileHandler->make($fullPath);
@@ -1073,8 +1079,8 @@ class modFileMediaSource extends modMediaSource implements modMediaSourceInterfa
                 }
 
                 $filesize = @filesize($filePathName);
-                $url = urlencode(ltrim($dir.$fileName,'/'));
-                $page = !empty($editAction) ? '?a='.$editAction.'&file='.$bases['urlRelative'].$fileName.'&wctx='.$this->ctx->get('key').'&source='.$this->get('id') : null;
+                $url = rawurlencode(ltrim($dir.$fileName,'/'));
+                $page = !empty($editAction) ? '?a='.$editAction.'&file='.rawurlencode($bases['urlRelative'].$fileName).'&wctx='.$this->ctx->get('key').'&source='.$this->get('id') : null;
 
                 /* get thumbnail */
                 $preview = 0;
@@ -1116,7 +1122,7 @@ class modFileMediaSource extends modMediaSource implements modMediaSourceInterfa
                             $thumbHeight = $size[1] >= $thumbHeight ? $thumbHeight : $size[1];
                             $thumbWidth = round($size[0] * ($thumbHeight / $size[1]));
                         }
-                        $image = $thumb = $bases['urlAbsolute'].urldecode($url);
+                        $image = $thumb = $bases['urlAbsolute'].rawurldecode($url);
                     } else {
                         $size = @getimagesize($filePathName);
                         if (is_array($size) && $size[0] > 0 && $size[1] > 0) {
@@ -1153,7 +1159,7 @@ class modFileMediaSource extends modMediaSource implements modMediaSourceInterfa
                                 'source' => $this->get('id'),
                                 't' => $file->getMTime(),
                             ));
-                            $image = $this->ctx->getOption('connectors_url', MODX_CONNECTORS_URL).'system/phpthumb.php?'.urldecode($imageQuery);
+                            $image = $this->ctx->getOption('connectors_url', MODX_CONNECTORS_URL).'system/phpthumb.php?'.rawurldecode($imageQuery);
                             $thumbQuery = http_build_query(array(
                                 'src' => $url,
                                 'w' => $thumbQueryWidth,
@@ -1165,7 +1171,7 @@ class modFileMediaSource extends modMediaSource implements modMediaSourceInterfa
                                 'source' => $this->get('id'),
                                 't' => $file->getMTime(),
                             ));
-                            $thumb = $this->ctx->getOption('connectors_url', MODX_CONNECTORS_URL).'system/phpthumb.php?'.urldecode($thumbQuery);
+                            $thumb = $this->ctx->getOption('connectors_url', MODX_CONNECTORS_URL).'system/phpthumb.php?'.rawurldecode($thumbQuery);
                         } else {
                             $this->xpdo->log(modX::LOG_LEVEL_ERROR,'Thumbnail could not be created for file: '.$filePathName);
                             $preview = 0;
@@ -1182,7 +1188,7 @@ class modFileMediaSource extends modMediaSource implements modMediaSourceInterfa
 
                 $filenames[] = strtoupper($fileName);
                 $files[$fileName] = array(
-                    'id' => $bases['urlAbsoluteWithPath'].$fileName,
+                    'id' => rawurlencode($bases['urlAbsoluteWithPath'].$fileName),
                     'name' => $fileName,
                     'cls' => 'icon-'.$fileExtension,
                     'image' => $image,

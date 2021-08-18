@@ -37,7 +37,7 @@ class ResourceUpdateManagerController extends ResourceManagerController {
         $this->addJavascript($managerUrl.'assets/modext/widgets/resource/modx.panel.resource.js');
         $this->addJavascript($managerUrl.'assets/modext/sections/resource/update.js');
         $this->addHtml('
-        <script type="text/javascript">
+        <script>
         // <![CDATA[
         MODx.config.publish_document = "'.$this->canPublish.'";
         MODx.onDocFormRender = "'.$this->onDocFormRender.'";
@@ -124,6 +124,7 @@ class ResourceUpdateManagerController extends ResourceManagerController {
         $this->resourceArray['cacheable'] = intval($this->resourceArray['cacheable']) == 1 ? true : false;
         $this->resourceArray['deleted'] = intval($this->resourceArray['deleted']) == 1 ? true : false;
         $this->resourceArray['uri_override'] = intval($this->resourceArray['uri_override']) == 1 ? true : false;
+        $this->resourceArray['alias_visible'] = (int)$this->resourceArray['alias_visible'] === 1;
         if (isset($this->resourceArray['syncsite'])) {
             $this->resourceArray['syncsite'] = intval($this->resourceArray['syncsite']) == 1 ? true : false;
         } else {

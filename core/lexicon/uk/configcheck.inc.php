@@ -20,17 +20,12 @@ $_lang['configcheck_errorpage_unavailable'] = 'Сторінка помилки 4
 $_lang['configcheck_errorpage_unavailable_msg'] = 'Це означає, що сторінка помилки 404 "Документ не знайдено" не доступна для відвідувачів Вашого сайту. Це може призвести до виникнення умов для рекурсивного зациклювання та появи числених помилок у логах Вашого сайту. Переконайтеся, що цій сторінці не призначено жодних груп веб-користувачів.';
 $_lang['configcheck_errorpage_unpublished'] = 'Сторінка помилки 404 "Документ не знайдений", що вказана у налаштуваннях системи, не опублікована або не існує.';
 $_lang['configcheck_errorpage_unpublished_msg'] = 'Це означає, що сторінка 404 помилки "Документ не знайдений" недоступна для відвідувачів сайту. Опублікуйте цю сторінку або переконайтеся, що її ідентифікатор правильно вказаний у налаштуваннях системи.';
-$_lang['configcheck_htaccess'] = 'Core folder is accessible by web';
-$_lang['configcheck_htaccess_msg'] = 'MODX detected that your core folder is (partially) accessible to the public.
-<strong>This is not recommended and a security risk.</strong>
-If your MODX installation is running on a Apache webserver
-you should at least set up the .htaccess file inside the core folder <em>[[+fileLocation]]</em>.
-This can be easily done by renaming the existing ht.access example file there to .htaccess.
-<p>There are other methods and webservers you may use, please read the <a href="https://docs.modx.com/current/en/getting-started/maintenance/securing-modx">Hardening MODX Guide</a>
-for further information about securing your site.</p>
-If you setup everything correctly, browsing e.g. to the <a href="[[+checkUrl]]" target="_blank">Changelog</a>
-should give you a 403 (permission denied) or better a 404 (not found). If you can see the changelog
-there in the browser, something is still wrong and you need to reconfigure or call an expert to solve this.';
+$_lang['configcheck_htaccess'] = 'Каталог ядра у відкритому доступі ';
+$_lang['configcheck_htaccess_msg'] = 'MODX виявив, що папка ядра доступна (частково) ззовні.
+<Strong> Це не рекомендується і є ризиком безпеки. </ Strong>
+Якщо ваша установка MODX працює на Apache web-сервері, ви повинні створити файл .htaccess всередині папки ядра <em>[[+fileLocation]]</em>. Це також можна зробити, перейменувавши існуючий вже файл-приклад ht.access в .htaccess.
+<P> Також існують інші методи і веб-сервери, які ви можете використовувати, прочитайте <a href="https://docs.modx.com/current/en/getting-started/maintenance/securing-modx"> Керівництво по посиленню захисту MODX </a> для інформації про додатковий захист вашого сайту. </ p>
+Якщо ви правильно все налаштували, відкрийте в браузері, наприклад, список змін - <a href="[[+checkUrl]]" target="_blank"> Changelog </a>. Це посилання має дати вам 403 код (доступ заборонений) або 404 (запиту, не знайдено). Якщо ви можете бачити список змін в браузері, щось все ще не так і вам потрібно змінити конфігурацію або знайти фахівця для вирішення цієї проблеми. ';
 $_lang['configcheck_images'] = 'Каталог зображень недоступний для запису';
 $_lang['configcheck_images_msg'] = 'Каталог зображень недоступний для запису або не існує. Це означає, що функції управління зображеннями не працюватимуть!';
 $_lang['configcheck_installer'] = 'Каталог з програмою установки не був видалений';
@@ -39,8 +34,8 @@ $_lang['configcheck_lang_difference'] = 'Неправильна кількіст
 $_lang['configcheck_lang_difference_msg'] = 'Кількість записів у вибраній мові відрізняється від кількості записів у мові за замовчуванням. Хоча це не обов\'язково може бути проблемою, але це привід для оновлення мовних файлів.';
 $_lang['configcheck_notok'] = 'У налаштуванні системи присутні помилки: ';
 $_lang['configcheck_ok'] = 'Перевірка пройшла успішно — попереджень немає.';
-$_lang['configcheck_phpversion'] = 'PHP version is outdated';
-$_lang['configcheck_phpversion_msg'] = 'Your PHP version [[+phpversion]] is no longer maintained by the PHP developers, which means no security updates are available. It is also likely that MODX or an extra package now or in the near future will no longer support this version. Please update your environment at least to PHP [[+phprequired]] as soon as possible to secure your site.';
+$_lang['configcheck_phpversion'] = 'Версія PHP застаріла ';
+$_lang['configcheck_phpversion_msg'] = 'Ваша версія PHP [[+phpversion]] більше не підтримується спільнотою PHP-розробників. Це означає, що оновлення безпеки недоступні. Також є ймовірність, що MODX або додаткові пакети вже зараз або в найближчому майбутньому більше не будуть підтримувати цю версію. Будь ласка, поновіть середу принаймні до PHP [[+phprequired]] якомога швидше для забезпечення безпеки вашого сайту. ';
 $_lang['configcheck_register_globals'] = '"register_globals" встановлено в ON у Вашому конфігураційному файлі php.ini';
 $_lang['configcheck_register_globals_msg'] = 'Ця конфігурація робить Ваш сайт значно більш вразливим до нападів Cross SIte Scripting (XSS). Зв\'яжіться з представниками Вашого хостингу і дізнайтеся, як можна усунути цю проблему.';
 $_lang['configcheck_title'] = 'Перевірка конфігурації';

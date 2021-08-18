@@ -8,6 +8,10 @@
  * files found in the top-level directory of this distribution.
  */
 class WebLinkCreateManagerController extends ResourceCreateManagerController {
+    public function checkPermissions() {
+        return $this->modx->hasPermission('new_document') && $this->modx->hasPermission('new_weblink');
+    }
+
     /**
      * Register custom CSS/JS for the page
      * @return void
@@ -21,7 +25,7 @@ class WebLinkCreateManagerController extends ResourceCreateManagerController {
         $this->addJavascript($mgrUrl.'assets/modext/widgets/resource/modx.panel.resource.weblink.js');
         $this->addJavascript($mgrUrl.'assets/modext/sections/resource/create.js');
         $this->addJavascript($mgrUrl.'assets/modext/sections/resource/weblink/create.js');
-        $this->addHtml('<script type="text/javascript">
+        $this->addHtml('<script>
 // <![CDATA[
 MODx.config.publish_document = "'.$this->canPublish.'";
 MODx.onDocFormRender = "'.$this->onDocFormRender.'";

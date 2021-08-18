@@ -33,7 +33,7 @@ class SecurityFormsSetUpdateManagerController extends modManagerController {
         $this->addJavascript($mgrUrl.'assets/modext/widgets/fc/modx.fc.common.js');
         $this->addJavascript($mgrUrl.'assets/modext/widgets/fc/modx.panel.fcset.js');
         $this->addJavascript($mgrUrl.'assets/modext/sections/fc/set/update.js');
-        $this->addHtml('<script type="text/javascript">
+        $this->addHtml('<script>
         // <![CDATA[
         Ext.onReady(function() {
             MODx.load({
@@ -67,7 +67,11 @@ class SecurityFormsSetUpdateManagerController extends modManagerController {
         ));
         /** @var modFormCustomizationSet $set */
         $set = $this->modx->getObject('modFormCustomizationSet',$c);
-        if (empty($set)) return $this->failure($this->modx->lexicon('set_err_nfs',array('id' => $scriptProperties['id'])));
+        if (empty($set)) {
+            return $this->failure($this->modx->lexicon('set_err_nfs',[
+                'id' => htmlentities($scriptProperties['id'], ENT_QUOTES, 'UTF-8')
+            ]));
+        }
 
         $this->setArray = $set->toArray();
         $setData = $set->getData();

@@ -10,7 +10,7 @@ $_lang['area'] = 'Area';
 $_lang['area_authentication'] = 'Autenticazione e Sicurezza';
 $_lang['area_caching'] = 'Caching';
 $_lang['area_core'] = 'Codice Core';
-$_lang['area_editor'] = 'Rich-Text Editor';
+$_lang['area_editor'] = 'Editor di Testo Avanzato';
 $_lang['area_file'] = 'File System';
 $_lang['area_filter'] = 'Filtra per area...';
 $_lang['area_furls'] = 'URL Semplici (Friendly URL)';
@@ -22,6 +22,7 @@ $_lang['area_phpthumb'] = 'phpThumb';
 $_lang['area_proxy'] = 'Proxy';
 $_lang['area_session'] = 'Sessioni e Cookie';
 $_lang['area_static_elements'] = 'Elementi statici';
+$_lang['area_static_resources'] = 'Risorse Statiche';
 $_lang['area_lexicon_string'] = 'Denominazione Area';
 $_lang['area_lexicon_string_msg'] = 'Inserisci qui la Chiave del termine associato all\'area. Se non c\'è alcuna denominazione corrispondente, verrà mostrata soltanto la Chiave stessa (il nome univoco).<br />Aree Core:<ul><li>authentication</li><li>caching</li><li>file</li><li>furls</li><li>gateway</li><li>language</li><li>manager</li><li>session</li><li>site</li><li>system</li></ul>';
 $_lang['area_site'] = 'Sito';
@@ -135,8 +136,8 @@ $_lang['setting_cache_action_map_desc'] = 'Se impostata su "SI", le azioni (o le
 $_lang['setting_cache_alias_map'] = 'Abilita Context Alias Map Cache';
 $_lang['setting_cache_alias_map_desc'] = 'Quando abilitato, tutti gli URIs delle Risorse sono inseriti nella cache del Contesto. Abilitalo su siti pi&ugrave; piccoli e disabilitalo su siti pi&ugrave; grandi per avere prestazioni migliori.';
 
-$_lang['setting_use_context_resource_table'] = 'Use the context resource table for context cache refreshes';
-$_lang['setting_use_context_resource_table_desc'] = 'When enabled, context cache refreshes use the context_resource table. This enables you to programmatically have one resource in multiple contexts. If you do not use those multiple resource contexts via the API, you can set this to false. On large sites you will get a potential performance boost in the manager then.';
+$_lang['setting_use_context_resource_table'] = 'Usa la tabella delle risorse contestuali per gli aggiornamenti della cache contestuale';
+$_lang['setting_use_context_resource_table_desc'] = 'Quando attivata, gli aggiornamenti del cache contesto utilizzano la tabella context_resource. Ciò consente di avere in paniera programmatica, una risorsa in più contesti. Se non devi usare queste risorse in contesti multipli tramite API, puoi impostare falso. Su siti di grandi dimensioni miglioreranno le prestazioni del manager.';
 
 $_lang['setting_cache_context_settings'] = 'Abilita Cache Impostazione dei Contesti';
 $_lang['setting_cache_context_settings_desc'] = 'Se impostata su "SI", le impostazioni dei contesti saranno inserite in cache per ridurre il tempo di caricamento.';
@@ -284,7 +285,7 @@ $_lang['setting_failed_login_attempts_desc'] = 'Il numero di tentativi errati di
 $_lang['setting_fe_editor_lang'] = 'Lingua Editor Front-end';
 $_lang['setting_fe_editor_lang_desc'] = 'Scegli una lingua da usare nell\'editor quando usato come editor front-end.';
 
-$_lang['setting_feed_modx_news'] = 'MODX News Feed URL';
+$_lang['setting_feed_modx_news'] = 'Feed Novita\' MODX';
 $_lang['setting_feed_modx_news_desc'] = 'Imposta l\'URL dei feed RSS per il pannello MODX News nel manager.';
 
 $_lang['setting_feed_modx_news_enabled'] = 'MODX News Feed Abilitati';
@@ -414,8 +415,11 @@ $_lang['setting_mail_smtp_pass_desc'] = 'La password per autenticatsi con SMTP.'
 $_lang['setting_mail_smtp_port'] = 'Porta SMTP';
 $_lang['setting_mail_smtp_port_desc'] = 'Imposta la porta di default del server SMTP.';
 
-$_lang['setting_mail_smtp_prefix'] = 'Prefisso Connessione SMTP';
-$_lang['setting_mail_smtp_prefix_desc'] = 'Imposta il prefisso della connessione. Le Opzioni sono "", "ssl" or "tls"';
+$_lang['setting_mail_smtp_prefix'] = 'Crittografia SMTP';
+$_lang['setting_mail_smtp_prefix_desc'] = 'Imposta la crittografia della connessione SMTP. Sono opzioni "", "ssl" o "tls"';
+
+$_lang['setting_mail_smtp_autotls'] = 'TLS Automatico SMTP';
+$_lang['setting_mail_smtp_autotls_desc'] = 'Se abilitare la crittografia TLS automaticamente se un server la supporta, anche se "Crittografia SMTP" non è impostata a "tls"';
 
 $_lang['setting_mail_smtp_single_to'] = 'SMTP Invio Singolo A:';
 $_lang['setting_mail_smtp_single_to_desc'] = 'Abilita l\'invio selettivo ai singoli destinatari "A:" delle mails, invece di inviare all\'intero elenco A: dei destinatari.';
@@ -665,8 +669,11 @@ $_lang['setting_session_cookie_path_desc'] = 'Con questa impostazione puoi perso
 $_lang['setting_session_cookie_secure'] = 'Sicurezza Cookie Sessione';
 $_lang['setting_session_cookie_secure_desc'] = 'Abilita questa opzione per usare cookies per sessioni sicure.';
 
-$_lang['setting_session_cookie_httponly'] = 'Session Cookie HttpOnly';
+$_lang['setting_session_cookie_httponly'] = 'Cookie Sessione HttpOnly';
 $_lang['setting_session_cookie_httponly_desc'] = 'Utilizza questa opzione per spuntare il flag HttpOnly sui cookies della sessione.';
+
+$_lang['setting_session_cookie_samesite'] = 'Cookie Sessione Sito Stesso';
+$_lang['setting_session_cookie_samesite_desc'] = 'Scegli Lax o Strict.';
 
 $_lang['setting_session_gc_maxlifetime'] = 'Durata Max sessione Garbage Collector';
 $_lang['setting_session_gc_maxlifetime_desc'] = 'Consente la personalizzazione dell\'impostazione gc_maxlifetime di PHP ini quando si usa \'modSessionHandler\'.';
@@ -738,6 +745,12 @@ $_lang['setting_static_elements_default_category_desc'] = 'Specifica una categor
 
 $_lang['setting_static_elements_basepath'] = 'Percorso di base degli elementi statici';
 $_lang['setting_static_elements_basepath_desc'] = 'Percorso di base dove memorizzare i file di elementi statici.';
+
+$_lang['setting_resource_static_allow_absolute'] = 'Consenti percorso risorsa statica assoluta';
+$_lang['setting_resource_static_allow_absolute_desc'] = 'Questa impostazione consente agli utenti di inserire un percorso assoluto completamente qualificato per qualsiasi file leggibile sul server come contenuto di una risorsa statica. Importante: abilitare questa impostazione può essere considerato un rischio significativo per la sicurezza! Si raccomanda vivamente di mantenere questa impostazione disabilitata, a meno che non ti fidi completamente ogni singolo utente manager.';
+
+$_lang['setting_resource_static_path'] = 'Percorso base risorsa statica';
+$_lang['setting_resource_static_path_desc'] = 'Quando resource_static_allow_absolute è disabilitato, le risorse statiche sono limitate ad essere all\'interno del percorso assoluto fornito qui. Importante: l\'impostazione di questo troppo largo può consentire agli utenti di leggere i file che non dovrebbero! Si raccomanda vivamente di limitare gli utenti a una directory specifica come {core_path}static/ o {assets_path} con questa impostazione.';
 
 $_lang['setting_strip_image_paths'] = 'Riscrivi Percorsi Browser?';
 $_lang['setting_strip_image_paths_desc'] = 'Se impostato su \'NO\', MODX scriverà le origini dei files delle risorse src(immagini, files, flash, etc.) come URLs assoluti. Gli URLs relativi sono utili per spostare la tua installazione di MODX, e.g., da un server di test a un server di produzione. Se non hai idea di cosa significhi, sarebbe opportuno lasciare semplicemente impostato su \'SI\'.';

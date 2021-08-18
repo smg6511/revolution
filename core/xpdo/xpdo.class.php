@@ -1060,6 +1060,7 @@ class xPDO {
      */
     public function getObjectGraph($className, $graph, $criteria= null, $cacheFlag= true) {
         $object= null;
+        $this->sanitizePKCriteria($className, $criteria);
         if ($collection= $this->getCollectionGraph($className, $graph, $criteria, $cacheFlag)) {
             if (!count($collection) === 1) {
                 $this->log(xPDO::LOG_LEVEL_WARN, 'getObjectGraph criteria returned more than one instance.');
@@ -2747,20 +2748,19 @@ class xPDO {
         if (is_scalar($criteria)) {
             $pkType = $this->getPKType($className);
             if (is_string($pkType)) {
-                if (is_string($criteria) && !xPDOQuery::isValidClause($criteria)) {
-                    $criteria = null;
-                } else {
-                    switch ($pkType) {
-                        case 'int':
-                        case 'integer':
-                            $criteria = (int)$criteria;
+                $pk = $this->getPK($className);
+                switch ($pkType) {
+                    case 'int':
+                    case 'integer':
+                        if (!is_int($criteria) && (string)(int)$criteria !== (string)$criteria) {
+                            $criteria = array($pk => null);
                             break;
-                        case 'string':
-                            if (is_int($criteria)) {
-                                $criteria = (string)$criteria;
-                            }
-                            break;
-                    }
+                        }
+                        $criteria = array($pk => (int)$criteria);
+                        break;
+                    case 'string':
+                        $criteria = array($pk => (string)$criteria);
+                        break;
                 }
             } elseif (is_array($pkType)) {
                 $criteria = null;
@@ -3085,7 +3085,7 @@ class xPDOConnection {
         $this->config['password']= $password;
         $driverOptions = is_array($driverOptions) ? $driverOptions : array();
         if (array_key_exists('driverOptions', $this->config) && is_array($this->config['driverOptions'])) {
-            $driverOptions = array_merge($this->config['driverOptions'], $driverOptions);
+            $driverOptions = $driverOptions + $this->config['driverOptions'];
         }
         $this->config['driverOptions']= $driverOptions;
         if (array_key_exists(xPDO::OPT_CONN_MUTABLE, $this->config)) {
@@ -3111,7 +3111,7 @@ class xPDOConnection {
     public function connect($driverOptions = array()) {
         if ($this->pdo === null) {
             if (is_array($driverOptions) && !empty($driverOptions)) {
-                $this->config['driverOptions']= array_merge($this->config['driverOptions'], $driverOptions);
+                $this->config['driverOptions']= $driverOptions + $this->config['driverOptions'];
             }
             try {
                 $this->pdo= new PDO($this->config['dsn'], $this->config['username'], $this->config['password'], $this->config['driverOptions']);

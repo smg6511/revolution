@@ -6,31 +6,26 @@
  * @package modx
  * @subpackage lexicon
  */
-$_lang['configcheck_admin'] = 'Neem contact op met de beheerder en waarschuw hem over deze melding!';
-$_lang['configcheck_allowtagsinpost_context_enabled'] = 'allow_tags_in_post Context Setting is ingeschakeld buiten de `mgr` context';
+$_lang['configcheck_admin'] = 'Neem contact op met de systeembeheerder en waarschuw hem over deze melding!';
+$_lang['configcheck_allowtagsinpost_context_enabled'] = 'allow_tags_in_post Context Instelling is ingeschakeld buiten de `mgr` context';
 $_lang['configcheck_allowtagsinpost_context_enabled_msg'] = 'De allow_tags_in_post Context Setting is in deze installatie ingeschakeld buiten de "mgr" context. Tenzij de gebruikers van de website specifiek MODX tags, genummerde entities of HTML script tags via POST naar een of meerdere formulieren op de site moeten kunnen sturen is het sterk aan te raden deze instelling te deactiveren. Over het algemeen moet alleen de "mgr" context deze instelling gebruiken.';
-$_lang['configcheck_allowtagsinpost_system_enabled'] = 'allow_tags_in_post System Setting Ingeschakeld';
+$_lang['configcheck_allowtagsinpost_system_enabled'] = 'allow_tags_in_post Systeem Instelling Ingeschakeld';
 $_lang['configcheck_allowtagsinpost_system_enabled_msg'] = 'De allow_tags_in_post System Setting is in deze installatie ingeschakeld. Tenzij de gebruikers van de website specifiek MODX tags, genummerde entities of HTML script tags via POST naar een of meerdere formulieren op de site moeten kunnen sturen is het sterk aan te raden deze instelling te deactiveren. Indien deze instelling nodig is, kan dit het beste op context niveau worden ingeschakeld met Context Settings.';
 $_lang['configcheck_cache'] = 'cache map is niet schrijfbaar';
 $_lang['configcheck_cache_msg'] = 'MODX kan niet schrijven naar de cache map. MODX zal nog steeds functioneren als verwacht maar caching zal niet werken. Om dit op te lossen maak de /cache/ map schrijfbaar.';
 $_lang['configcheck_configinc'] = 'Configuratiebestand nog steeds schrijfbaar!';
-$_lang['configcheck_configinc_msg'] = 'De website is kwetsbaar voor hackers welke veel schade aan jouw website kunnen aanrichten. Stel jouw configuratiebestand in op alleen-lezen! Indien je niet de beheerder bent, neem dan contact met de beheerder op en waarschuw hem over deze melding. Het bestand kan worden gevonden in [[+path]]';
+$_lang['configcheck_configinc_msg'] = 'Je website is kwetsbaar voor hackers die veel schade kunnen aanrichten. Zorg ervoor dat je configuratiebestand op alleen-lezen is ingesteld! Als je niet de beheerder bent, neem dan contact op met een systeembeheerder en waarschuw hem over deze melding! Het bestand kan gevonden worden in [[+path]]';
 $_lang['configcheck_default_msg'] = 'Een onverwachte fout is opgetreden. Dit is toch wel een beetje apart.';
-$_lang['configcheck_errorpage_unavailable'] = 'De website\'s foutpagina is niet beschikbaar.';
+$_lang['configcheck_errorpage_unavailable'] = 'De foutpagina van je website is niet beschikbaar.';
 $_lang['configcheck_errorpage_unavailable_msg'] = 'Dit betekent dat jouw foutpagina niet bereikbaar is voor bezoekers of deze bestaat niet. Dit kan leiden tot een oneindige loop en veel fouten in logbestanden. Zorg ervoor dat de foutpagina publiekelijk toegankelijk is.';
-$_lang['configcheck_errorpage_unpublished'] = 'De site\'s foutpagina is niet gepubliceerd of bestaat niet.';
+$_lang['configcheck_errorpage_unpublished'] = 'De foutpagina van je website is niet gepubliceerd of bestaat niet.';
 $_lang['configcheck_errorpage_unpublished_msg'] = 'Dit betekent dat jouw foutpagina niet bereikbaar is voor bezoekers. Publiceer de pagina of controleer of het is gekoppeld aan een bestaand document in jouw site structuur in het Systeem > Systeeminstellingen menu.';
 $_lang['configcheck_htaccess'] = 'Core map is toegankelijk op het web';
-$_lang['configcheck_htaccess_msg'] = 'MODX detected that your core folder is (partially) accessible to the public.
-<strong>This is not recommended and a security risk.</strong>
-If your MODX installation is running on a Apache webserver
-you should at least set up the .htaccess file inside the core folder <em>[[+fileLocation]]</em>.
-This can be easily done by renaming the existing ht.access example file there to .htaccess.
-<p>There are other methods and webservers you may use, please read the <a href="https://docs.modx.com/current/en/getting-started/maintenance/securing-modx">Hardening MODX Guide</a>
-for further information about securing your site.</p>
-If you setup everything correctly, browsing e.g. to the <a href="[[+checkUrl]]" target="_blank">Changelog</a>
-should give you a 403 (permission denied) or better a 404 (not found). If you can see the changelog
-there in the browser, something is still wrong and you need to reconfigure or call an expert to solve this.';
+$_lang['configcheck_htaccess_msg'] = 'MODX heeft geconstateerd dat uw core map (gedeeltelijk) voor het publiek toegankelijk is.
+<strong>Dit is niet aanbevolen en kan een beveiligingsrisico met zich mee brengen.</strong> 
+Indien de MODX installatie op Apache draait is het mogelijk om het meegeleverde .htaccess bestand in <em>[[+fileLocation]]</em> te gebruiken om toegang tot de core map te weren. Dit is eenvoudig te doen door het ht.access bestand te hernoemen naar .htaccess.
+<p>Voor andere methoden en webservers kan de <a href="https://docs.modx.com/current/en/getting-started/maintenance/securing-modx">Hardening MODX Guide</a> geraadpleegd worden (Engels). </p>
+Indien alles succesvol is ingesteld zou bij het opvragen van bijvoorbeeld het <a href="[[+checkUrl]]" target="_blank">Changelog</a> een 403 (toegang geweigerd) of 404 (pagina niet gevonden) foutmelding moeten geven. Als de changelog toch op te vragen is, dan dienen verdere stappen genomen te worden om het probleem te verhelpen.';
 $_lang['configcheck_images'] = 'Afbeeldingen map is niet schrijfbaar';
 $_lang['configcheck_images_msg'] = 'De afbeeldingen map is niet schrijfbaar of bestaat niet. Dit betekent dat Afbeeldingenbeheer functionaliteiten in de editor niet werken!';
 $_lang['configcheck_installer'] = 'Installatie is nog aanwezig';
