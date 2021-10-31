@@ -1,22 +1,22 @@
 <?php
+
 namespace MODX\Revolution\mysql;
 
 use xPDO\xPDO;
 
 class modTemplateVar extends \MODX\Revolution\modTemplateVar
 {
-
-    public static $metaMap = array (
+    public static $metaMap = array(
         'package' => 'MODX\\Revolution\\',
         'version' => '3.0',
         'table' => 'site_tmplvars',
         'extends' => 'MODX\\Revolution\\modElement',
-        'tableMeta' => 
-        array (
+        'tableMeta' =>
+        array(
             'engine' => 'InnoDB',
         ),
-        'fields' => 
-        array (
+        'fields' =>
+        array(
             'type' => '',
             'name' => '',
             'caption' => '',
@@ -24,28 +24,28 @@ class modTemplateVar extends \MODX\Revolution\modTemplateVar
             'editor_type' => 0,
             'category' => 0,
             'locked' => 0,
-            'elements' => NULL,
+            'elements' => null,
             'rank' => 0,
             'display' => '',
-            'default_text' => NULL,
-            'properties' => NULL,
-            'input_properties' => NULL,
-            'output_properties' => NULL,
+            'default_text' => null,
+            'properties' => null,
+            'input_properties' => null,
+            'output_properties' => null,
             'static' => 0,
             'static_file' => '',
         ),
-        'fieldMeta' => 
-        array (
-            'type' => 
-            array (
+        'fieldMeta' =>
+        array(
+            'type' =>
+            array(
                 'dbtype' => 'varchar',
                 'precision' => '20',
                 'phptype' => 'string',
                 'null' => false,
                 'default' => '',
             ),
-            'name' => 
-            array (
+            'name' =>
+            array(
                 'dbtype' => 'varchar',
                 'precision' => '50',
                 'phptype' => 'string',
@@ -53,32 +53,32 @@ class modTemplateVar extends \MODX\Revolution\modTemplateVar
                 'default' => '',
                 'index' => 'unique',
             ),
-            'caption' => 
-            array (
+            'caption' =>
+            array(
                 'dbtype' => 'varchar',
                 'precision' => '80',
                 'phptype' => 'string',
                 'null' => false,
                 'default' => '',
             ),
-            'description' => 
-            array (
+            'description' =>
+            array(
                 'dbtype' => 'varchar',
                 'precision' => '255',
                 'phptype' => 'string',
                 'null' => false,
                 'default' => '',
             ),
-            'editor_type' => 
-            array (
+            'editor_type' =>
+            array(
                 'dbtype' => 'int',
                 'precision' => '11',
                 'phptype' => 'integer',
                 'null' => false,
                 'default' => 0,
             ),
-            'category' => 
-            array (
+            'category' =>
+            array(
                 'dbtype' => 'int',
                 'precision' => '11',
                 'phptype' => 'integer',
@@ -86,8 +86,8 @@ class modTemplateVar extends \MODX\Revolution\modTemplateVar
                 'default' => 0,
                 'index' => 'fk',
             ),
-            'locked' => 
-            array (
+            'locked' =>
+            array(
                 'dbtype' => 'tinyint',
                 'precision' => '1',
                 'attributes' => 'unsigned',
@@ -96,13 +96,13 @@ class modTemplateVar extends \MODX\Revolution\modTemplateVar
                 'default' => 0,
                 'index' => 'index',
             ),
-            'elements' => 
-            array (
+            'elements' =>
+            array(
                 'dbtype' => 'text',
                 'phptype' => 'string',
             ),
-            'rank' => 
-            array (
+            'rank' =>
+            array(
                 'dbtype' => 'int',
                 'precision' => '11',
                 'phptype' => 'integer',
@@ -110,39 +110,39 @@ class modTemplateVar extends \MODX\Revolution\modTemplateVar
                 'default' => 0,
                 'index' => 'index',
             ),
-            'display' => 
-            array (
+            'display' =>
+            array(
                 'dbtype' => 'varchar',
                 'precision' => '20',
                 'phptype' => 'string',
                 'null' => false,
                 'default' => '',
             ),
-            'default_text' => 
-            array (
+            'default_text' =>
+            array(
                 'dbtype' => 'mediumtext',
                 'phptype' => 'string',
             ),
-            'properties' => 
-            array (
+            'properties' =>
+            array(
                 'dbtype' => 'text',
                 'phptype' => 'array',
                 'null' => true,
             ),
-            'input_properties' => 
-            array (
+            'input_properties' =>
+            array(
                 'dbtype' => 'text',
                 'phptype' => 'array',
                 'null' => true,
             ),
-            'output_properties' => 
-            array (
+            'output_properties' =>
+            array(
                 'dbtype' => 'text',
                 'phptype' => 'array',
                 'null' => true,
             ),
-            'static' => 
-            array (
+            'static' =>
+            array(
                 'dbtype' => 'tinyint',
                 'precision' => '1',
                 'attributes' => 'unsigned',
@@ -151,8 +151,8 @@ class modTemplateVar extends \MODX\Revolution\modTemplateVar
                 'default' => 0,
                 'index' => 'index',
             ),
-            'static_file' => 
-            array (
+            'static_file' =>
+            array(
                 'dbtype' => 'varchar',
                 'precision' => '255',
                 'phptype' => 'string',
@@ -160,86 +160,86 @@ class modTemplateVar extends \MODX\Revolution\modTemplateVar
                 'default' => '',
             ),
         ),
-        'fieldAliases' => 
-        array (
+        'fieldAliases' =>
+        array(
             'content' => 'default_text',
         ),
-        'indexes' => 
-        array (
-            'name' => 
-            array (
+        'indexes' =>
+        array(
+            'name' =>
+            array(
                 'alias' => 'name',
                 'primary' => false,
                 'unique' => true,
                 'type' => 'BTREE',
-                'columns' => 
-                array (
-                    'name' => 
-                    array (
+                'columns' =>
+                array(
+                    'name' =>
+                    array(
                         'length' => '',
                         'collation' => 'A',
                         'null' => false,
                     ),
                 ),
             ),
-            'category' => 
-            array (
+            'category' =>
+            array(
                 'alias' => 'category',
                 'primary' => false,
                 'unique' => false,
                 'type' => 'BTREE',
-                'columns' => 
-                array (
-                    'category' => 
-                    array (
+                'columns' =>
+                array(
+                    'category' =>
+                    array(
                         'length' => '',
                         'collation' => 'A',
                         'null' => false,
                     ),
                 ),
             ),
-            'locked' => 
-            array (
+            'locked' =>
+            array(
                 'alias' => 'locked',
                 'primary' => false,
                 'unique' => false,
                 'type' => 'BTREE',
-                'columns' => 
-                array (
-                    'locked' => 
-                    array (
+                'columns' =>
+                array(
+                    'locked' =>
+                    array(
                         'length' => '',
                         'collation' => 'A',
                         'null' => false,
                     ),
                 ),
             ),
-            'rank' => 
-            array (
+            'rank' =>
+            array(
                 'alias' => 'rank',
                 'primary' => false,
                 'unique' => false,
                 'type' => 'BTREE',
-                'columns' => 
-                array (
-                    'rank' => 
-                    array (
+                'columns' =>
+                array(
+                    'rank' =>
+                    array(
                         'length' => '',
                         'collation' => 'A',
                         'null' => false,
                     ),
                 ),
             ),
-            'static' => 
-            array (
+            'static' =>
+            array(
                 'alias' => 'static',
                 'primary' => false,
                 'unique' => false,
                 'type' => 'BTREE',
-                'columns' => 
-                array (
-                    'static' => 
-                    array (
+                'columns' =>
+                array(
+                    'static' =>
+                    array(
                         'length' => '',
                         'collation' => 'A',
                         'null' => false,
@@ -247,41 +247,41 @@ class modTemplateVar extends \MODX\Revolution\modTemplateVar
                 ),
             ),
         ),
-        'composites' => 
-        array (
-            'PropertySets' => 
-            array (
+        'composites' =>
+        array(
+            'PropertySets' =>
+            array(
                 'class' => 'MODX\\Revolution\\modElementPropertySet',
                 'local' => 'id',
                 'foreign' => 'element',
                 'owner' => 'local',
                 'cardinality' => 'many',
-                'criteria' => 
-                array (
-                    'foreign' => 
-                    array (
+                'criteria' =>
+                array(
+                    'foreign' =>
+                    array(
                         'element_class' => 'MODX\\Revolution\\modTemplateVar',
                     ),
                 ),
             ),
-            'TemplateVarTemplates' => 
-            array (
+            'TemplateVarTemplates' =>
+            array(
                 'class' => 'MODX\\Revolution\\modTemplateVarTemplate',
                 'local' => 'id',
                 'foreign' => 'tmplvarid',
                 'cardinality' => 'many',
                 'owner' => 'local',
             ),
-            'TemplateVarResources' => 
-            array (
+            'TemplateVarResources' =>
+            array(
                 'class' => 'MODX\\Revolution\\modTemplateVarResource',
                 'local' => 'id',
                 'foreign' => 'tmplvarid',
                 'cardinality' => 'many',
                 'owner' => 'local',
             ),
-            'TemplateVarResourceGroups' => 
-            array (
+            'TemplateVarResourceGroups' =>
+            array(
                 'class' => 'MODX\\Revolution\\modTemplateVarResourceGroup',
                 'local' => 'id',
                 'foreign' => 'tmplvarid',
@@ -289,10 +289,10 @@ class modTemplateVar extends \MODX\Revolution\modTemplateVar
                 'owner' => 'local',
             ),
         ),
-        'aggregates' => 
-        array (
-            'Category' => 
-            array (
+        'aggregates' =>
+        array(
+            'Category' =>
+            array(
                 'class' => 'MODX\\Revolution\\modCategory',
                 'local' => 'category',
                 'foreign' => 'id',
@@ -300,20 +300,20 @@ class modTemplateVar extends \MODX\Revolution\modTemplateVar
                 'owner' => 'foreign',
             ),
         ),
-        'validation' => 
-        array (
-            'rules' => 
-            array (
-                'name' => 
-                array (
-                    'invalid' => 
-                    array (
+        'validation' =>
+        array(
+            'rules' =>
+            array(
+                'name' =>
+                array(
+                    'invalid' =>
+                    array(
                         'type' => 'preg_match',
                         'rule' => '/^(?!\\s)[a-zA-Z0-9\\x2d-\\x2f\\x7f-\\xff-_\\s]+(?<!\\s)$/',
                         'message' => 'tv_err_invalid_name',
                     ),
-                    'reserved' => 
-                    array (
+                    'reserved' =>
+                    array(
                         'type' => 'preg_match',
                         'rule' => '/^(?!(id|type|pagetitle|longtitle|description|alias|alias_visible|link_attributes|published|pub_date|unpub_date|parent|isfolder|introtext|content|richtext|template|menuindex|searchable|cacheable|createdby|createdon|editedby|editedon|deleted|deletedby|deletedon|publishedon|publishedby|menutitle|donthit|privateweb|privatemgr|content_dispo|hidemenu|class_key|context_key|content_type|uri|uri_override|hide_children_in_tree|show_in_tree|properties)$)/',
                         'message' => 'tv_err_reserved_name',
@@ -322,5 +322,4 @@ class modTemplateVar extends \MODX\Revolution\modTemplateVar
             ),
         ),
     );
-
 }
