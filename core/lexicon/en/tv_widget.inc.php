@@ -251,9 +251,10 @@ $_lang['tv_default_datetime'] = $_lang['tv_default_date'];
     quick create/edit panels access to them when opened
     outside the context of their respective element types)
 
-    tv_type
     tv_default
     tv_default_desc
     tv_elements
+    tv_type
+    tv_type_desc
 
 */

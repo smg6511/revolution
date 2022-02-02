@@ -6,7 +6,6 @@
  * @package modx
  * @subpackage lexicon
  */
-$_lang['example_tag_tv_name'] = 'NameOfTV';
 $_lang['has_access'] = 'Has Access?';
 $_lang['filter_by_category'] = 'Filter by Category...';
 $_lang['rank'] = 'Rank';
@@ -94,6 +93,7 @@ $_lang['tv_tmpl_access_msg'] = $_lang['tv_tab_tmpl_access_desc'];
     quick create/edit panels access to them when opened
     outside the context of their respective element types)
 
+    example_tag_tv_name
     tv_caption_desc
     tv_category_desc
     tv_description_desc

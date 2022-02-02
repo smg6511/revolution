@@ -273,7 +273,10 @@ Ext.extend(MODx.Window,Ext.Window,{
             ,anchor: '100% 100%'
             ,errorReader: MODx.util.JSONReader
             ,defaults: this.config.formDefaults || {
-                msgTarget: this.config.msgTarget || 'under'
+                msgTarget: this.config.msgTarget || 'under',
+                anchor: '100%',
+                validationEvent: 'change',
+                validateOnBlur: false
             }
             ,url: this.config.url
             ,baseParams: this.config.baseParams || {}

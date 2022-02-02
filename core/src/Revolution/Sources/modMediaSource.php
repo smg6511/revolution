@@ -1786,7 +1786,7 @@ abstract class modMediaSource extends modAccessibleSimpleObject implements modMe
      *
      * @return bool
      */
-    protected function checkFileType($filename)
+    public function checkFileType($filename)
     {
         if ($this->getOption('allowedFileTypes')) {
             $allowedFileTypes = $this->getOption('allowedFileTypes');

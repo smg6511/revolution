@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the MODX Revolution package.
  *
@@ -9,7 +10,6 @@
  */
 
 namespace MODX\Revolution\Processors\Model;
-
 
 use MODX\Revolution\modAccessibleObject;
 use MODX\Revolution\Processors\ModelProcessor;
@@ -31,6 +31,7 @@ abstract class DuplicateProcessor extends ModelProcessor
     public $newObject;
     public $nameField = 'name';
     public $staticfileField = 'static_file';
+    private $source;
     /**
      * @var string $newNameField The name of field that used for filling new name of object.
      * If defined, duplication error will be attached to field with this name
@@ -78,8 +79,32 @@ abstract class DuplicateProcessor extends ModelProcessor
         $this->setNewName($name);
 
         $staticFilename = $this->getProperty($this->staticfileField);
+
         if (!empty($staticFilename)) {
-            $this->newObject->set('static_file', $staticFilename);
+            $this->getSource();
+            if ($this->source instanceof modFileMediaSource) {
+                $fileIsValid = true;
+                $fullFilename = $this->source->getBasePath() . $staticFilename;
+                if (!$this->source->checkFileType($fullFilename)) {
+                    $fileIsValid = false;
+                    $this->addFieldError($this->staticfileField, $this->modx->lexicon('file_err_ext_not_allowed', [
+                        'ext' => strtolower(pathinfo($fullFilename, PATHINFO_EXTENSION))
+                    ]));
+                }
+                if (file_exists($fullFilename)) {
+                    $fileIsValid = false;
+                    $this->modx->lexicon->load('core:element');
+                    $this->addFieldError($this->staticfileField, $this->modx->lexicon('element_err_staticfile_exists'));
+                }
+                if ($fileIsValid) {
+                    $this->newObject->set('static_file', $staticFilename);
+                }
+            } else {
+                $fileIsValid = false;
+                $this->addFieldError($this->staticfileField, $this->modx->lexicon('file_err_source_init', [
+                    'sourceId' => $this->getProperty('source')
+                ]));
+            }
         }
 
         if ($this->alreadyExists($name)) {
@@ -87,12 +112,6 @@ abstract class DuplicateProcessor extends ModelProcessor
                 $this->newNameField ? $this->newNameField : $this->nameField,
                 $this->modx->lexicon($this->objectType . '_err_ae', ['name' => $name])
             );
-        }
-
-        /* Check if a static file already exists within specified static file path. */
-        if ($staticFilename && $this->staticFileAlreadyExists($staticFilename)) {
-            $this->modx->lexicon->load('core:element');
-            $this->addFieldError($this->staticfileField, $this->modx->lexicon('element_err_staticfile_exists'));
         }
 
         $canSave = $this->beforeSave();
@@ -172,9 +191,10 @@ abstract class DuplicateProcessor extends ModelProcessor
     public function getNewName()
     {
         $name = $this->getProperty($this->nameField);
-        $newName = !empty($name) ? $name : $this->modx->lexicon('duplicate_of',
-            ['name' => $this->object->get($this->nameField)]);
-
+        $newName = !empty($name)
+            ? $name
+            : $this->modx->lexicon('duplicate_of', ['name' => $this->object->get($this->nameField)])
+            ;
         return $newName;
     }
 
@@ -202,29 +222,21 @@ abstract class DuplicateProcessor extends ModelProcessor
         return $this->modx->getCount($this->classKey, [
                 $this->nameField => $name,
             ]) > 0;
-
     }
 
     /**
-     * Check to see if a static element file already exists.
-     *
-     * @param $filename
-     *
-     * @return bool
+     * Gets an instance of modFileMediaSource for use in validating static files
      */
-    public function staticFileAlreadyExists($filename)
+    public function getSource()
     {
         $sourceId = $this->getProperty('source');
         if ($sourceId > 0) {
             /** @var modFileMediaSource $source */
-            $source = $this->modx->getObject(modFileMediaSource::class, ['id' => $sourceId]);
-            if ($source && $source->get('is_stream')) {
-                $source->initialize();
-                $filename = $source->getBasePath() . $filename;
+            $this->source = $this->modx->getObject(modFileMediaSource::class, ['id' => $sourceId]);
+            if ($this->source && $this->source->get('is_stream')) {
+                $this->source->initialize();
             }
         }
-
-        return file_exists($filename);
     }
 
     /**

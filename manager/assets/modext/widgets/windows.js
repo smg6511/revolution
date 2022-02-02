@@ -110,41 +110,75 @@ Ext.reg('modx-window-resource-duplicate',MODx.window.DuplicateResource);
  * @xtype modx-window-element-duplicate
  */
 MODx.window.DuplicateElement = function(config) {
-    config = config || {};
-    this.ident = config.ident || 'dupeel-'+Ext.id();
 
-    var flds = [{
+    config = config || {};
+
+    const   windowId = `window-dup-element-${Ext.id()}`,
+            staticFileCmpId = `${windowId}-modx-static_file`,
+            nameFieldName = config.record.type == 'template' ? 'templatename' : 'name' ,
+            elementNameCmpId = `${windowId}-modx-name`,
+            nameFieldListeners = {
+                change: function(cmp) {
+                    cmp.setValue(cmp.getValue().trim());
+                }
+            },
+            nameHelpListeners = {}
+    ;
+    if (['tv', 'chunk', 'snippet'].includes(config.record.type)) {
+        Object.assign(nameHelpListeners, {
+            afterrender: function(cmp) {
+                MODx.util.insertTagCopyUtility(cmp, config.record.type);
+            }
+        });
+        if (MODx.config.inline_help) {
+            Object.assign(nameFieldListeners, {
+                keyup: {
+                    fn: function(cmp, e) {
+                        let title = Ext.util.Format.stripTags(cmp.getValue()).trim()
+                            tagTitle = title.length > 0 ? Ext.util.Format.htmlEncode(title) : _('example_tag_tvname')
+                        ;
+                        cmp.nextSibling().getEl().child('.example-replace-name').update(tagTitle);
+                    },
+                    scope: this
+                }
+            });
+        }
+    }
+
+    const flds = [{
         xtype: 'hidden'
         ,name: 'id'
-        ,id: 'modx-'+this.ident+'-id'
     },{
         xtype: 'hidden'
         ,name: 'source'
-        ,id: 'modx-'+this.ident+'-source'
     },{
         xtype: 'textfield'
-        ,fieldLabel: _('element_name_new')
-        ,name: config.record.type == 'template' ? 'templatename' : 'name'
-        ,id: 'modx-'+this.ident+'-name'
-        ,anchor: '100%'
+        ,name: nameFieldName
+        ,id: elementNameCmpId
+        ,fieldLabel: _(`${config.record.type}_new_name`) || _('element_name_new')
         ,enableKeyEvents: true
-        ,listeners: {
-            'afterRender' : {scope:this,fn:function(f,e) {
-                this.setStaticElementsPath(f);
-            }},
-            'keyup': {scope:this,fn:function(f,e) {
-                this.setStaticElementsPath(f);
-            }}
-        }
+        ,allowBlank: false
+        ,listeners: nameFieldListeners
+        ,value: config.record.name
+    },{
+        xtype: 'box'
+        ,hidden: MODx.expandHelp ? false : true
+        ,html: _(`${config.record.type}_name_desc`) || ''
+        ,cls: 'desc-under'
+        ,listeners: nameHelpListeners
     }];
 
     if (config.record.type == 'tv') {
         flds.push({
             xtype: 'textfield'
-            ,fieldLabel: _('element_caption_new')
             ,name: 'caption'
-            ,id: 'modx-'+this.ident+'-caption'
-            ,anchor: '100%'
+            ,fieldLabel: _(`tv_new_caption`) || _('element_caption_new')
+            ,value: config.record.caption
+        },{
+            xtype: 'box'
+            ,hidden: MODx.expandHelp ? false : true
+            ,html: _('tv_caption_desc')
+            ,cls: 'desc-under'
         });
         flds.push({
             xtype: 'xcheckbox'
@@ -153,7 +187,6 @@ MODx.window.DuplicateElement = function(config) {
             ,labelSeparator: ''
             ,name: 'duplicateValues'
             ,id: 'modx-'+this.ident+'-duplicate-values'
-            ,anchor: '100%'
             ,inputValue: 1
             ,checked: false
         });
@@ -162,10 +195,26 @@ MODx.window.DuplicateElement = function(config) {
     if (config.record.static === true) {
         flds.push({
             xtype: 'textfield'
-            ,fieldLabel: _('static_file')
             ,name: 'static_file'
-            ,id: 'modx-'+this.ident+'-static_file'
-            ,anchor: '100%'
+            ,id: staticFileCmpId
+            ,fieldLabel: _('static_file')
+            ,listeners: {
+                change: {
+                    fn: function(cmp) {
+                        const file = cmp.getValue().trim();
+                        if (!Ext.isEmpty(file)) {
+                            const fileName =
+                            cmp.setValue(MODx.util.Format.fileFullPath(file));
+                        }
+                    },
+                    scope: this
+                }
+            }
+        },{
+            xtype: 'box'
+            ,hidden: MODx.expandHelp ? false : true
+            ,html: _('static_file_desc')
+            ,cls: 'desc-under'
         });
     }
 
@@ -179,56 +228,102 @@ MODx.window.DuplicateElement = function(config) {
     });
 
     Ext.applyIf(config,{
-        title: _('duplicate_'+config.record.type)
+        id: windowId
+        ,title: _('duplicate_'+config.record.type)
         ,url: MODx.config.connector_url
-        ,action: 'element/'+config.record.type+'/duplicate'
+        ,action: `element/${config.record.type}/duplicate`
         ,width: 600
         ,fields: flds
         ,labelWidth: 150
     });
     MODx.window.DuplicateElement.superclass.constructor.call(this,config);
-};
 
-Ext.extend(MODx.window.DuplicateElement,MODx.Window, {
-    setStaticElementsPath: function(f) {
-        if (this.config.record.static === true) {
-            var category = this.config.record.category;
+    if (this.config.record.static) {
 
-            if (typeof category !== 'number') {
-                if (Ext.getCmp('modx-' + this.config.record.type + '-category').getValue() > 0) {
-                    category = Ext.getCmp('modx-' + this.config.record.type + '-category').lastSelectionText;
-                }
+        const   elementAutomationType = `${this.config.record.type}s`,
+                staticsAutomationConfigKey = `static_elements_automate_${elementAutomationType}`
+        ;
+        this.staticsAutomated = MODx.config[staticsAutomationConfigKey] == 1;
 
-                var path = MODx.getStaticElementsPath(f.getValue(), category, this.config.record.type + 's');
-                Ext.getCmp('modx-' + this.ident + '-static_file').setValue(path);
+        if (this.staticsAutomated) {
+            const elementCategory = this.config.record.category || 0;
+            this.staticElementType = elementAutomationType;
+            this.getElementCategoryName(elementCategory);
             } else {
-                // If category is set but is a number, retrieve full category name.
-                if (typeof category === "number" && category > 0) {
-                    MODx.Ajax.request({
-                        url: MODx.config.connector_url
-                        ,params: {
-                            action: 'Element/Category/GetList'
-                            ,id: category
-                        }
-                        ,listeners: {
-                            'success': {fn:function(response) {
-                                for (var i = 0; i < response.results.length; i++) {
-                                    if (response.results[i].id === category) {
-                                        category = response.results[i].name;
-                                    }
-                                }
-
-                                var path = MODx.getStaticElementsPath(f.getValue(), category, this.config.record.type + 's');
-                                Ext.getCmp('modx-' + this.ident + '-static_file').setValue(path);
-                            },scope:this}
-                        }
-                  });
-                }
-            }
+            const   currentPath = this.config.record.static_file,
+                    fileName = currentPath.indexOf('/') !== -1 ? currentPath.split('/').pop() : currentPath,
+                    fileExt = fileName.indexOf('.') !== -1 ? fileName.slice(fileName.lastIndexOf('.')) : ''
+            ;
+            this.staticElementBasePath = currentPath.replace(fileName, '');
+            this.staticElementFileExt = fileExt;
         }
+        Ext.getCmp(elementNameCmpId).on({
+            /*
+                Delay used in afterrender to ensure the ajax response
+                getting the category name returns before this event is fired
+            */
+            afterrender: {
+                fn: function(cmp) {
+                    const elementName = cmp.getValue().trim() || this.config.record.name;
+                    this.syncFilenameToElementName(elementName, staticFileCmpId);
+                },
+                scope: this,
+                delay: 250
+            },
+            keyup: {
+                fn: function(cmp, e) {
+                    const elementName = cmp.getValue().trim();
+                    this.syncFilenameToElementName(elementName, staticFileCmpId);
+                },
+                scope: this
+            }
+        });
     }
-});
 
+};
+Ext.extend(MODx.window.DuplicateElement,MODx.Window, {
+
+    getElementCategoryName: function(categoryId) {
+
+        if (typeof categoryId === 'number' && categoryId > 0) {
+            MODx.Ajax.request({
+                url: MODx.config.connector_url,
+                params: {
+                    action: 'Element/Category/GetList',
+                    id: categoryId
+                },
+                listeners: {
+                    success: {
+                        fn: function(response) {
+                            response.results.forEach(result => {
+                                if (result.id === categoryId) {
+                                    this.staticElementCategoryName = result.name;
+                                }
+                            });
+                        },
+                        scope: this
+                    }
+                }
+            });
+        } else {
+            this.staticElementCategoryName = '';
+        }
+    },
+
+    syncFilenameToElementName: function(elementName, targetId) {
+
+        let path;
+
+        if (this.staticsAutomated) {
+            path = MODx.getStaticElementsPath(elementName, this.staticElementCategoryName, this.staticElementType);
+        } else {
+            path = MODx.util.Format.staticElementPathFragment(elementName);
+            path = `${this.staticElementBasePath}${path}${this.staticElementFileExt}`;
+        }
+        Ext.getCmp(targetId).setValue(path);
+    }
+    
+});
 Ext.reg('modx-window-element-duplicate',MODx.window.DuplicateElement);
 
 MODx.window.CreateCategory = function(config) {

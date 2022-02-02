@@ -13,7 +13,6 @@ $_lang['rank'] = 'Rank';
 $_lang['template'] = 'Template';
 $_lang['template_assignedtv_tab'] = 'Assigned TVs';
 $_lang['template_category_desc'] = 'Use to group Templates within the Elements tree.';
-$_lang['template_code'] = 'Template Code (HTML)';
 $_lang['template_delete_confirm'] = 'Are you sure you want to delete this template?';
 $_lang['template_description_desc'] = 'Usage information for this Template shown in search results and as a tooltip in the Elements tree.';
 $_lang['template_duplicate_confirm'] = 'Are you sure you want to duplicate this template?';
@@ -37,7 +36,6 @@ $_lang['template_lock'] = 'Lock template for editing';
 $_lang['template_lock_desc'] = 'Only users with “edit_locked” permissions can edit this Template.';
 $_lang['template_locked_message'] = 'This template is locked.';
 $_lang['template_management_msg'] = 'Here you can choose which template you wish to edit.';
-$_lang['template_name_desc'] = 'The name of this Template.';
 $_lang['template_new'] = 'Create Template';
 $_lang['template_no_tv'] = 'No TVs have been assigned to this template yet.';
 $_lang['template_preview'] = 'Preview Image';
@@ -47,7 +45,10 @@ $_lang['template_preview_source_desc'] = 'Sets the basePath for this Template’
 $_lang['template_properties'] = 'Default Properties';
 $_lang['template_reset_all'] = 'Reset all pages to use Default template';
 $_lang['template_reset_specific'] = 'Reset only \'%s\' pages';
-$_lang['template_tab_general_desc'] = 'Here you can enter the basic attributes for this <em>Template</em> as well as its content. The content must be HTML, either placed in the <em>Template Code</em> field below or in a static external file, and may include MODX tags. Note that changed or new templates won’t be visible in your site’s cached pages until the cache is emptied; however, you can use the preview function on a page to see the template in action.';
+$_lang['template_source'] = 'Media Source';
+$_lang['template_source_desc'] = 'The media source to select a static file or preview. Using "None" will assume you are specifying an absolute path.';
+$_lang['template_tab_general_desc'] = 'Here you can enter the basic attributes for this <em>Template</em> as well as its content. The content must be HTML, either placed in the <a href="#x-form-el-modx-template-content">Template Code</a> field below or in a static external file, and may include MODX tags. Note that changed or new templates won’t be visible in your site’s cached pages until the cache is emptied; however, you can use the preview function on a page to see the template in action.';
+$_lang['template_title'] = 'Create/edit template';
 $_lang['template_tv_edit'] = 'Edit the sort order of the TVs';
 $_lang['template_tv_msg'] = 'The <abbr title="Template Variables">TVs</abbr> assigned to this template are listed below.';
 $_lang['templates'] = 'Templates';
@@ -59,7 +60,21 @@ $_lang['tvt_err_remove'] = 'An error occurred while trying to delete the TV from
 $_lang['template_desc_category'] = $_lang['template_category_desc'];
 $_lang['template_desc_description'] = $_lang['template_description_desc'];
 $_lang['template_desc_name'] = $_lang['template_name_desc'];
+$_lang['template_icon_description'] = $_lang['template_icon_desc'];
 $_lang['template_lock_msg'] = $_lang['template_lock_desc'];
+$_lang['template_preview_description'] = $_lang['template_preview_desc'];
+$_lang['template_source_description'] = $_lang['template_source_desc'];
 
 // --tabs
 $_lang['template_msg'] = $_lang['template_tab_general_desc'];
+
+/*
+    Refer to default.inc.php for the keys below.
+    (Placement in this default file necessary to allow
+    quick create/edit panels access to them when opened
+    outside the context of their respective element types)
+
+    template_code
+    template_description_desc
+    template_name_desc
+*/
