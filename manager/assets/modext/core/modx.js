@@ -104,7 +104,7 @@ Ext.extend(MODx,Ext.Component,{
             config = config || {};
             Ext.apply(config, {
                 init: function(cmp) {
-                    
+
                     if (cmp.allowBlank !== false) return;
 
                     const cmpLabel = cmp.fieldLabel;
@@ -488,7 +488,7 @@ Ext.extend(MODx,Ext.Component,{
     }
 
     /**
-     * Adds a new tab to the specified panel; method called from code inserted via modActionDom (modactiondom.class.php)
+     * Adds a new tab to the specified tab panel; method called from code inserted via modActionDom (modactiondom.class.php)
      *
      * @param {String} panelId - Text id of the tabPanel the new tab will be added to
      * @param {Object} newTabConfig - The base configuration for the new tab
@@ -496,25 +496,54 @@ Ext.extend(MODx,Ext.Component,{
      */
     ,addTab: function(panelId, newTabConfig) {
         const tabPanel = Ext.getCmp(panelId);
+        /*
         if (tabPanel) {
             Ext.applyIf(newTabConfig,{
                 id: 'modx-' + Ext.id() + '-tab'
+                ,itemId: 'user-region--' + newTabConfig.id
                 ,layout: 'form'
                 ,labelAlign: 'top'
                 ,cls: 'modx-resource-tab'
                 ,bodyStyle: 'padding: 15px;'
                 ,autoHeight: true
                 ,defaults: {
-                    border: false
-                    ,msgTarget: 'side'
-                    ,width: 400
+                    border: false,
+                    msgTarget: 'side',
+                    // width: 400,
+                    anchor: '50%'
                 }
             });
             tabPanel.add(newTabConfig);
             tabPanel.doLayout();
             tabPanel.setActiveTab(0);
         }
+        */
     }
+
+    ,createTab: function(baseTabConfig, panelId) {
+        return Ext.applyIf(baseTabConfig,{
+            id: 'modx-' + Ext.id() + '-tab',
+            itemId: 'user-region--' + baseTabConfig.id,
+            layout: 'form',
+            labelAlign: 'top',
+            cls: 'modx-resource-tab',
+            bodyStyle: 'padding: 15px;',
+            bodyCssClass: 'main-wrapper',
+            forceLayout: true,
+            deferredRender: false,
+            autoHeight: true,
+            defaults: {
+                validationEvent: 'change',
+                border: false,
+                msgTarget: 'under',
+                labelSeparator: '',
+                anchor: '100%'
+            },
+            items: []
+        });
+    }
+
+
     ,hiddenTabs: []
 
     ,hideTab: function(ct, tab) {

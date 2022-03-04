@@ -21,6 +21,7 @@ MODx.panel.ResourceTV = function(config) {
     });
     MODx.panel.ResourceTV.superclass.constructor.call(this,config);
     this.addEvents({ load: true });
+    console.log('MODx.panel.ResourceTV, this: ', this);
 };
 Ext.extend(MODx.panel.ResourceTV,MODx.Panel,{
     autoload: function() {
