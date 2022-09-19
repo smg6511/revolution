@@ -223,7 +223,7 @@ class modLexiconTest extends MODxTestCase {
      * @depends testLoad
      */
     public function testProcess($topic,$key,$properties,$expected) {
-        $this->lexicon->load($topic);
+        $this->lexicon->load('default', $topic);
         $translation = $this->lexicon->process($key,$properties);
         $this->assertEquals($expected,$translation);
     }
