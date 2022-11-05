@@ -9,6 +9,8 @@
  * files found in the top-level directory of this distribution.
  */
 
+// namespace MODX\Revolution\Processors\Element\TemplateVar\Renders\mgr\input;
+
 use MODX\Revolution\modTemplateVarInputRender;
 
 /**
@@ -17,67 +19,86 @@ use MODX\Revolution\modTemplateVarInputRender;
  */
 class modTemplateVarInputRenderListboxMultiple extends modTemplateVarInputRender
 {
-    public function getTemplate()
+    public function render($value, array $params = [])
     {
-        return 'element/tv/renders/input/listbox-multiple.tpl';
+        $this->useNewLoader = true;
+        $value = str_replace('||', ',', $value);
+
+        $this->componentConfig = [
+            'columnWidth' => $params['columnWidth'],
+            'groupWith' => $params['groupWith'],
+            'config' => [
+                'xtype' => 'superboxselect',
+                'id' => 'tv' . $params['id'],
+                'name' => 'tv' . $params['id'] . '[]',
+                'fieldLabel' => $params['caption'],
+                'description' => $this->getComponentDescription($params['name'], $params['description']),
+                'triggerAction' => 'all',
+                'maxHeight' => 300,
+                'extraItemCls' => 'x-tag',
+                'expandBtnCls' => 'x-form-trigger',
+                'clearBtnCls' => 'x-form-trigger',
+                'listClass' => 'modx-superboxselect modx-tv-listbox-multiple',
+                'addNewDataOnBlur' => true,
+                'resizable' => true,
+                'mode' => 'local',
+                'store' => $this->getListData(),
+                'value' => $value
+            ]
+        ];
+        $this->componentConfig['config']['allowBlank'] = $params['allowBlank'] == 1 || $params['allowBlank'] === 'true' ? true : false ;
+
+        if (!empty($params['title'])) {
+            $this->componentConfig['config']['title'] = $params['title'];
+        }
+        if (!empty($params['listEmptyText'])) {
+            $this->componentConfig['config']['listEmptyText'] = $params['listEmptyText'];
+        }
+        if ($params['typeAhead'] === 'true' || $params['typeAhead'] == 1) {
+            $this->componentConfig['config']['editable'] = true;
+            $this->componentConfig['config']['typeAhead'] = true;
+            if (!empty($params['typeAheadDelay']) || $params['typeAheadDelay'] === 0) {
+                $this->componentConfig['config']['typeAheadDelay'] = (int)$params['typeAheadDelay'];
+            }
+        } else {
+            $this->componentConfig['config']['editable'] = false;
+            $this->componentConfig['config']['typeAhead'] = false;
+        }
+        if ($params['stackItems'] === 'true' || $params['stackItems'] == 1) {
+            $this->componentConfig['config']['stackItems'] = true;
+        }
+        if ($params['forceSelection'] === 'true' || $params['forceSelection'] == 1) {
+            $this->componentConfig['config']['forceSelection'] = true;
+        } else {
+            $this->componentConfig['config']['allowAddNewData'] = true;
+        }
+
+        return $this->componentConfig;
     }
-    public function process($value, array $params = [])
+
+    private function getListData(): array
     {
-        $savedValues = explode('||', $value);
         $options = $this->getInputOptions();
+        $store = [];
 
-        $items = [];
-        $selections = [];
-        $optsValues = [];
+        /*
+            Note that in Ext JS the order is the opposite of how MODx formats associative arrays for stores
+            (i.e., value->label [Ext] vs. label->value [MODx])
 
+            Also, the previous version of this class re-ordered store items; this
+            should be done on the js side via a listener to maintain order on the fly.
+        */
         foreach ($options as $option) {
             $opt = explode('==', $option);
-            if (!isset($opt[1])) {
+            $opt[0] = htmlspecialchars($opt[0], ENT_COMPAT | ENT_HTML5, 'UTF-8');
+            if (count($opt) === 1) {
                 $opt[1] = $opt[0];
-            }
-            $optLabel = htmlspecialchars($opt[0], ENT_COMPAT, 'UTF-8');
-            $optValue = htmlspecialchars($opt[1], ENT_COMPAT, 'UTF-8');
-
-            /*
-                Collect defined options values for later comparison to savedValues
-                to determine if any custom user-entered values need to be accounted for.
-            */
-            $optsValues[] = $optValue;
-
-            if (in_array($opt[1], $savedValues)) {
-                $selections[] = [
-                    'text' => $optLabel,
-                    'value' => $optValue,
-                    'selected' => 1
-                ];
             } else {
-                $items[] = [
-                    'text' => $optLabel,
-                    'value' => $optValue,
-                    'selected' => 0
-                ];
+                $opt[1] = htmlspecialchars($opt[1], ENT_COMPAT | ENT_HTML5, 'UTF-8');
             }
+            $store[] = [$opt[1], $opt[0]];
         }
-
-        // Ensure custom values are displayed when the listbox is editable
-        if (isset($params['forceSelection']) && empty($params['forceSelection'])) {
-            $customValues = array_diff($savedValues, $optsValues);
-            if (!empty($customValues)) {
-                $customData = [];
-                foreach ($customValues as $customValue) {
-                    $customValue = htmlspecialchars($customValue, ENT_COMPAT, 'UTF-8');
-                    $customData[] = [
-                        'text' => $customValue,
-                        'value' => $customValue,
-                        'selected' => 1
-                    ];
-                }
-                $selections = array_merge($selections, $customData);
-            }
-        }
-        $items = array_merge($selections, $items);
-
-        $this->setPlaceholder('opts', $items);
+        return $store;
     }
 }
 return 'modTemplateVarInputRenderListboxMultiple';
