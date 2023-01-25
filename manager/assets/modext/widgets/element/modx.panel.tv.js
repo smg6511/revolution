@@ -93,7 +93,7 @@ MODx.panel.TV = function(config) {
                                         fn: function(cmp, e) {
                                             const   title = this.formatMainPanelTitle('tv', this.config.record, cmp.getValue(), true),
                                                     tagTitle = title && title.length > 0 ? title : _('example_tag_tv_name')
-                                                ;
+                                            ;
                                             cmp.nextSibling().getEl().child('.example-replace-name').update(tagTitle);
                                             MODx.setStaticElementPath('tv');
                                         }
@@ -132,7 +132,7 @@ MODx.panel.TV = function(config) {
                                 ,tabIndex: 2
                                 ,listeners: {
                                     afterrender: {scope:this,fn:function(f,e) {
-                                            MODx.setStaticElementPath('tv');
+                                        MODx.setStaticElementPath('tv');
                                     }}
                                     ,select: {scope:this,fn:function(f,e) {
                                         MODx.setStaticElementPath('tv');
@@ -388,12 +388,12 @@ MODx.panel.TV = function(config) {
                             }
                             ,items: [
                                 this.getStaticFileField('tv', config.record),{
-                                xtype: MODx.expandHelp ? 'label' : 'hidden'
-                                ,forId: 'modx-tv-static-file'
-                                ,id: 'modx-tv-static-file-help'
-                                ,html: _('static_file_desc')
-                                ,cls: 'desc-under'
-                            }]
+                                    xtype: MODx.expandHelp ? 'label' : 'hidden'
+                                    ,forId: 'modx-tv-static-file'
+                                    ,id: 'modx-tv-static-file-help'
+                                    ,html: _('static_file_desc')
+                                    ,cls: 'desc-under'
+                                }]
                         }]
                     }]
                     ,listeners: {
@@ -403,7 +403,7 @@ MODx.panel.TV = function(config) {
                                 this.isStatic = isStaticCmp.checked;
                                 const   switchField = 'modx-tv-static',
                                         toggleFields = ['modx-tv-static-file','modx-tv-static-source']
-                                        ;
+                                ;
                                 isStaticCmp.on('check', function(){
                                     this.toggleFieldVisibility(switchField, cmp.id, toggleFields);
                                 }, this);
@@ -803,7 +803,7 @@ Ext.extend(MODx.panel.TV,MODx.FormPanel,{
                 const maxFld = tvp.validatorRefMap[type][this.validator.name].compareTo + tvId;
                 let max = Ext.getCmp(maxFld),
                     maxVal = Number(max.getValue())
-                    ;
+                ;
                 if(maxVal > 0){
                     if (Number(v) > maxVal) {
                         return tvp.validatorRefMap[type][this.validator.name].errMsg;
@@ -816,7 +816,7 @@ Ext.extend(MODx.panel.TV,MODx.FormPanel,{
                 const minFld = tvp.validatorRefMap[type][this.validator.name].compareTo + tvId;
                 let min = Ext.getCmp(minFld),
                     minVal = Number(min.getValue())
-                    ;
+                ;
                 if(minVal > 0){
                     if (v && Number(v) < minVal) {
                         return tvp.validatorRefMap[type][this.validator.name].errMsg;
@@ -871,7 +871,7 @@ Ext.extend(MODx.panel.TV,MODx.FormPanel,{
                 if(targetEl.classList.contains('example-input')) {
                     const   exampleTxt = targetEl.textContent,
                             inputEl = cmp.previousSibling()
-                        ;
+                    ;
                     inputEl.setValue(exampleTxt);
                 }
             },
@@ -959,7 +959,7 @@ MODx.panel.TVInputProperties = function(config) {
                 ,msgTarget: 'under'
                 ,validationEvent: 'change'
                 ,validateOnBlur: false
-        }
+            }
         }
         ,cls: 'form-with-labels'
         ,items: [{
@@ -1025,7 +1025,7 @@ MODx.panel.TVInputProperties = function(config) {
                 },
                 items: []
     		},{
-				id: 'modx-input-props',
+                id: 'modx-input-props',
                 autoHeight: true
             }]
         }]
@@ -1062,7 +1062,7 @@ Ext.extend(MODx.panel.TVInputProperties,MODx.Panel,{
                 siblingCmp = fieldCmp.nextSibling(),
                 optsDbExample_1 = '@SELECT `pagetitle`,`id` FROM `[[+PREFIX]]site_content` WHERE `published`=1 AND `deleted`=0 AND `template`=1',
                 optsDbExample_2 = '@SELECT "-none-" AS `pagetitle`, 0 AS `id` UNION ALL SELECT `pagetitle`,`id` FROM `[[+PREFIX]]site_content` WHERE `published`=1 AND `deleted`=0 AND `template`=1'
-                ;
+        ;
         let defaultProps = {},
             typeProps = {},
             defaultHelp = {},
@@ -1071,7 +1071,7 @@ Ext.extend(MODx.panel.TVInputProperties,MODx.Panel,{
             helpLexKey,
             helpUseLexKey,
             helpText
-            ;
+        ;
         if (this.isNativeType) {
             switch(fieldId) {
                 case 'modx-tv-elements':
@@ -1428,10 +1428,10 @@ Ext.extend(MODx.panel.TVInputProperties,MODx.Panel,{
                     url: MODx.config.connector_url
                     ,method: 'GET'
                     ,params: {
-                           action: 'Element/TemplateVar/Renders/GetInputProperties'
-                           ,context: 'mgr'
-                           ,tv: this.config.record.id
-                           ,type: type || 'default'
+                        action: 'Element/TemplateVar/Renders/GetInputProperties'
+                        ,context: 'mgr'
+                        ,tv: this.config.record.id
+                        ,type: type || 'default'
                     }
                     ,scripts: true
                 });
@@ -1445,13 +1445,13 @@ Ext.extend(MODx.panel.TVInputProperties,MODx.Panel,{
                 MODx.Ajax.request({
                     url: MODx.config.connector_url
                     ,params: {
-                       action: 'Element/TemplateVar/Configs/GetInputPropertyConfigs'
-                       ,context: 'mgr'
-                       ,tv: this.config.record.id
-                       ,type: type || 'default'
-                       ,expandHelp: MODx.expandHelp
-                   }
-                   ,listeners: {
+                        action: 'Element/TemplateVar/Configs/GetInputPropertyConfigs'
+                        ,context: 'mgr'
+                        ,tv: this.config.record.id
+                        ,type: type || 'default'
+                        ,expandHelp: MODx.expandHelp
+                    }
+                    ,listeners: {
                         success: {
                             fn: function(r) {
 
@@ -1582,10 +1582,10 @@ Ext.extend(MODx.panel.TVOutputProperties,MODx.Panel,{
                     url: MODx.config.connector_url
                     ,method: 'GET'
                     ,params: {
-                           action: 'Element/TemplateVar/Renders/GetProperties'
-                           ,context: 'mgr'
-                           ,tv: this.config.record.id
-                           ,type: type || 'default'
+                        action: 'Element/TemplateVar/Renders/GetProperties'
+                        ,context: 'mgr'
+                        ,tv: this.config.record.id
+                        ,type: type || 'default'
                     }
                     ,scripts: true
                 });
@@ -1598,13 +1598,13 @@ Ext.extend(MODx.panel.TVOutputProperties,MODx.Panel,{
                 MODx.Ajax.request({
                     url: MODx.config.connector_url
                     ,params: {
-                       action: 'Element/TemplateVar/Configs/GetOutputPropertyConfigs'
-                       ,context: 'mgr'
-                       ,tv: this.config.record.id
-                       ,type: type || 'default'
-                       ,expandHelp: MODx.expandHelp
-                   }
-                   ,listeners: {
+                        action: 'Element/TemplateVar/Configs/GetOutputPropertyConfigs'
+                        ,context: 'mgr'
+                        ,tv: this.config.record.id
+                        ,type: type || 'default'
+                        ,expandHelp: MODx.expandHelp
+                    }
+                    ,listeners: {
                         success: {
                             fn: function(r) {
 
@@ -1648,36 +1648,81 @@ Ext.reg('modx-panel-tv-output-properties',MODx.panel.TVOutputProperties);
  * @param {Object} config An object of configuration properties
  * @xtype modx-grid-element-sources
  */
-MODx.grid.ElementSources = function(config) {
-    var src = new MODx.combo.MediaSource();
-    src.getStore().load();
+MODx.grid.ElementSources = function(config = {}) {
+    /*
+        This unfiltered store is primarily used to calculate the page a given row's source editor 
+        should display; also used to set source names on the grid after editing.
+    */
+    const 
+        allSourcesStore = new Ext.data.JsonStore({
+            url: MODx.config.connector_url,
+            root: 'results',
+            fields: ['id','name'],
+            baseParams: {
+                action: 'Source/GetList',
+                limit: 0
+            },
+            valueField: 'id'
+        });
+    allSourcesStore.load();
 
-    config = config || {};
-    Ext.applyIf(config,{
+    Ext.applyIf(config, {
         id: 'modx-grid-element-sources'
         ,fields: ['context_key','source','name']
         ,showActionsColumn: false
         ,autoHeight: true
         ,primaryKey: 'id'
         ,columns: [{
-            header: _('context')
-            ,dataIndex: 'context_key'
-            ,renderer: { fn: function(v,md,record) {
-                return this.renderLink(v, {
-                    href: '?a=context/update&key=' + v
-                    ,target: '_blank'
-                });
-            }, scope: this }
+            header: _('context'),
+            dataIndex: 'context_key',
+            renderer: { 
+                fn: function(value, metaData, record) {
+                    return this.renderLink(value, {
+                        href: `?a=context/update&key=${value}`,
+                        target: '_blank'
+                    });
+                }, 
+                scope: this 
+            }
         },{
-            header: _('source')
-            ,dataIndex: 'source'
-            ,xtype: 'combocolumn'
-            ,editor: src
-            ,gridId: 'modx-grid-element-sources'
+            header: _('source'),
+            dataIndex: 'source',
+            xtype: 'combocolumn',
+            editor: {
+                xtype: 'modx-combo-source',
+            },
+            renderer: {
+                fn: function(value, metaData, record) {
+                    return record.get('name');
+                },
+                scope: this
+            },
+            gridId: 'modx-grid-element-sources'
         }]
     });
     MODx.grid.ElementSources.superclass.constructor.call(this,config);
+
     this.propRecord = Ext.data.Record.create(['context_key','source']);
+
+    this.on({
+        beforeedit: function(e) {
+            const editor = this.getColumnModel().getCellEditor(e.column, e.row),
+                  currentValue = parseInt(e.value),
+                  pagingToolbar = editor.field.pageTb,
+                  pageSize = editor.field.pageSize,
+                  listIndex = allSourcesStore.data.findIndex('id', currentValue) + 1,
+                  activePage = Math.ceil(listIndex / pageSize)
+            ;
+            if (pagingToolbar) {
+                pagingToolbar.changePage(activePage);
+            }
+        },
+        afteredit: function(e) {
+            const sourceName = allSourcesStore.data.map[e.value].get('name');
+            e.record.set('name', sourceName);
+        }
+    });
+
 };
 Ext.extend(MODx.grid.ElementSources,MODx.grid.LocalGrid,{
     getMenu: function() {
