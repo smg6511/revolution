@@ -121,6 +121,49 @@ MODx.grid.Sources = function(config = {}) {
         ]
     });
     MODx.grid.Sources.superclass.constructor.call(this, config);
+
+    this.on({
+        afterAutoSave: function(response) {
+            if (response.eventData.value !== response.eventData.originalValue) {
+                const
+                    treeId = `source-tree-${response.object.id}`,
+                    sourceTree = Ext.getCmp(treeId),
+                    rootNode = sourceTree.getRootNode()
+                ;
+                if (sourceTree && sourceTree.rendered) {
+                    switch (response.eventData.field) {
+                        case 'name':
+                            rootNode.setText(response.eventData.value);
+                            break;
+                        case 'description':
+                            rootNode.setTooltip(response.eventData.value);
+                            break;
+                        // no default
+                    }
+                }
+            }
+        },
+        afterRemoveRow: function(response) {
+            /*
+                Selectively update the tree to remove the deleted sources
+
+                Note that the tree list to iterate must be captured in the new
+                const (trees), as directly working on items.items can lead to some
+                of the selected objects not being destroyed in the UI
+            */
+            const
+                filesPanel = Ext.getCmp('modx-file-tree'),
+                trees = filesPanel.items.items
+            ;
+            if (filesPanel) {
+                trees.forEach(tree => {
+                    if (response.itemsRemoved.includes(tree.source)) {
+                        tree.destroy();
+                    }
+                });
+            }
+        }
+    });
 };
 Ext.extend(MODx.grid.Sources, MODx.grid.Grid, {
     getMenu: function() {
@@ -238,30 +281,39 @@ MODx.window.CreateSource = function(config = {}) {
         url: MODx.config.connector_url,
         autoHeight: true,
         action: 'Source/Create',
+        formDefaults: {
+            anchor: '100%',
+            validationEvent: 'change',
+            validateOnBlur: false
+        },
         fields: [{
             xtype: 'textfield',
             fieldLabel: _('name'),
             name: 'name',
-            anchor: '100%',
             allowBlank: false
         }, {
             xtype: 'textarea',
             fieldLabel: _('description'),
             name: 'description',
-            anchor: '100%',
             grow: true
         }, {
             name: 'class_key',
             hiddenName: 'class_key',
             xtype: 'modx-combo-source-type',
             fieldLabel: _('source_type'),
-            anchor: '100%',
             allowBlank: false,
             value: MODx.config.default_media_source_type
         }],
         keys: []
     });
     MODx.window.CreateSource.superclass.constructor.call(this, config);
+
+    this.on('success', response => {
+        const filesPanel = Ext.getCmp('modx-file-tree');
+        if (filesPanel) {
+            filesPanel.getSourceList();
+        }
+    });
 };
 Ext.extend(MODx.window.CreateSource, MODx.Window);
 Ext.reg('modx-window-source-create', MODx.window.CreateSource);
