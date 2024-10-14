@@ -6,34 +6,36 @@
  * @param {Object} config An object of configuration options
  * @xtype modx-panel-contexts
  */
-MODx.panel.Contexts = function(config) {
-    config = config || {};
-    Ext.applyIf(config,{
-        id: 'modx-panel-contexts'
-        ,cls: 'container'
-        ,bodyStyle: ''
-        ,defaults: { collapsible: false ,autoHeight: true }
-        ,items: [{
-            html: _('contexts')
-            ,id: 'modx-contexts-header'
-            ,xtype: 'modx-header'
-        },MODx.getPageStructure([{
-            title: _('contexts')
-            ,layout: 'form'
-            ,items: [{
-                html: '<p>'+_('context_management_message')+'</p>'
-                ,xtype: 'modx-description'
-            },{
-                xtype: 'modx-grid-contexts'
-                ,cls:'main-wrapper'
-                ,preventRender: true
+MODx.panel.Contexts = function(config = {}) {
+    Ext.applyIf(config, {
+        id: 'modx-panel-contexts',
+        cls: 'container',
+        bodyStyle: '',
+        defaults: {
+            collapsible: false,
+            autoHeight: true
+        },
+        items: [{
+            html: _('contexts'),
+            id: 'modx-contexts-header',
+            xtype: 'modx-header'
+        }, MODx.getPageStructure([{
+            title: _('contexts'),
+            layout: 'form',
+            items: [{
+                html: `<p>${_('context_management_message')}</p>`,
+                xtype: 'modx-description'
+            }, {
+                xtype: 'modx-grid-contexts',
+                cls: 'main-wrapper',
+                preventRender: true
             }]
         }])]
     });
-    MODx.panel.Contexts.superclass.constructor.call(this,config);
+    MODx.panel.Contexts.superclass.constructor.call(this, config);
 };
-Ext.extend(MODx.panel.Contexts,MODx.FormPanel);
-Ext.reg('modx-panel-contexts',MODx.panel.Contexts);
+Ext.extend(MODx.panel.Contexts, MODx.FormPanel);
+Ext.reg('modx-panel-contexts', MODx.panel.Contexts);
 
 /**
  * Loads a grid of modContexts.
@@ -43,110 +45,112 @@ Ext.reg('modx-panel-contexts',MODx.panel.Contexts);
  * @param {Object} config An object of configuration properties
  * @xtype modx-grid-contexts
  */
-MODx.grid.Context = function(config) {
-    config = config || {};
-    Ext.applyIf(config,{
-        title: _('contexts')
-        ,id: 'modx-grid-context'
-        ,url: MODx.config.connector_url
-        ,baseParams: {
+MODx.grid.Context = function(config = {}) {
+    Ext.applyIf(config, {
+        title: _('contexts'),
+        id: 'modx-grid-context',
+        url: MODx.config.connector_url,
+        baseParams: {
             action: 'Context/GetList'
-        }
-        ,fields: [
+        },
+        fields: [
             'key',
             'name',
             'description',
             'perm',
             'rank'
-        ]
-        ,paging: true
-        ,autosave: true
-        ,save_action: 'Context/UpdateFromGrid'
-        ,remoteSort: true
-        ,primaryKey: 'key'
-        ,columns: [{
-            header: _('key')
-            ,dataIndex: 'key'
-            ,width: 100
-            ,sortable: true
-        },{
-            header: _('name')
-            ,dataIndex: 'name'
-            ,width: 150
-            ,sortable: true
-            ,editor: { xtype: 'textfield' }
-            ,renderer: { fn: function(v,md,record) {
-                return this.renderLink(v, {
-                    href: '?a=context/update&key=' + record.data.key
-                });
-            }, scope: this }
-        },{
-            header: _('description')
-            ,dataIndex: 'description'
-            ,width: 575
-            ,sortable: false
-            ,editor: { xtype: 'textarea' }
-        },{
-            header: _('rank')
-            ,dataIndex: 'rank'
-            ,width: 100
-            ,sortable: true
-            ,editor: { xtype: 'numberfield' }
-        }]
-        ,tbar: [
+        ],
+        paging: true,
+        autosave: true,
+        save_action: 'Context/UpdateFromGrid',
+        remoteSort: true,
+        primaryKey: 'key',
+        columns: [{
+            header: _('key'),
+            dataIndex: 'key',
+            width: 100,
+            sortable: true
+        }, {
+            header: _('name'),
+            dataIndex: 'name',
+            width: 150,
+            sortable: true,
+            editor: { xtype: 'textfield' },
+            renderer: {
+                fn: function(v, md, record) {
+                    return this.renderLink(v, {
+                        href: `?a=context/update&key=${record.data.key}`
+                    });
+                },
+                scope: this
+            }
+        }, {
+            header: _('description'),
+            dataIndex: 'description',
+            width: 575,
+            sortable: false,
+            editor: { xtype: 'textarea' }
+        }, {
+            header: _('rank'),
+            dataIndex: 'rank',
+            width: 100,
+            sortable: true,
+            editor: { xtype: 'numberfield' }
+        }],
+        tbar: [
             {
-                text: _('create')
-                ,cls:'primary-button'
-                ,handler: this.create
-                ,scope: this
+                text: _('create'),
+                cls: 'primary-button',
+                handler: this.create,
+                scope: this
             },
             '->',
             this.getQueryFilterField(),
             this.getClearFiltersButton()
         ]
     });
-    MODx.grid.Context.superclass.constructor.call(this,config);
+    MODx.grid.Context.superclass.constructor.call(this, config);
 };
-Ext.extend(MODx.grid.Context,MODx.grid.Grid,{
+Ext.extend(MODx.grid.Context, MODx.grid.Grid, {
     getMenu: function() {
-        var r = this.getSelectionModel().getSelected();
-        var p = r.data.perm;
-        var m = [];
-        if (p.indexOf('pnew') != -1) {
+        const r = this.getSelectionModel().getSelected(),
+              p = r.data.perm,
+              m = [];
+        if (p.indexOf('pnew') !== -1) {
             m.push({
-                text: _('duplicate')
-                ,handler: this.duplicateContext
-                ,scope: this
+                text: _('duplicate'),
+                handler: this.duplicateContext,
+                scope: this
             });
         }
 
-        if (p.indexOf('pedit') != -1) {
+        if (p.indexOf('pedit') !== -1) {
             m.push({
-                text: _('edit')
-                ,handler: this.updateContext
+                text: _('edit'),
+                handler: this.updateContext
             });
         }
 
-        if (p.indexOf('premove') != -1) {
+        if (p.indexOf('premove') !== -1) {
             m.push('-');
             m.push({
-                text: _('delete')
-                ,handler: this.remove
-                ,scope: this
+                text: _('delete'),
+                handler: this.remove,
+                scope: this
             });
         }
         return m;
-    }
+    },
 
-    ,create: function(btn, e) {
+    create: function(btn, e) {
         if (this.createWindow) {
             this.createWindow.destroy();
         }
         this.createWindow = MODx.load({
             xtype: 'modx-window-context-create',
-            closeAction:'close',
+            closeAction: 'close',
             listeners: {
-                'success': {
+                success: {
                     fn: function() {
                         this.afterAction();
                     },
@@ -155,34 +159,38 @@ Ext.extend(MODx.grid.Context,MODx.grid.Grid,{
             }
         });
         this.createWindow.show(e.target);
-    }
+    },
 
-    ,updateContext: function(itm,e) {
-        MODx.loadPage('context/update', 'key='+this.menu.record.key);
-    }
+    updateContext: function(itm, e) {
+        MODx.loadPage('context/update', `key=${this.menu.record.key}`);
+    },
 
-    ,duplicateContext: function() {
-        var r = {
-            key: this.menu.record.key
-            ,newkey: ''
-        };
-        var w = MODx.load({
-            xtype: 'modx-window-context-duplicate'
-            ,record: r
-            ,listeners: {
-                'success': {fn:function() {
-                    this.refresh();
-                    var tree = Ext.getCmp('modx-resource-tree');
-                    if (tree) {
-                        tree.refresh();
+    duplicateContext: function() {
+        const
+            record = {
+                key: this.menu.record.key,
+                newkey: ''
+            },
+            window = MODx.load({
+                xtype: 'modx-window-context-duplicate',
+                record: record,
+                listeners: {
+                    success: {
+                        fn: function() {
+                            this.refresh();
+                            const tree = Ext.getCmp('modx-resource-tree');
+                            if (tree) {
+                                tree.refresh();
+                            }
+                        },
+                        scope: this
                     }
-                },scope:this}
-            }
-        });
-        w.show();
-    }
+                }
+            });
+        window.show();
+    },
 
-    ,remove: function(btn, e) {
+    remove: function(btn, e) {
         MODx.msg.confirm({
             title: _('warning'),
             text: _('context_remove_confirm'),
@@ -192,7 +200,7 @@ Ext.extend(MODx.grid.Context,MODx.grid.Grid,{
                 key: this.menu.record.key
             },
             listeners: {
-                'success': {
+                success: {
                     fn: function() {
                         this.afterAction();
                     },
@@ -200,10 +208,10 @@ Ext.extend(MODx.grid.Context,MODx.grid.Grid,{
                 }
             }
         });
-    }
+    },
 
-    ,afterAction: function() {
-        var cmp = Ext.getCmp('modx-resource-tree');
+    afterAction: function() {
+        const cmp = Ext.getCmp('modx-resource-tree');
         if (cmp) {
             cmp.refresh();
         }
@@ -211,7 +219,7 @@ Ext.extend(MODx.grid.Context,MODx.grid.Grid,{
         this.refresh();
     }
 });
-Ext.reg('modx-grid-contexts',MODx.grid.Context);
+Ext.reg('modx-grid-contexts', MODx.grid.Context);
 
 /**
  * Generates the create context window.
@@ -221,40 +229,41 @@ Ext.reg('modx-grid-contexts',MODx.grid.Context);
  * @param {Object} config An object of options.
  * @xtype modx-window-context-create
  */
-MODx.window.CreateContext = function(config) {
-    config = config || {};
-    Ext.applyIf(config,{
-        title: _('create')
-        ,url: MODx.config.connector_url
-        ,action: 'Context/Create'
-        ,fields: [{
-            xtype: 'textfield'
-            ,fieldLabel: _('context_key')
-            ,name: 'key'
-            ,anchor: '100%'
-            ,maxLength: 100
-        },{
-            xtype: 'textfield'
-            ,fieldLabel: _('name')
-            ,name: 'name'
-            ,anchor: '100%'
-            ,maxLength: 100
-        },{
-            xtype: 'textarea'
-            ,fieldLabel: _('description')
-            ,name: 'description'
-            ,anchor: '100%'
-            ,grow: true
-        },{
-            xtype: 'numberfield'
-            ,fieldLabel: _('rank')
-            ,name: 'rank'
-            ,allowBlank: true
-            ,anchor: '100%'
-        }]
-        ,keys: []
+MODx.window.CreateContext = function(config = {}) {
+    Ext.applyIf(config, {
+        title: _('create'),
+        url: MODx.config.connector_url,
+        action: 'Context/Create',
+        formDefaults: {
+            anchor: '100%',
+            validationEvent: 'change',
+            validateOnBlur: false
+        },
+        fields: [{
+            xtype: 'textfield',
+            fieldLabel: _('context_key'),
+            name: 'key',
+            maxLength: 100,
+            allowBlank: false
+        }, {
+            xtype: 'textfield',
+            fieldLabel: _('name'),
+            name: 'name',
+            maxLength: 100,
+            allowBlank: false
+        }, {
+            xtype: 'textarea',
+            fieldLabel: _('description'),
+            name: 'description',
+            grow: true
+        }, {
+            xtype: 'numberfield',
+            fieldLabel: _('rank'),
+            name: 'rank'
+        }],
+        keys: []
     });
-    MODx.window.CreateContext.superclass.constructor.call(this,config);
+    MODx.window.CreateContext.superclass.constructor.call(this, config);
 };
-Ext.extend(MODx.window.CreateContext,MODx.Window);
-Ext.reg('modx-window-context-create',MODx.window.CreateContext);
+Ext.extend(MODx.window.CreateContext, MODx.Window);
+Ext.reg('modx-window-context-create', MODx.window.CreateContext);
