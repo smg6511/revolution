@@ -110,6 +110,32 @@ MODx.grid.Context = function(config = {}) {
         ]
     });
     MODx.grid.Context.superclass.constructor.call(this, config);
+
+    this.on({
+        afterAutoSave: function(response) {
+            if (response.eventData.value !== response.eventData.originalValue) {
+                const
+                    resourceTree = Ext.getCmp('modx-resource-tree'),
+                    contextNodeId = `${response.object.key}_0`,
+                    contextRootNode = resourceTree.root.findChild('id', contextNodeId)
+                ;
+                if (resourceTree && resourceTree.rendered) {
+                    switch (response.eventData.field) {
+                        case 'name':
+                            contextRootNode.setText(response.eventData.value);
+                            break;
+                        case 'description':
+                            contextRootNode.setTooltip(response.eventData.value);
+                            break;
+                        case 'rank':
+                            resourceTree.refresh();
+                            break;
+                        // no default
+                    }
+                }
+            }
+        }
+    });
 };
 Ext.extend(MODx.grid.Context, MODx.grid.Grid, {
     getMenu: function() {
