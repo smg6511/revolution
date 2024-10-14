@@ -56,17 +56,15 @@ Ext.extend(MODx.panel.FileTree, Ext.Container, {
      * @param {Array} sources
      */
     onSourceListReceived: function(sources) {
-        for (let k = 0; k < sources.length; k++) {
-            let source = sources[k],
-                exists = this.getComponent(this._treePrefix + source.id);
-
-            if (!exists) {
-                var tree = this.loadTree(source);
+        sources.forEach(source => {
+            const
+                sourceTreeExists = this.getComponent(this._treePrefix + source.id),
+                newSourceTree = !sourceTreeExists ? this.loadTree(source) : false
+            ;
+            if (newSourceTree) {
+                this.add(newSourceTree);
             }
-
-            this.add(tree);
-            tree = exists = void 0;
-        }
+        });
         this.doLayout();
     },
 
@@ -77,23 +75,13 @@ Ext.extend(MODx.panel.FileTree, Ext.Container, {
      * @returns {Object}
      */
     loadTree: function(source) {
-        const params = {};
-        if (location.search) {
-            const parts = location.search.substring(1).split('&');
-
-            for (let i = 0; i < parts.length; i++) {
-                const nv = parts[i].split('=');
-                if (!nv[0]) { continue; }
-                params[nv[0]] = nv[1] || true;
+        let expandSource = false;
+        if (window.location.search) {
+            const params = MODx.util.UrlParams.get();
+            if (Object.hasOwn(params, 'source')) {
+                expandSource = source.id === params.source;
             }
         }
-        let activeSource = params.source,
-            expandSource = false;
-
-        if (source.id == activeSource) {
-            expandSource = true;
-        }
-
         return MODx.load({
             xtype: 'modx-tree-directory',
             autoExpandRoot: expandSource,
