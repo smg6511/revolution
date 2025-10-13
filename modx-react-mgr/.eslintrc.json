@@ -1,0 +1,6 @@
+{
+  "extends": "next/core-web-vitals",
+  "rules" : {
+    "arrow-parens": ["error", "as-needed"]
+  }
+}

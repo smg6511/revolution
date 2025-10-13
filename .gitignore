@@ -17,6 +17,7 @@ modext.js
 # ignore common root paths for docs and assets
 /docs/
 /assets/
+/console/
 
 # ignore various IDE project files and folders
 .idea/

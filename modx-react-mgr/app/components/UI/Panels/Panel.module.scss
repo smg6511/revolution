@@ -1,0 +1,8 @@
+.panel {
+    // style def...
+    &::before {
+        // content: 'Test Before...';
+        content: '';
+        padding: 1rem 0;
+    }
+}
