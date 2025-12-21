@@ -141,7 +141,9 @@ class Create extends Processor
         }
 
         /* check role */
-        if (!empty($fields['role'])) {
+        if (empty($fields['role'])) {
+            $this->addFieldError('role', $this->modx->lexicon('role_err_ns'));
+        } else {
             $this->role = $this->modx->getObject(modUserGroupRole::class, $fields['role']);
             if (!$this->role) {
                 $this->addFieldError('role', $this->modx->lexicon('role_err_nf'));

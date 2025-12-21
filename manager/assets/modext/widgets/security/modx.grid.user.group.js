@@ -197,10 +197,30 @@ MODx.window.AddGroupToUser = function(config) {
         }]
     });
     MODx.window.AddGroupToUser.superclass.constructor.call(this,config);
+
+    this.on('show', window => {
+        const form = window.fp.getForm();
+        if (form) {
+            form.clearInvalid();
+        }
+    });
 };
 Ext.extend(MODx.window.AddGroupToUser,MODx.Window,{
     submit: function() {
-        var r = this.fp.getForm().getValues();
+        const
+            form = this.fp.getForm(),
+            r = form.getValues()
+        ;
+
+        /*
+            Because the submit method is being overridden, must explicitly check validity
+            in order for field errors to show and to prevent submission. Previous errors must
+            be manually cleared each time the window is shown.
+        */
+        if (!form.isValid()) {
+            return false;
+        }
+
         // Typecast user group ID (for strict match search)
         r.usergroup = ~~r.usergroup;
 

@@ -12,6 +12,7 @@
 namespace MODX\Revolution\Processors\Security\User;
 
 use MODX\Revolution\modUser;
+use MODX\Revolution\modUserGroup;
 use MODX\Revolution\modUserProfile;
 use MODX\Revolution\modX;
 use MODX\Revolution\Processors\ModelProcessor;
@@ -49,6 +50,7 @@ class Validation
         $this->checkCellPhone();
         $this->checkBirthDate();
         $this->checkBlocked();
+        $this->groupAssignmentIsValid();
 
         return !$this->processor->hasErrors();
     }
@@ -201,6 +203,43 @@ class Validation
             }
             $this->processor->setProperty('blockedafter', $blockedAfter);
             $this->profile->set('blockedafter', $blockedAfter);
+        }
+    }
+
+    public function groupAssignmentIsValid()
+    {
+        $errors = 0;
+        $groups = $this->processor->getProperty('groups', null);
+
+        if ($groups !== null) {
+            $groups = is_array($groups) ? $groups : json_decode($groups, true);
+            $groupNames = [];
+
+            foreach ($groups as $group) {
+                if ((int)$group['usergroup'] === 0) {
+                    $errors++;
+                    continue;
+                }
+                $usergroup = $this->modx->getObject(modUserGroup::class, $group['usergroup']);
+                if (empty($group['role'])) {
+                    $groupNames[] = $usergroup->get('name');
+                    $errors++;
+                }
+            }
+        }
+        if ($errors > 0) {
+            $groupNames = implode(', ', $groupNames);
+            $msg = $errors === 1 && empty($groupNames)
+                ? $this->modx->lexicon(
+                    'user_group_member_err_group_empty',
+                    ['errors' => $errors]
+                )
+                : $this->modx->lexicon(
+                    'user_group_member_err_role_empty',
+                    ['errors' => $errors, 'groups' => $groupNames]
+                )
+                ;
+            $this->processor->failure($msg);
         }
     }
 }
