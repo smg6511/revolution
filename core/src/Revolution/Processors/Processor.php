@@ -322,6 +322,66 @@ abstract class Processor
     }
 
     /**
+     * Converts an html-formatted message to JSON, configured such that it can be
+     * reliably decoded and consumed as a value in a javascript config object
+     *
+     * @param string $message The unencoded html message
+     * @return string The JSON-encoded html message
+     */
+    protected function htmlMessageToJSON(string $message): string
+    {
+        $message = trim($message);
+        if (empty($message)) {
+            return '';
+        }
+        $message = $this->modx->stripTags(
+            $message,
+            '<div><p><ul><ol><li><strong><em><br>'
+        );
+        // Collapse presentational (code formatting) space
+        $regex = '/(?<=>)[\s]*(?=<)/';
+        return json_encode(
+            preg_replace($regex, '', $message),
+            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES
+        );
+    }
+
+    /**
+     * Prepare formatting and titling config for optional customizations to be
+     * sent via $this->failure as its $object argument
+     *
+     * @param string $windowTitle Optional title to replace the default, generic error title
+     * @param string $type Optional indicator of the message type (error, warn, info)
+     * @param bool $isFormatted Indicates whether message contains and should render html
+     * @return array The prepared configuration
+     */
+    protected function setCustomMessageOptions(
+        string $windowTitle = '',
+        string $type = 'error',
+        bool $isFormatted = false
+    ): array {
+        $options = [];
+        if (empty($windowTitle) && $type === 'error' && empty($isFormatted)) {
+            return $options;
+        }
+        switch (true) {
+            case $isFormatted || $type !== 'error':
+                $options['messageConfig'] = [];
+                // fall through to keep building
+            case $isFormatted:
+                $options['messageConfig']['messageIsFormatted'] = $isFormatted;
+                // fall through to keep building
+            case $type !== 'error':
+                $options['messageConfig']['messageType'] = $type;
+                // fall through to keep building
+            case !empty($windowTitle):
+                $options['messageWindowTitle'] = $windowTitle;
+            // no default
+        }
+        return $options;
+    }
+
+    /**
      * Encodes certain JavaScript literal strings for later decoding.
      *
      * @access protected
