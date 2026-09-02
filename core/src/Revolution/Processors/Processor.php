@@ -12,6 +12,8 @@
 namespace MODX\Revolution\Processors;
 
 use MODX\Revolution\modX;
+use MODX\Revolution\Utilities\Sanitizers\modUtilsStringSanitizers;
+use MODX\Revolution\Utilities\Converters\modUtilsStringConverters;
 
 /**
  * Abstracts a MODX processor, handling its response and error formatting.
@@ -20,11 +22,16 @@ use MODX\Revolution\modX;
  */
 abstract class Processor
 {
+    const STATUS_TYPE_ERROR = 'error';
+    const STATUS_TYPE_WARN = 'warning';
+    const STATUS_TYPE_INFO = 'info';
+    const STATUS_TYPE_SUCCESS = 'success';
+
     /**
      * A reference to the modX object.
      * @var modX $modx
      */
-    public $modx = null;
+    public ?modX $modx = null;
     /**
      * The absolute path to this processor
      * @var string $path
@@ -41,15 +48,20 @@ abstract class Processor
      */
     public $permission = '';
 
+    public modUtilsStringSanitizers $stringSanitizers;
+    public modUtilsStringConverters $stringConverters;
+
     /**
      * Creates a modProcessor object.
-     *
+     *x
      * @param modX $modx A reference to the modX instance
      * @param array $properties An array of properties
      */
     public function __construct(modX $modx, array $properties = [])
     {
         $this->modx =& $modx;
+        $this->stringSanitizers = $this->modx->services->get(modUtilsStringSanitizers::class);
+        $this->stringConverters = $this->modx->services->get(modUtilsStringConverters::class);
         $this->setProperties($properties);
     }
 
@@ -137,6 +149,42 @@ abstract class Processor
     public function failure($msg = '', $object = null)
     {
         return $this->modx->error->failure($msg, $object);
+    }
+
+    /**
+     * Return a type-specific message with optional customizations from the processor.
+     *
+     * @param string $message The message to send.
+     * @param string $messageWindowTitle Optional title to replace the default, generic title for the specified message type.
+     * @param string $messageType Optional indicator of the message type (error, warn, info, etc)
+     * @param boolean $messageIsFormatted Indicates whether message contains and should render html
+     * @param object|array|string $object An object to send back to the output.
+     * @return string|array The status response
+     */
+    public function status(
+        $message = '',
+        $messageWindowTitle = '',
+        $messageType = self::STATUS_TYPE_ERROR,
+        $messageIsFormatted = false,
+        $object = null
+    ) {
+        if ($messageIsFormatted) {
+            $message = $this->stringSanitizers->stripHTML(
+                $message,
+                modX::MGR_MESSAGES_ALLOWED_TAGS,
+                modX::MGR_MESSAGES_ALLOWED_ATTRS
+            );
+            $message = $this->stringConverters->htmlToJSON($message);
+        }
+
+        $hasCustomMessageOptions = !empty($messageWindowTitle) || $messageType !== self::STATUS_TYPE_ERROR || $messageIsFormatted;
+
+        if ($hasCustomMessageOptions) {
+            $this->modx->error->messageConfig = $this->setCustomMessageOptions($messageWindowTitle, $messageType, $messageIsFormatted);
+        }
+        $status = $messageType !== self::STATUS_TYPE_ERROR ? 'success' : 'failure';
+
+        return $this->modx->error->$status($message, $object);
     }
 
     /**
@@ -322,40 +370,15 @@ abstract class Processor
     }
 
     /**
-     * Converts an html-formatted message to JSON, configured such that it can be
-     * reliably decoded and consumed as a value in a javascript config object
-     *
-     * @param string $message The unencoded html message
-     * @return string The JSON-encoded html message
-     */
-    protected function htmlMessageToJSON(string $message): string
-    {
-        $message = trim($message);
-        if (empty($message)) {
-            return '';
-        }
-        $message = $this->modx->stripTags(
-            $message,
-            '<div><p><ul><ol><li><strong><em><br>'
-        );
-        // Collapse presentational (code formatting) space
-        $regex = '/(?<=>)[\s]*(?=<)/';
-        return json_encode(
-            preg_replace($regex, '', $message),
-            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES
-        );
-    }
-
-    /**
      * Prepare formatting and titling config for optional customizations to be
-     * sent via $this->failure as its $object argument
+     * sent via $this->status
      *
      * @param string $windowTitle Optional title to replace the default, generic error title
      * @param string $type Optional indicator of the message type (error, warn, info)
      * @param bool $isFormatted Indicates whether message contains and should render html
      * @return array The prepared configuration
      */
-    protected function setCustomMessageOptions(
+    private function setCustomMessageOptions(
         string $windowTitle = '',
         string $type = 'error',
         bool $isFormatted = false
@@ -364,10 +387,8 @@ abstract class Processor
         if (empty($windowTitle) && $type === 'error' && empty($isFormatted)) {
             return $options;
         }
+        $options['messageConfig'] = [];
         switch (true) {
-            case $isFormatted || $type !== 'error':
-                $options['messageConfig'] = [];
-                // fall through to keep building
             case $isFormatted:
                 $options['messageConfig']['messageIsFormatted'] = $isFormatted;
                 // fall through to keep building
@@ -375,7 +396,7 @@ abstract class Processor
                 $options['messageConfig']['messageType'] = $type;
                 // fall through to keep building
             case !empty($windowTitle):
-                $options['messageWindowTitle'] = $windowTitle;
+                $options['messageConfig']['messageWindowTitle'] = $windowTitle;
             // no default
         }
         return $options;
