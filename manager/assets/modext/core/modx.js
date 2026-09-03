@@ -810,7 +810,12 @@ Ext.extend(MODx.Ajax,Ext.Component,{
                     if (config.listeners.success && config.listeners.success.fn) {
                         this._runCallback(config.listeners.success, [r]);
                     }
-                    // Account for the fact that some success responses may still contain a message to display to the user and that warning and info messages will typically be sent via a success rather than failure response.
+                    /*
+                        Account for the fact that some success responses may still
+                        contain a message to display to the user and that warning
+                        and info messages will typically be sent via a success
+                        rather than failure response.
+                    */
                     if (r.message || !Ext.isEmpty(r.messageConfig)) {
                         reportStatus = true;
                     }
@@ -850,8 +855,6 @@ Ext.extend(MODx.Ajax,Ext.Component,{
      * @param {Array} args - An array of arguments to pass to the callback
      */
     ,_runCallback: function(config, args) {
-        // console.log('MODx.Ajax._runCallback, args', args);
-        
         var scope = window
             ,fn = config.fn;
 
