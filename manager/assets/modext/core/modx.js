@@ -925,7 +925,6 @@ Ext.extend(MODx.form.Handler,Ext.Component,{
      * @return {void}
      */
     ,statusJSON: function(response) {
-        console.log('MODx.form.Handler:statusJSON, response', response);
         if (response && response?.data) {
             for (let i = 0; i < response.data.length; i++) {
                 this.highlightField(response.data[i]);

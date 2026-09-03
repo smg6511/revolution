@@ -22,16 +22,21 @@ use MODX\Revolution\Utilities\Converters\modUtilsStringConverters;
  */
 abstract class Processor
 {
+    // Status message types, currently aligned with ExtJS message types
+    /** Status message type: Error */
     const STATUS_TYPE_ERROR = 'error';
+    /** Status message type: Warning */
     const STATUS_TYPE_WARN = 'warning';
+    /** Status message type: Info */
     const STATUS_TYPE_INFO = 'info';
+    /** Status message type: Success */
     const STATUS_TYPE_SUCCESS = 'success';
 
     /**
      * A reference to the modX object.
      * @var modX $modx
      */
-    public ?modX $modx = null;
+    public $modx = null;
     /**
      * The absolute path to this processor
      * @var string $path
@@ -48,7 +53,10 @@ abstract class Processor
      */
     public $permission = '';
 
+    /** A reference to the modUtilsStringSanitizers service */
     public modUtilsStringSanitizers $stringSanitizers;
+
+    /** A reference to the modUtilsStringConverters service */
     public modUtilsStringConverters $stringConverters;
 
     /**
