@@ -95,18 +95,7 @@ class CheckForUpdates extends Processor
         if (count($packages) < 1) {
             $msg = $this->modx->lexicon('package_err_uptodate', ['signature' => $this->package->get('signature')]);
             $this->modx->log(modX::LOG_LEVEL_INFO, $msg);
-            $msg = <<<HTML
-                <strong>Special Message</strong><br>
-                <span>It's a special intro:</span><br>
-                <em>{$msg}</em>
-                <script>return 'do something bad';</script>
-            HTML;
-            // $msg = '';
-            return $this->failure(
-                $this->htmlMessageToJSON($msg),
-                $this->setCustomMessageOptions('Package\'s Status', 'info', true)
-                // $this->setCustomMessageOptions('Package\'s Status', 'info')
-            );
+            return $this->failure($msg);     
         }
 
         $list = [];
