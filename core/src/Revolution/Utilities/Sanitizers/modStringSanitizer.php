@@ -18,7 +18,7 @@ use MODX\Revolution\modX;
  *
  * @package MODX\Revolution
  */
-class modUtilsStringSanitizers
+class modStringSanitizer
 {
     /**
      * A reference to the modX object.

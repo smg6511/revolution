@@ -18,7 +18,7 @@ use MODX\Revolution\modX;
  *
  * @package MODX\Revolution
  */
-class modUtilsStringConverters
+class modStringConverter
 {
     /**
      * A reference to the modX object.

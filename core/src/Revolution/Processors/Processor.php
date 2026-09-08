@@ -12,8 +12,8 @@
 namespace MODX\Revolution\Processors;
 
 use MODX\Revolution\modX;
-use MODX\Revolution\Utilities\Sanitizers\modUtilsStringSanitizers;
-use MODX\Revolution\Utilities\Converters\modUtilsStringConverters;
+use MODX\Revolution\Utilities\Sanitizers\modStringSanitizer;
+use MODX\Revolution\Utilities\Converters\modStringConverter;
 
 /**
  * Abstracts a MODX processor, handling its response and error formatting.
@@ -53,11 +53,11 @@ abstract class Processor
      */
     public $permission = '';
 
-    /** A reference to the modUtilsStringSanitizers service */
-    public modUtilsStringSanitizers $stringSanitizers;
+    /** A reference to the modStringSanitizer service */
+    public modStringSanitizer $stringSanitizers;
 
-    /** A reference to the modUtilsStringConverters service */
-    public modUtilsStringConverters $stringConverters;
+    /** A reference to the modStringConverter service */
+    public modStringConverter $stringConverters;
 
     /**
      * Creates a modProcessor object.
@@ -68,8 +68,8 @@ abstract class Processor
     public function __construct(modX $modx, array $properties = [])
     {
         $this->modx =& $modx;
-        $this->stringSanitizers = $this->modx->services->get(modUtilsStringSanitizers::class);
-        $this->stringConverters = $this->modx->services->get(modUtilsStringConverters::class);
+        $this->stringSanitizers = $this->modx->services->get(modStringSanitizer::class);
+        $this->stringConverters = $this->modx->services->get(modStringConverter::class);
         $this->setProperties($properties);
     }
 

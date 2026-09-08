@@ -23,8 +23,8 @@ use MODX\Revolution\Registry\modRegister;
 use MODX\Revolution\Registry\modRegistry;
 use MODX\Revolution\Services\Container;
 use MODX\Revolution\Smarty\modSmarty;
-use MODX\Revolution\Utilities\Sanitizers\modUtilsStringSanitizers;
-use MODX\Revolution\Utilities\Converters\modUtilsStringConverters;
+use MODX\Revolution\Utilities\Sanitizers\modStringSanitizer;
+use MODX\Revolution\Utilities\Converters\modStringConverter;
 use MODX\Revolution\Validation\modValidator;
 use PDO;
 use PDOStatement;
@@ -601,8 +601,8 @@ class modX extends xPDO {
             $this->registry = $this->services->get('registry');
 
             $this->services->add(modManagerDateFormatter::class, fn() => new modManagerDateFormatter($this));
-            $this->services->add(modUtilsStringSanitizers::class, fn() => new modUtilsStringSanitizers($this));
-            $this->services->add(modUtilsStringConverters::class, fn() => new modUtilsStringConverters($this));
+            $this->services->add(modStringSanitizer::class, fn() => new modStringSanitizer($this));
+            $this->services->add(modStringConverter::class, fn() => new modStringConverter($this));
 
             if (!$this->getOption(xPDO::OPT_SETUP)) {
                 $this->invokeEvent(
