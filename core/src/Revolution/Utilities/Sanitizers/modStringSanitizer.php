@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+/** @phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps */
+
 namespace MODX\Revolution\Utilities\Sanitizers;
 
 use MODX\Revolution\modX;
@@ -32,7 +34,9 @@ class modStringSanitizer
     }
 
     /**
-     * Removes unwanted tags and/or tag attributes from an HTML string
+     * Removes unwanted tags and/or tag attributes from an HTML string.
+     * Assumes well-designed HTML without inline php (which is not supported
+     * and always stripped).
      *
      * @param string $htmlSource The html string to clean
      * @param ?string|array $allowedTags An array or comma-separated list of tag names to allow
@@ -47,13 +51,7 @@ class modStringSanitizer
             return '';
         }
 
-        libxml_use_internal_errors(true);
-
         $allowedTags = is_string($allowedTags) ? trim($allowedTags) : $allowedTags ;
-
-        if (empty($allowedTags)) {
-            return strip_tags($htmlSource);
-        }
 
         if (!is_array($allowedTags)) {
             $allowedTags = preg_replace('/[\s<>]+/', '', $allowedTags);
@@ -64,6 +62,9 @@ class modStringSanitizer
             }, $allowedTags);
         }
 
+        // Strip php before encoding
+        $htmlSource = preg_replace('/<\s*?\?(?:php)?[\s\S]*?\?\s*?>|<\s*?\?(?:php)?[\s\S]*/m', '', $htmlSource);
+
         if (!empty($allowedAttr)) {
             if (!is_array($allowedAttr)) {
                 $allowedAttr = explode(',', $allowedAttr);
@@ -73,17 +74,26 @@ class modStringSanitizer
             $allowedAttr = [];
         }
 
+        libxml_use_internal_errors(true);
+
         $dom = new \DOMDocument();
         // Prevent additional formatting of the source string
         $dom->formatOutput = false;
 
+        /*
+            To support multiple languages, the source needs to be mb-encoded to
+            ensure DOMDocument can cleanly parse the string and avoid errors.
+        */
         $content = mb_encode_numericentity(
             $htmlSource,
             [0x80, 0x10FFFF, 0, ~0],
             'UTF-8'
         );
 
-        // Need a placeholder wrapping tag, as loadHTML will automatically wrap strings with no root tag with a <p> tag (do not want that)
+        /*
+            Need a placeholder wrapping tag, as loadHTML will automatically
+            wrap strings with no root tag with a <p> tag (do not want that)
+        */
         $dom->loadHTML(
             '<phwrap>' . $content . '</phwrap>',
             LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
@@ -103,7 +113,7 @@ class modStringSanitizer
             in most cases not be able to identify the content to remove
             because its enclosing tag had already been removed.
         */
-        if (!$allowScripts) {
+        if (!$allowScripts || !in_array('script', $allowedTags)) {
             foreach ($xpath->query("//script") as $node) {
                 $node->parentNode->removeChild($node);
             }
@@ -165,6 +175,7 @@ class modStringSanitizer
         if (strpos($output, '<phwrap>') !== false) {
             $output = str_replace(['<phwrap>', '</phwrap>'], '', $output);
         }
+
         return $output;
     }
 }

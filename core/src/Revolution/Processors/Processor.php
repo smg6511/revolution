@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+/** @phpcs:disable PSR2.Methods.MethodDeclaration.Underscore */
+
 namespace MODX\Revolution\Processors;
 
 use MODX\Revolution\modX;
@@ -24,13 +26,13 @@ abstract class Processor
 {
     // Status message types, currently aligned with ExtJS message types
     /** Status message type: Error */
-    const STATUS_TYPE_ERROR = 'error';
+    public const STATUS_TYPE_ERROR = 'error';
     /** Status message type: Warning */
-    const STATUS_TYPE_WARN = 'warning';
+    public const STATUS_TYPE_WARN = 'warning';
     /** Status message type: Info */
-    const STATUS_TYPE_INFO = 'info';
+    public const STATUS_TYPE_INFO = 'info';
     /** Status message type: Success */
-    const STATUS_TYPE_SUCCESS = 'success';
+    public const STATUS_TYPE_SUCCESS = 'success';
 
     /**
      * A reference to the modX object.
@@ -163,9 +165,12 @@ abstract class Processor
      * Return a type-specific message with optional customizations from the processor.
      *
      * @param string $message The message to send.
-     * @param string $messageWindowTitle Optional title to replace the default, generic title for the specified message type.
-     * @param string $messageType Optional indicator of the message type (error, warn, info, etc)
-     * @param boolean $messageIsFormatted Indicates whether message contains and should render html
+     * @param string $messageWindowTitle Optional title to replace the default,
+     * generic title for the specified message type.
+     * @param string $messageType Optional indicator of the message type
+     * (error, warn, info, etc)
+     * @param bool $messageIsFormatted Indicates whether message contains
+     * and should render html
      * @param object|array|string $object An object to send back to the output.
      * @return string|array The status response
      */

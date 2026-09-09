@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+/** @phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps */
+
 namespace MODX\Revolution\Utilities\Converters;
 
 use MODX\Revolution\modX;
