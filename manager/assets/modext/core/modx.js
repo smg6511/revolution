@@ -986,6 +986,8 @@ Ext.extend(MODx.form.Handler,Ext.Component,{
             : Ext.util.Format.stripTags(response.message)
         ;
         data.type = messageType;
+        data.iconType = messageType.toUpperCase() || ERROR;
+        data.dialogClass = `modx-dialog-${messageType.toLowerCase() || 'error'}`;
 
         return data;
     }
@@ -1037,7 +1039,13 @@ Ext.extend(MODx.form.Handler,Ext.Component,{
         if (typeof data === 'string') {
             data = { title: _('error'), message: data };
         }
-        MODx.msg.alert(data.title, data.message, Ext.emptyFn);
+        Ext.Msg.show({
+            title: data.title,
+            msg: data.message,
+            buttons: Ext.MessageBox.OK,
+            icon: Ext.MessageBox[data.iconType],
+            cls: data.dialogClass
+        });
     }
 
     /**
@@ -1049,7 +1057,6 @@ Ext.extend(MODx.form.Handler,Ext.Component,{
     ,showFormattedMessage: function(data) {
         let message;
         const
-            iconType = data.type.toUpperCase(),
             allowedTags = (MODx.config?.manager_messages_allowed_tags && (MODx.config.manager_messages_allowed_tags)
                 .split(',')
                 .map(tag => `<${tag.trim()}>`)
@@ -1078,7 +1085,8 @@ Ext.extend(MODx.form.Handler,Ext.Component,{
             title: data.title,
             msg: message,
             buttons: Ext.MessageBox.OK,
-            icon: Ext.MessageBox[iconType]
+            icon: Ext.MessageBox[data.iconType],
+            cls: data.dialogClass
         });
     }
 

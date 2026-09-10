@@ -181,7 +181,9 @@ abstract class Processor
         $messageIsFormatted = false,
         $object = null
     ) {
-        if ($messageIsFormatted) {
+        if (!$messageIsFormatted) {
+            $message = $this->stringSanitizers->stripHTML($message);
+        } else {
             $message = $this->stringSanitizers->stripHTML(
                 $message,
                 modX::MGR_MESSAGES_ALLOWED_TAGS,
