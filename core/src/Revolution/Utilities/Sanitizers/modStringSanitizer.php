@@ -134,7 +134,7 @@ class modStringSanitizer
                         for ($i = 0; $i < $node->attributes->length; $i++) {
                             $name = $node->attributes->item($i)->nodeName;
                             /*
-                                Because data attributes are infinitly variable, but always begin with 'data-', allowing this attribute is done by simply entering
+                                Because data attributes are infinitely variable, but always begin with 'data-', allowing this attribute is done by simply entering
                                 'data' in the allowed list. Special handling for that done here.
                             */
                             $attrIsAllowed = in_array($name, $allowedAttr) || (in_array('data', $allowedAttr) && strpos($name, 'data-') === 0);

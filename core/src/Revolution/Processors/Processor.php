@@ -31,6 +31,10 @@ abstract class Processor
     public const STATUS_TYPE_WARN = 'warning';
     /** Status message type: Info */
     public const STATUS_TYPE_INFO = 'info';
+    /** Status message type: Question */
+    public const STATUS_TYPE_ASK = 'question';
+
+    // Additional non-ExtJS-specific message types
     /** Status message type: Success */
     public const STATUS_TYPE_SUCCESS = 'success';
 
@@ -61,9 +65,15 @@ abstract class Processor
     /** A reference to the modStringConverter service */
     public modStringConverter $stringConverters;
 
+    /** @var bool $useStatus Whether to look for and use custom status message data */
+    protected bool $useStatus = false;
+
+    /** @var array $statusConfig Use to persist message configuration data when it needs to be established in a child processor class but the actual status/success/failure is emitted by its parent class */
+    protected array $statusConfig = [];
+
     /**
      * Creates a modProcessor object.
-     *x
+     *
      * @param modX $modx A reference to the modX instance
      * @param array $properties An array of properties
      */
@@ -181,6 +191,7 @@ abstract class Processor
         $messageIsFormatted = false,
         $object = null
     ) {
+        $this->useStatus = true;
         if (!$messageIsFormatted) {
             $message = $this->stringSanitizers->stripHTML($message);
         } else {
@@ -200,6 +211,24 @@ abstract class Processor
         $status = $messageType !== self::STATUS_TYPE_ERROR ? 'success' : 'failure';
 
         return $this->modx->error->$status($message, $object);
+    }
+
+    /**
+     * Use in child processors to make custom message configuration data available
+     * to the parent processor that emits the status message.
+     *
+     * @param array $config An optional set of customization specifications to tailor the
+     * message output. Config options include:
+     * - messageType: (string) The type of message to output. Options include the status
+     * constants defined in the base processor (i.e., Processor::STATUS_TYPE_INFO, etc.).
+     * - messageWindowTitle: (string) Overrides the default window title
+     * - messageIsFormatted: (bool) Whether the message source is html-formatted
+     * (must be set to true to preserve formatting).
+     */
+    public function forwardStatus($config = []): void
+    {
+        $this->useStatus = true;
+        $this->statusConfig = $config;
     }
 
     /**
@@ -388,30 +417,30 @@ abstract class Processor
      * Prepare formatting and titling config for optional customizations to be
      * sent via $this->status
      *
-     * @param string $windowTitle Optional title to replace the default, generic error title
-     * @param string $type Optional indicator of the message type (error, warn, info)
-     * @param bool $isFormatted Indicates whether message contains and should render html
+     * @param string $messageWindowTitle Optional title to replace the default, generic error title
+     * @param string $messageType Optional indicator of the message type (error, warn, info)
+     * @param bool $messageIsFormatted Indicates whether message contains and should render html
      * @return array The prepared configuration
      */
     private function setCustomMessageOptions(
-        string $windowTitle = '',
-        string $type = 'error',
-        bool $isFormatted = false
+        string $messageWindowTitle = '',
+        string $messageType = 'error',
+        bool $messageIsFormatted = false
     ): array {
         $options = [];
-        if (empty($windowTitle) && $type === 'error' && empty($isFormatted)) {
+        if (empty($messageWindowTitle) && $messageType === 'error' && empty($messageIsFormatted)) {
             return $options;
         }
         $options['messageConfig'] = [];
         switch (true) {
-            case $isFormatted:
-                $options['messageConfig']['messageIsFormatted'] = $isFormatted;
+            case $messageIsFormatted:
+                $options['messageConfig']['messageIsFormatted'] = $messageIsFormatted;
                 // fall through to keep building
-            case $type !== 'error':
-                $options['messageConfig']['messageType'] = $type;
+            case $messageType !== 'error':
+                $options['messageConfig']['messageType'] = $messageType;
                 // fall through to keep building
-            case !empty($windowTitle):
-                $options['messageConfig']['messageWindowTitle'] = $windowTitle;
+            case !empty($messageWindowTitle):
+                $options['messageConfig']['messageWindowTitle'] = $messageWindowTitle;
             // no default
         }
         return $options;

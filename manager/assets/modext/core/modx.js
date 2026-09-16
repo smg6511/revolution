@@ -813,8 +813,17 @@ Ext.extend(MODx.Ajax,Ext.Component,{
                     /*
                         Account for the fact that some success responses may still
                         contain a message to display to the user and that warning
-                        and info messages will typically be sent via a success
+                        and info messages might be sent via a success
                         rather than failure response.
+
+                        Note that r.message is typically not set for a success response
+                        but, in the rare instance that it is, we want to display it.
+                        The r.messageConfig object is used to pass additional information
+                        about the message (e.g., a custom messageWindowTitle) and when
+                        present and non-empty should always signal a message dialog to be shown.
+
+                        When r.message is empty, the process is intentionally short-circuited in
+                        MODx.form.Handler.routeStatusMessage() and no dialog is shown.
                     */
                     if (r.message || !Ext.isEmpty(r.messageConfig)) {
                         reportStatus = true;
@@ -875,7 +884,8 @@ MODx.form.Handler = function(config) {
     MODx.form.Handler.superclass.constructor.call(this,config);
 };
 Ext.extend(MODx.form.Handler,Ext.Component,{
-    fields: []
+    fields: [],
+    extIconTypes: ['ERROR', 'INFO', 'WARNING', 'QUESTION']
 
     /** @todo Seems to be unused; confirm and remove */
     ,handle: function(o,s,r) {
@@ -909,7 +919,7 @@ Ext.extend(MODx.form.Handler,Ext.Component,{
     }
 
     /**
-     * @deprecated Renamed to statusJSON to reflect expanded usage for both error and non-error messages. Legacy implementations may still call this method directly, so it is retained for backward compatibility. Remove in MODX 3.4.
+     * @deprecated Renamed to "statusJSON" to reflect expanded usage for both error and non-error messages. Legacy implementations may still call this method directly, so it is retained for backward compatibility. Remove in MODX 3.4.
      */
     ,errorJSON: function(response) {
         this.statusJSON(response);
@@ -937,14 +947,20 @@ Ext.extend(MODx.form.Handler,Ext.Component,{
     }
 
     /**
+     * @deprecated Renamed to "status" to reflect expanded usage for both error and non-error messages. Legacy implementations may still call this method directly, so it is retained for backward compatibility. Remove in MODX 3.4.
+     */
+    ,errorExt: function(response, form) {
+        this.status(response, form);
+    }
+
+    /**
      * Error handling used by panel and window forms (via submit method's failure listener)
      * 
      * @param {Object} response
      * @param {Ext.form.BasicForm} form The form config/data that was submitted
      * @return {void}
      */
-    ,errorExt: function(response, form) {
-        console.log('MODx.form.Handler:errorExt, response', response);
+    ,status: function(response, form) {
         this.unhighlightFields();
         if (response && response.errors !== null && form) {
             // As currently implemented, message prop may be empty. An array of field error messages are collected in the errors prop.
@@ -976,7 +992,7 @@ Ext.extend(MODx.form.Handler,Ext.Component,{
             return null;
         }
         const data = {};
-        data.title = Object.hasOwn(response.messageConfig, 'messageWindowTitle')
+        data.title = response?.messageConfig && Object.hasOwn(response.messageConfig, 'messageWindowTitle')
             ? Ext.util.Format.stripTags(response.messageConfig.messageWindowTitle)
             : _('error')
         ;
@@ -987,21 +1003,23 @@ Ext.extend(MODx.form.Handler,Ext.Component,{
         ;
         data.type = messageType;
         data.iconType = messageType.toUpperCase() || ERROR;
+        data.isExtType = this.extIconTypes.includes(data.iconType);
         data.dialogClass = `modx-dialog-${messageType.toLowerCase() || 'error'}`;
 
         return data;
     }
 
     /**
-     * Routes message data to the appropriate method depending on whether it is html-formatted or plain text
+     * Routes message data to the appropriate method depending on whether it is
+     * html-formatted or plain text
      * 
      * @param {Object} response
      * @return {void}
      */
     ,routeStatusMessage: function(response) {
         const
-            isFormatted = response.messageConfig?.messageIsFormatted || false,
-            messageType = response.messageConfig?.messageType || 'error',
+            isFormatted = response?.messageConfig?.messageIsFormatted || false,
+            messageType = response?.messageConfig?.messageType || 'error',
             messageData = this.prepareMessageData(response, messageType, isFormatted)
         ;
         if (messageData === null) {
@@ -1022,10 +1040,31 @@ Ext.extend(MODx.form.Handler,Ext.Component,{
     }
 
     /**
-     * @deprecated Renamed to showMessage to reflect expanded usage for both error and non-error messages. Legacy implementations may still call this method directly, so it is retained for backward compatibility. Remove in MODX 3.4.
+     * @deprecated Renamed to "showMessage" to reflect expanded usage for both error and non-error messages. Legacy implementations may still call this method directly, so it is retained for backward compatibility. Remove in MODX 3.4.
      */
     ,showError: function(data) {
         this.showMessage(data);
+    }
+
+    /**
+     * Generates a message dialog config object based on provided message data
+     *
+     * @param {Object} data A data object containing the window title, message, and
+     * other relevant properties for building the message dialog.
+     * See prepareMessageData() for details.
+     * @return {Object} A config object passed to Ext.Msg.show()
+     */
+    ,getMessageConfig: function(data) {
+        const config = {
+            title: data.title,
+            msg: data.message,
+            buttons: Ext.MessageBox.OK,
+            cls: data.dialogClass
+        };
+        if (data.isExtType) {
+            config.icon = Ext.MessageBox[data.iconType];
+        }
+        return config;
     }
 
     /**
@@ -1039,13 +1078,7 @@ Ext.extend(MODx.form.Handler,Ext.Component,{
         if (typeof data === 'string') {
             data = { title: _('error'), message: data };
         }
-        Ext.Msg.show({
-            title: data.title,
-            msg: data.message,
-            buttons: Ext.MessageBox.OK,
-            icon: Ext.MessageBox[data.iconType],
-            cls: data.dialogClass
-        });
+        Ext.Msg.show(this.getMessageConfig(data));
     }
 
     /**
@@ -1057,11 +1090,11 @@ Ext.extend(MODx.form.Handler,Ext.Component,{
     ,showFormattedMessage: function(data) {
         let message;
         const
-            allowedTags = (MODx.config?.manager_messages_allowed_tags && (MODx.config.manager_messages_allowed_tags)
+            allowedTags = (MODx.config?.message_html_enabled.TAGS && (MODx.config.message_html_enabled.TAGS)
                 .split(',')
                 .map(tag => `<${tag.trim()}>`)
                 .join('')) || '',
-            allowedAttributes = MODx.config?.manager_messages_allowed_attrs || ''
+            allowedAttributes = MODx.config?.message_html_enabled.ATTRS || ''
         ;
         try {
             message = JSON.parse(data.message);
@@ -1080,18 +1113,13 @@ Ext.extend(MODx.form.Handler,Ext.Component,{
             allowedTags,
             allowedAttributes
         );
-        
-        Ext.Msg.show({
-            title: data.title,
-            msg: message,
-            buttons: Ext.MessageBox.OK,
-            icon: Ext.MessageBox[data.iconType],
-            cls: data.dialogClass
-        });
+
+        data.message = message;
+        Ext.Msg.show(this.getMessageConfig(data));
     }
 
     /**
-     * @deprecated Renamed to closeStatusMessage to reflect expanded usage for both error and non-error messages. Legacy implementations may still call this method directly, so it is retained for backward compatibility. Remove in MODX 3.4.
+     * @deprecated Renamed to "closeStatusMessage" to reflect expanded usage for both error and non-error messages. Legacy implementations may still call this method directly, so it is retained for backward compatibility. Remove in MODX 3.4.
      */
     ,closeError: function() {
         this.closeStatusMessage();

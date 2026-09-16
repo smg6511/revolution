@@ -1520,9 +1520,20 @@ class modX extends xPDO {
                 $this->config['error_handler_class']= modErrorHandler::class;
             if (!isset ($this->config['server_port']))
                 $this->config['server_port']= isset($_SERVER['SERVER_PORT']) ? $_SERVER['SERVER_PORT'] : '';
-            
-            $this->config['manager_messages_allowed_tags'] = self::MGR_MESSAGES_ALLOWED_TAGS;
-            $this->config['manager_messages_allowed_attrs'] = self::MGR_MESSAGES_ALLOWED_ATTRS;
+
+            $this->config['message_html_enabled'] = [
+                'TAGS' => self::MGR_MESSAGES_ALLOWED_TAGS,
+                'ATTRS' => self::MGR_MESSAGES_ALLOWED_ATTRS
+            ];
+
+            $this->config['message_statuses'] = [
+                'WARN' => Processor::STATUS_TYPE_WARN,
+                'ERROR' => Processor::STATUS_TYPE_ERROR,
+                'SUCCESS' => Processor::STATUS_TYPE_SUCCESS,
+                'INFO' => Processor::STATUS_TYPE_INFO,
+                'ASK' => Processor::STATUS_TYPE_ASK
+            ];
+
 
             $this->_config= $this->config;
             if (!$this->_loadConfig()) {
