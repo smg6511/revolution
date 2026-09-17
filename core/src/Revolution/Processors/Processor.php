@@ -80,6 +80,12 @@ abstract class Processor
     public function __construct(modX $modx, array $properties = [])
     {
         $this->modx =& $modx;
+        if (!$this->modx->services->has(modStringSanitizer::class)) {
+            $this->modx->services->add(modStringSanitizer::class, fn() => new modStringSanitizer($this->modx));
+        }
+        if (!$this->modx->services->has(modStringConverter::class)) {
+            $this->modx->services->add(modStringConverter::class, fn() => new modStringConverter($this->modx));
+        }
         $this->stringSanitizers = $this->modx->services->get(modStringSanitizer::class);
         $this->stringConverters = $this->modx->services->get(modStringConverter::class);
         $this->setProperties($properties);

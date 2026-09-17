@@ -94,10 +94,18 @@ class modStringSanitizer
             Need a placeholder wrapping tag, as loadHTML will automatically
             wrap strings with no root tag with a <p> tag (do not want that)
         */
-        $dom->loadHTML(
+        $loaded = $dom->loadHTML(
             '<phwrap>' . $content . '</phwrap>',
             LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
         );
+
+        if (!$loaded) {
+            $errors = libxml_get_errors();
+            $msg = 'stripHTML — DOMDocument::loadHTML failed with the following errors: ' . print_r($errors, true);
+            $this->modx->log(modX::LOG_LEVEL_ERROR, "\r\n$msg");
+            libxml_clear_errors();
+            return '';
+        }
 
         $xpath = new \DOMXPath($dom);
 
