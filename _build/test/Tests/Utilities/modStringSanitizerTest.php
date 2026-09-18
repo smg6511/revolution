@@ -18,6 +18,13 @@ namespace MODX\Revolution\Tests\Utilities\Sanitizers;
 use MODX\Revolution\MODxTestCase;
 use MODX\Revolution\Utilities\Sanitizers\modStringSanitizer;
 
+/**
+ * Tests related to string sanitizing utilities
+ *
+ * @package modx-test
+ * @subpackage modx
+ * @group Utilities
+ */
 class modStringSanitizerTest extends MODxTestCase
 {
     /** @var modStringSanitizer $sanitizers */
@@ -57,6 +64,9 @@ class modStringSanitizerTest extends MODxTestCase
 
         $result = $this->sanitizers->stripHTML($htmlSource, $allowedTags, $allowedAttr, $allowScripts, $allowComments);
         $this->assertEquals($expected, $result);
+
+        // Make sure the placeholder wrapping tag is not present in the final output
+        $this->assertDoesNotMatchRegularExpression('/<\/?phwrap>/', $result);
     }
 
     public function providerStripHTML(): array
@@ -70,6 +80,8 @@ class modStringSanitizerTest extends MODxTestCase
         $parmSet3 = ['p, notatag', 'notanattr'];
         // Data attr and allowing scripts
         $parmSet4 = ['div,img, script', 'data, src', true];
+        // Allowed tags but no attributes
+        $parmSet5 = ['p, a, strong, em'];
 
         // Have to hack this to keep parser from interpreting as actual opening short tag in the tests below
         $shortOpenTag = <<<TAG
@@ -77,7 +89,17 @@ class modStringSanitizerTest extends MODxTestCase
         TAG;
 
         return [
+            // Single-use param specs
+            'Should handle malformed html' => [
+                'Still here',
+                '<div wrong<span class="bad">Still here</div/em>',
+                ...['span']
+            ],
             // Full strip, nothing passed in for allowed params
+            'White space only should result in empty string' => [
+                '',
+                '   '
+            ],
             'Should remove all tags and attrs' => [
                 'My great string',
                 '<p class="gone">My <em>great</em> string</p>'
@@ -86,6 +108,10 @@ class modStringSanitizerTest extends MODxTestCase
                 'My great string',
                 '<p class="gone">My <em>great</em> string</p>',
                 ...$nullParams
+            ],
+            'Should remove tag and html comment' => [
+                'My great string',
+                '<p>My <!-- comment -->great string</p>'
             ],
             'Should remove script tag and its contents' => [
                 'This would , but we fixed it.',
@@ -205,6 +231,16 @@ class modStringSanitizerTest extends MODxTestCase
                     </script>
                 SRC,
                 ...$parmSet4
+            ],
+            /*
+                paramSet5 rules, allowed:
+                    tags -- p, a, strong, em
+                    attr -- none
+            */
+            'Should retain allowed tags but remove all attributes' => [
+                '<p>A <a>jazzy</a> caption simplified</p>',
+                '<p class="test">A <a href="here.com">jazzy</a> caption <span>simplified</span></p>',
+                ...$parmSet5
             ]
         ];
     }

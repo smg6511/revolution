@@ -45,8 +45,13 @@ class modStringSanitizer
      * @param bool $allowScripts Whether to allow javascript in html source passed to this method
      * @param bool $allowComments Whether to allow comments in the final output
      */
-    public function stripHTML(string $htmlSource, string|array|null $allowedTags = '', string|array|null $allowedAttr = '', bool $allowScripts = false, bool $allowComments = false): string
-    {
+    public function stripHTML(
+        string $htmlSource,
+        string|array|null $allowedTags = '',
+        string|array|null $allowedAttr = '',
+        bool $allowScripts = false,
+        bool $allowComments = false
+    ): string {
         if (trim($htmlSource) === '') {
             return '';
         }

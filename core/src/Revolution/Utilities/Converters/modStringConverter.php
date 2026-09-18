@@ -28,6 +28,8 @@ class modStringConverter
      */
     protected ?modX $modx = null;
 
+    private const HTML_TO_JSON_OPTS = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES;
+
     public function __construct(modX $modx)
     {
         $this->modx =& $modx;
@@ -47,12 +49,21 @@ class modStringConverter
             return '';
         }
 
-        // Collapse presentational (code formatting) space
-        $regex = '/(?<=>)[\s]*(?=<)/';
+        /*
+            Collapse presentational (code formatting) space; retain single space
+            in replacement to account for the rare instance where the content
+            contains facing angle brackets, e.g., "some text > < some more text"
+            which would otherwise be collapsed to "some text >< some more text"
+
+            Given the stated end-use of this method's output, it's very important for
+            line breaks to be removed as they cause parsing failures when present in
+            javascript object property values
+        */
+        $regex = '/(?<=>)[\s]+(?=<)/';
 
         return json_encode(
-            preg_replace($regex, '', $string),
-            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES
+            preg_replace($regex, ' ', $string),
+            self::HTML_TO_JSON_OPTS
         );
     }
 }
