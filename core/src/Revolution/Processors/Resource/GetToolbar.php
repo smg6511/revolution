@@ -86,7 +86,7 @@ class GetToolbar extends Processor
         }
         unset($context);
         $items[] = '->';
-        if ($this->modx->hasPermission('purge_deleted')) {
+        if ($this->modx->hasPermission('purge_deleted') || $this->modx->hasPermission('undelete_document')) {
             $deletedResources = $this->modx->getCount(modResource::class, ['deleted' => 1]);
 
             $items[] = [

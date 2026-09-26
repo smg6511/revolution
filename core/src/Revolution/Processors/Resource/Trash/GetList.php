@@ -45,6 +45,7 @@ class GetList extends GetListProcessor
     public $canUPublish = false;
 
     private modManagerDateFormatter $formatter;
+    private array $listableContexts = [];
 
     public function initialize()
     {
@@ -83,19 +84,6 @@ class GetList extends GetListProcessor
         $c->leftJoin(modUser::class, 'User', 'modResource.deletedby = User.id');
         $c->leftJoin(modContext::class, 'Context', 'modResource.context_key = Context.key');
 
-        /*
-            TODO:
-            Add only resources if we have the save permission here (on the context!!)
-            we need the following permissions:
-                undelete_document - to restore the document
-                delete_document - that's perhaps not necessary, because all documents are already deleted
-                but we need the purge_deleted permission - for every single file
-        */
-        if ($deleted = $this->getDeleted()) {
-            $c->where(['modResource.id:IN' => $deleted]);
-        } else {
-            $c->where(['modResource.id:IN' => 0]);
-        }
         if (!empty($query)) {
             $c->where([
                 'modResource.pagetitle:LIKE' => '%' . $query . '%',
@@ -110,25 +98,35 @@ class GetList extends GetListProcessor
 
     public function getDeleted()
     {
+
+        $contexts = $this->modx->getCollection(modContext::class, ['key:!=' => 'mgr']);
+        if (!$contexts) {
+            return [];
+        }
+        foreach ($contexts as $context) {
+            if ($context->checkPolicy('list')) {
+                $this->listableContexts[] = $context->get('key');
+            }
+        }
+        if (empty($this->listableContexts)) {
+            return [];
+        }
         $c = $this->modx->newQuery($this->classKey);
         $c->select($this->modx->getSelectColumns($this->classKey, $c->getAlias(), '', ['id', 'context_key']));
         $c->where([
-            $c->getAlias() . '.deleted' => true
+            $c->getAlias() . '.deleted' => true,
+            $c->getAlias() . '.context_key:IN' => $this->listableContexts
         ]);
-        if ($c->prepare() && $c->stmt->execute()) {
-            $resources = $c->stmt->fetchAll(PDO::FETCH_ASSOC);
-        }
-        /*
-            TODO:
-            Filter out resources where user does not have at least one of the permissions
-            applicable to the actions available in the trash manager:
-            1. undelete_document - restore resource
-            2. purge_deleted - permanently destroy resource
-        */
+
+        // Note that getCollection() handles filtering out items in resource groups not accessible to the user
+        $resources = $this->modx->getCollection($this->classKey, $c);
+
         $deleted = [];
         foreach ($resources as $resource) {
-            $deleted[] = (int)$resource['id'];
-            $children = $this->modx->getChildIds($resource['id'], 10, ['context' => $resource['context_key']]);
+            $id = $resource->get('id');
+            $contextKey = $resource->get('context_key');
+            $deleted[] = (int)$id;
+            $children = $this->modx->getChildIds($id, 10, ['context' => $contextKey]);
             $deleted = array_merge($deleted, $children);
         }
         return array_unique($deleted);
@@ -140,14 +138,6 @@ class GetList extends GetListProcessor
      */
     public function prepareRow(xPDOObject $object)
     {
-        // quick exit if we don't have access to the context
-        // this is a strange workaround: obviously we can access the resources even if we don't have access to the context! Check that
-        // TODO check if that is the same for resource groups
-        $context = $this->modx->getContext($object->get('context_key'));
-        if (!$context) {
-            return [];
-        }
-
         $permissions = [
             'purge' => $this->canPurge && $object->checkPolicy('purge_deleted'),
             'undelete' => $this->canUndelete && $object->checkPolicy('undelete_document'),
