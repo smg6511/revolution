@@ -238,7 +238,7 @@ class Create extends CreateProcessor
     {
         $this->object->removeLock();
         $this->clearCache();
-        $data = ['id' => $this->object->get('id')];
+        $responseData = ['id' => $this->object->get('id')];
         /*
             Unusual, but an editor could potentially create a resource with the deleted property
             set to true, so ensure such a scenario updates the trash counter. Note that this may ultimately
@@ -248,9 +248,9 @@ class Create extends CreateProcessor
         */
         if ($this->object->get('deleted')) {
             $this->setDeletedResourceCount();
-            $data['deletedCount'] = $this->object->get('deletedCount');
+            $responseData['deletedCount'] = $this->object->get('deletedCount');
         }
-        return $this->success('', $data);
+        return $this->success('', $responseData);
     }
 
     /**

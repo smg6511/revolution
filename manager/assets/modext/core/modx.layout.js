@@ -277,11 +277,6 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
                 cls: 'modx-tab-trash',
                 updateState: function(deletedCount = 0) {
                     const inTrashManager = MODx.request?.a === 'resource/trash';
-                    if (inTrashManager) {
-                        this.tabEl.classList.add('trash-open');
-                    } else {
-                        this.tabEl.classList.remove('trash-open');
-                    }
                     if (inTrashManager || deletedCount === 0) {
                         this.disable();
                         this.tabEl.classList.remove('active');
@@ -294,6 +289,12 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
                             target: this.tabEl,
                             title: _('trash.manage_recycle_bin_tooltip', { count: deletedCount })
                         });
+                    }
+                    if (inTrashManager) {
+                        this.tabEl.classList.add('trash-open');
+                        Ext.getCmp('modx-trash-resources')?.refresh();
+                    } else {
+                        this.tabEl.classList.remove('trash-open');
                     }
                 }
             });
@@ -369,8 +370,8 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
                                 listeners: {
                                     success: {
                                         fn: function(response) {
-                                            if (trashTab && response.object.deleted_resources) {
-                                                const deletedCount = response.object.deleted_resources;
+                                            if (trashTab && Object.hasOwn(response.object, 'deletedCount')) {
+                                                const { deletedCount } = response.object;
                                                 trashTab.updateState(deletedCount);
                                             }
                                         },

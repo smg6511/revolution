@@ -1631,7 +1631,7 @@ MODx.util.Trash = {
         const deletedCount = action.result?.object?.deletedCount;
         if (typeof deletedCount !== 'undefined') {
             let updateTrashCount = false;
-            if (form.baseParams.action === 'Resource/Create') {
+            if (['Resource/Create', 'Resource/Duplicate'].includes(form.baseParams.action)) {
                 updateTrashCount = true;
             } else {
                 // In update mode, only update the trash count if the deleted field was dirty (i.e., changed)

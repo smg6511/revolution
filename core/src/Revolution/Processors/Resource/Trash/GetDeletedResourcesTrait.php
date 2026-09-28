@@ -13,7 +13,6 @@ namespace MODX\Revolution\Processors\Resource\Trash;
 
 use modResource;
 use MODX\Revolution\modContext;
-use xPDOQuery;
 
 trait GetDeletedResourcesTrait
 {
@@ -55,7 +54,7 @@ trait GetDeletedResourcesTrait
     /**
      * Gets the count of deleted Resources accessible to the current user.
      */
-    private function getDeletedResourcesCount(): int
+    protected function getDeletedResourcesCount(): int
     {
         $deletedResources = $this->getDeletedResources();
         return !empty($deletedResources) ? count($deletedResources) : 0;
@@ -70,12 +69,12 @@ trait GetDeletedResourcesTrait
     }
 
     /**
-     * Updates the deleted resource count in the output array.
+     * Updates the deleted resource count in the output/response data array.
      *
-     * @param array $outputArray The output array to update
+     * @param array $dataArray The output array to update
      */
-    protected function updateDeletedResourceCount(array &$outputArray): void
+    protected function updateDeletedResourceCount(array &$dataArray): void
     {
-        $outputArray['deletedCount'] = $this->getDeletedResourcesCount();
+        $dataArray['deletedCount'] = $this->getDeletedResourcesCount();
     }
 }

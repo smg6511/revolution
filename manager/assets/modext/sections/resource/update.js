@@ -89,7 +89,6 @@ Ext.extend(MODx.page.UpdateResource, MODx.Component, {
                             node.parentNode.attributes.childCount = parseInt(node.parentNode.attributes.childCount, 10) + 1;
                             tree.refreshNode(node.id);
                         }
-                        // Update trash stats
                     },
                     scope: this
                 }

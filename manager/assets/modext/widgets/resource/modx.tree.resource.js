@@ -213,9 +213,6 @@ Ext.extend(MODx.tree.Resource, MODx.tree.Tree, {
                         nodeUI.addClass('deleted');
                         node.cascade(childNode => childNode.getUI().addClass('deleted'), this);
 
-                        // Refresh the trash manager if possible
-                        Ext.getCmp('modx-trash-resources')?.refresh();
-
                         Ext.get(nodeUI.getEl()).frame();
 
                         // Handle deleted resource in update panel
@@ -253,11 +250,6 @@ Ext.extend(MODx.tree.Resource, MODx.tree.Tree, {
 
                         activeNodeUI.removeClass('deleted');
                         node.cascade(childNode => childNode.getUI().removeClass('deleted'), this);
-
-                        const trashResourcesPanel = Ext.getCmp('modx-trash-resources');
-                        if (trashResourcesPanel) {
-                            trashResourcesPanel.refresh();
-                        }
 
                         Ext.get(activeNodeUI.getEl()).frame();
 
@@ -305,9 +297,6 @@ Ext.extend(MODx.tree.Resource, MODx.tree.Tree, {
                         Ext.getCmp('modx-trash-link')?.updateState(+data.object.deletedCount);
 
                         node.remove();
-
-                        // refresh the trash manager if possible
-                        Ext.getCmp('modx-trash-resources')?.refresh();
 
                         MODx.msg.status({
                             title: _('success'),
