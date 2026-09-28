@@ -89,6 +89,7 @@ Ext.extend(MODx.page.UpdateResource, MODx.Component, {
                             node.parentNode.attributes.childCount = parseInt(node.parentNode.attributes.childCount, 10) + 1;
                             tree.refreshNode(node.id);
                         }
+                        // Update trash stats
                     },
                     scope: this
                 }
@@ -116,8 +117,8 @@ Ext.extend(MODx.page.UpdateResource, MODx.Component, {
                             panel.updatePreviewButton(response.object);
                             panel.handleDeleted(true);
                         }
-                        Ext.getCmp('modx-resource-tree')?.refresh();
                         Ext.getCmp('modx-trash-link')?.updateState(+response.object.deletedCount);
+                        Ext.getCmp('modx-resource-tree')?.refresh();
                     },
                     scope: this
                 }
@@ -140,12 +141,8 @@ Ext.extend(MODx.page.UpdateResource, MODx.Component, {
                             panel.updatePreviewButton(response.object);
                             panel.handleDeleted(false);
                         }
-
-                        const tree = Ext.getCmp('modx-resource-tree');
-                        if (tree?.rendered) {
-                            tree.refresh();
-                        }
                         Ext.getCmp('modx-trash-link')?.updateState(+response.object.deletedCount);
+                        Ext.getCmp('modx-resource-tree')?.refresh();
                     },
                     scope: this
                 }

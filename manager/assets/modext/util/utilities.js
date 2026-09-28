@@ -1625,3 +1625,24 @@ MODx.util.FileDownload = function(fields) {
         me.isFinished(successCallback, failureCallback);
     }
 };
+
+MODx.util.Trash = {
+    updateTreeTabStats: function(form, action) {
+        const deletedCount = action.result?.object?.deletedCount;
+        if (typeof deletedCount !== 'undefined') {
+            let updateTrashCount = false;
+            if (form.baseParams.action === 'Resource/Create') {
+                updateTrashCount = true;
+            } else {
+                // In update mode, only update the trash count if the deleted field was dirty (i.e., changed)
+                const deletedField = form.findField('deleted');
+                if (deletedField && deletedField.isDirty()) {
+                    updateTrashCount = true;
+                }
+            }
+            if (updateTrashCount) {
+                Ext.getCmp('modx-trash-link')?.updateState(deletedCount);
+            }
+        }
+    }
+};

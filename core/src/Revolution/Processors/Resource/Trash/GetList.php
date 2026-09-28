@@ -32,6 +32,8 @@ use xPDO\Om\xPDOQuery;
  */
 class GetList extends GetListProcessor
 {
+    use GetDeletedResourcesTrait;
+
     public $classKey = modResource::class;
 
     public $languageTopics = ['resource'];
@@ -45,7 +47,6 @@ class GetList extends GetListProcessor
     public $canUPublish = false;
 
     private modManagerDateFormatter $formatter;
-    private array $listableContexts = [];
 
     public function initialize()
     {
@@ -98,38 +99,15 @@ class GetList extends GetListProcessor
 
     public function getDeleted()
     {
-
-        $contexts = $this->modx->getCollection(modContext::class, ['key:!=' => 'mgr']);
-        if (!$contexts) {
-            return [];
-        }
-        foreach ($contexts as $context) {
-            if ($context->checkPolicy('list')) {
-                $this->listableContexts[] = $context->get('key');
+        $deleted = [];
+        $resources = $this->getDeletedResources();
+        if (!empty($resources)) {
+            foreach ($resources as $resource) {
+                $id = $resource->get('id');
+                $deleted[] = (int)$id;
             }
         }
-        if (empty($this->listableContexts)) {
-            return [];
-        }
-        $c = $this->modx->newQuery($this->classKey);
-        $c->select($this->modx->getSelectColumns($this->classKey, $c->getAlias(), '', ['id', 'context_key']));
-        $c->where([
-            $c->getAlias() . '.deleted' => true,
-            $c->getAlias() . '.context_key:IN' => $this->listableContexts
-        ]);
-
-        // Note that getCollection() handles filtering out items in resource groups not accessible to the user
-        $resources = $this->modx->getCollection($this->classKey, $c);
-
-        $deleted = [];
-        foreach ($resources as $resource) {
-            $id = $resource->get('id');
-            $contextKey = $resource->get('context_key');
-            $deleted[] = (int)$id;
-            $children = $this->modx->getChildIds($id, 10, ['context' => $contextKey]);
-            $deleted = array_merge($deleted, $children);
-        }
-        return array_unique($deleted);
+        return $deleted;
     }
 
     /**

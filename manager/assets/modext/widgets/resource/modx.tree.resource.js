@@ -1160,7 +1160,10 @@ MODx.window.QuickCreateResource = function(config = {}) {
             shift: true,
             fn: this.submit,
             scope: this
-        }]
+        }],
+        success: (form, action) => {
+            MODx.util.Trash.updateTreeTabStats(form, action);
+        }
     });
     MODx.window.QuickCreateResource.superclass.constructor.call(this, config);
 };
