@@ -205,25 +205,7 @@ Ext.extend(MODx.tree.Resource, MODx.tree.Tree, {
             },
             listeners: {
                 success: {
-                    fn: data => {
-                        const deletedCount = +data.object.deletedCount;
-                        Ext.getCmp('modx-trash-link')?.updateState(deletedCount);
-
-                        const nodeUI = node.getUI();
-                        nodeUI.addClass('deleted');
-                        node.cascade(childNode => childNode.getUI().addClass('deleted'), this);
-
-                        Ext.get(nodeUI.getEl()).frame();
-
-                        // Handle deleted resource in update panel
-                        const updatePanel = Ext.getCmp('modx-panel-resource');
-                        if (updatePanel && MODx.request.a === 'resource/update' && MODx.request.id === id) {
-                            updatePanel.handleDeleted(true);
-                            updatePanel.updatePreviewButton(data.object);
-                        }
-                        node.attributes.preview_url = data.object.preview_url;
-                    },
-                    scope: this
+                    fn: this.onChangeDeletedSuccess.createDelegate(this, [node, id, true], true)
                 }
             }
         });
@@ -242,28 +224,32 @@ Ext.extend(MODx.tree.Resource, MODx.tree.Tree, {
             },
             listeners: {
                 success: {
-                    fn: function(response) {
-                        const deletedCount = +response.object.deletedCount;
-                        Ext.getCmp('modx-trash-link')?.updateState(deletedCount);
-
-                        const activeNodeUI = node.getUI();
-
-                        activeNodeUI.removeClass('deleted');
-                        node.cascade(childNode => childNode.getUI().removeClass('deleted'), this);
-
-                        Ext.get(activeNodeUI.getEl()).frame();
-
-                        const updatePanel = Ext.getCmp('modx-panel-resource');
-                        if (updatePanel && MODx.request.a === 'resource/update' && MODx.request.id === id) {
-                            updatePanel.handleDeleted(false);
-                            updatePanel.updatePreviewButton(response.object);
-                        }
-                        node.attributes.preview_url = response.object.preview_url;
-                    },
-                    scope: this
+                    fn: this.onChangeDeletedSuccess.createDelegate(this, [node, id, false], true)
                 }
             }
         });
+    },
+
+    onChangeDeletedSuccess: function(response, node, nodeId, wasDeleted) {
+        const
+            deletedCount = +response.object.deletedCount,
+            className = wasDeleted ? 'addClass' : 'removeClass'
+        ;
+        Ext.getCmp('modx-trash-link')?.updateState(deletedCount);
+
+        const activeNodeUI = node.getUI();
+
+        activeNodeUI[className]('deleted');
+        node.cascade(childNode => childNode.getUI()[className]('deleted'), this);
+
+        Ext.get(activeNodeUI.getEl()).frame();
+
+        const updatePanel = Ext.getCmp('modx-panel-resource');
+        if (updatePanel && MODx.request.a === 'resource/update' && MODx.request.id === nodeId) {
+            updatePanel.handleDeleted(wasDeleted);
+            updatePanel.updatePreviewButton(response.object);
+        }
+        node.attributes.preview_url = response.object.preview_url;
     },
 
     purgeDocument: function(itm, e) {
