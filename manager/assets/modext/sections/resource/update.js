@@ -110,16 +110,7 @@ Ext.extend(MODx.page.UpdateResource, MODx.Component, {
             },
             listeners: {
                 success: {
-                    fn: function(response) {
-                        const panel = Ext.getCmp('modx-panel-resource');
-                        if (panel) {
-                            panel.updatePreviewButton(response.object);
-                            panel.handleDeleted(true);
-                        }
-                        Ext.getCmp('modx-trash-link')?.updateState(+response.object.deletedCount);
-                        Ext.getCmp('modx-resource-tree')?.refresh();
-                    },
-                    scope: this
+                    fn: this.onChangeDeletedSuccess.createDelegate(this, [true], true)
                 }
             }
         });
@@ -134,19 +125,20 @@ Ext.extend(MODx.page.UpdateResource, MODx.Component, {
             },
             listeners: {
                 success: {
-                    fn: function(response) {
-                        const panel = Ext.getCmp('modx-panel-resource');
-                        if (panel) {
-                            panel.updatePreviewButton(response.object);
-                            panel.handleDeleted(false);
-                        }
-                        Ext.getCmp('modx-trash-link')?.updateState(+response.object.deletedCount);
-                        Ext.getCmp('modx-resource-tree')?.refresh();
-                    },
-                    scope: this
+                    fn: this.onChangeDeletedSuccess.createDelegate(this, [false], true)
                 }
             }
         });
+    },
+
+    onChangeDeletedSuccess: function(response, handleDeleted) {
+        const panel = Ext.getCmp('modx-panel-resource');
+        if (panel) {
+            panel.updatePreviewButton(response.object);
+            panel.handleDeleted(handleDeleted);
+        }
+        Ext.getCmp('modx-trash-link')?.updateState(+response.object.deletedCount);
+        Ext.getCmp('modx-resource-tree')?.refresh();
     },
 
     purgeResource: function() {
