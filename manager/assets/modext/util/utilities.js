@@ -298,7 +298,6 @@ Ext.form.BasicForm.prototype.append = function() {
         layout = new Ext.form.Layout(),
         fields = []
     ;
-    console.log('Ext.form.BasicForm.prototype.append');
     // eslint-disable-next-line prefer-spread
     layout.stack.push.apply(layout.stack, arguments);
     for (let i = 0; i < arguments.length; i++) {
