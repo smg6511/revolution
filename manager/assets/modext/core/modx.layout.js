@@ -280,11 +280,10 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
                     if (inTrashManager || deletedCount === 0) {
                         this.disable();
                         this.tabEl.classList.remove('active');
+                        this.tooltip?.destroy();
                     } else {
                         this.enable();
                         this.tabEl.classList.add('active');
-                    }
-                    if (!this.disabled) {
                         this.tooltip = new Ext.ToolTip({
                             target: this.tabEl,
                             title: _('trash.manage_recycle_bin_tooltip', { count: deletedCount })

@@ -35,7 +35,7 @@ class GetTrashStats extends Processor
 
     public function process()
     {
-        $responseData = [];
+        $responseData = ['deletedCount' => 0];
 
         if ($this->modx->hasPermission('purge_deleted') || $this->modx->hasPermission('undelete_document')) {
             $deletedResources = $this->getDeletedResources();
