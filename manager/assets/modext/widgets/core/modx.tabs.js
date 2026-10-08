@@ -51,7 +51,10 @@ MODx.Tabs = function(config = {}) {
                 <tpl if="closable">
                 <a class="x-tab-strip-close"></a>
                 </tpl>
-                <a href="#">
+                <a 
+                    href="#"
+                    <tpl if="showIconOnly">aria-label="{text}"</tpl>
+                >
                     <tpl if="!showIconOnly">
                     <span class="x-tab-strip-text">{text}</span>
                     </tpl>
@@ -68,12 +71,13 @@ MODx.Tabs = function(config = {}) {
         getTemplateArgs: function(item) {
             // Call the native method to collect base data, such as id
             const result = Ext.TabPanel.prototype.getTemplateArgs.call(this, item);
-
             /*
-                Note that previous releases did not utilize getTemplateArgs and therefore had missing info (such as item cls) and unintented values (such as an auto-generated id instead of the one passed in individual tab items). Therefor, not including 'id: item.id' in the object below for now, as it may cause confusion/problems in Extras relying on the auto-generated id for styling or other purposes)
+                Note that previous releases did not utilize getTemplateArgs and therefore had missing info (such as item cls) and unintended values (such as an auto-generated id instead of the one passed in individual tab items). Therefore, not including 'id: item.id' in the object below for now, as it may cause confusion/problems in Extras relying on the auto-generated id for styling or other purposes)
             */
             return Ext.apply(result, {
-                cls: item.cls,
+                cls: [result.cls, item.cls]
+                    .filter(classes => Ext.isString(classes) && classes.length > 0)
+                    .join(' '),
                 showIconOnly: item?.showIconOnly === true,
                 closable: item.closable
             });

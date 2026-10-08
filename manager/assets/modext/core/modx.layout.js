@@ -274,6 +274,7 @@ Ext.extend(MODx.Layout, Ext.Viewport, {
                 id: 'modx-trash-link',
                 showIconOnly: true,
                 html: `<p>${_('loading_trash_manager')}</p>`,
+                title: _('trash.tab_title'),
                 cls: 'modx-tab-trash',
                 updateState: function(deletedCount = 0) {
                     const inTrashManager = MODx.request?.a === 'resource/trash';
